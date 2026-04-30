@@ -21,21 +21,34 @@ export async function generateMetadata({
   const paper = getPaper(slug);
   if (!paper) return {};
 
+  const altText = `${paper.part}: ${paper.title} — Emergent Spacetime Dynamics`;
   return {
     title: paper.title,
     description: paper.abstract.slice(0, 200),
     openGraph: {
-      title: paper.title,
-      description: paper.abstract.slice(0, 200),
       type: "article",
       url: `/papers/${paper.slug}/`,
-      images: [{ url: `/og/${paper.slug}.png`, width: 1200, height: 630 }],
+      siteName: "Emergent Spacetime Dynamics",
+      locale: "en_US",
+      title: paper.title,
+      description: paper.abstract.slice(0, 200),
+      images: [
+        {
+          url: `/og/${paper.slug}.png`,
+          width: 1200,
+          height: 630,
+          alt: altText,
+          type: "image/png",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
+      site: "@MagnetonIO",
+      creator: "@MagnetonIO",
       title: paper.title,
       description: paper.abstract.slice(0, 200),
-      images: [`/og/${paper.slug}.png`],
+      images: [{ url: `/og/${paper.slug}.png`, alt: altText }],
     },
   };
 }

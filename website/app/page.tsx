@@ -8,17 +8,36 @@ export const metadata: Metadata = {
   description:
     "A Modular Framework: Information → Phase → Frequency → Geometry. Five papers by MagnetonIO Research formalising emergent spacetime dynamics via categorical composition.",
   openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Emergent Spacetime Dynamics",
+    locale: "en_US",
     title: "Emergent Spacetime Dynamics",
     description:
       "A Modular Framework: Information → Phase → Frequency → Geometry. Five papers by MagnetonIO Research.",
-    images: [{ url: "/og/default.png", width: 1200, height: 630 }],
+    images: [
+      {
+        url: "/og/default.png",
+        width: 1200,
+        height: 630,
+        alt: "Emergent Spacetime Dynamics — A Modular Framework: Information → Phase → Frequency → Geometry",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    site: "@MagnetonIO",
+    creator: "@MagnetonIO",
     title: "Emergent Spacetime Dynamics",
     description:
       "A Modular Framework: Information → Phase → Frequency → Geometry.",
-    images: ["/og/default.png"],
+    images: [
+      {
+        url: "/og/default.png",
+        alt: "Emergent Spacetime Dynamics — A Modular Framework",
+      },
+    ],
   },
 };
 
