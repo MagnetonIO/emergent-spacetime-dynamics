@@ -1,0 +1,43 @@
+cabal-version:      2.2
+name:               mathematical-formalisms
+version:            0.1.0.0
+synopsis:           Categorical primitives for Law I of Emergent Spacetime Dynamics
+description:        Haskell encoding of categories, monoidal categories, functors,
+                    and the matter-information functor M : Phys -> Info, with
+                    property tests (in-house, QuickCheck-style) for category
+                    and monoidal laws.
+author:             MagnetonIO Research
+maintainer:         mlong168@gmail.com
+license:            BSD-3-Clause
+build-type:         Simple
+
+common warnings
+  ghc-options: -Wall
+
+library
+  import:           warnings
+  hs-source-dirs:   src
+  exposed-modules:  Categorical.Core
+                    Categorical.Monoidal
+                    Categorical.Functor1
+                    Categorical.MatterInfo
+                    Categorical.Examples
+  build-depends:    base >= 4.14 && < 5
+  default-language: Haskell2010
+
+executable mathematical-formalisms-demo
+  import:           warnings
+  hs-source-dirs:   app
+  main-is:          Main.hs
+  build-depends:    base >= 4.14 && < 5,
+                    mathematical-formalisms
+  default-language: Haskell2010
+
+test-suite mathematical-formalisms-tests
+  import:           warnings
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Spec.hs
+  build-depends:    base >= 4.14 && < 5,
+                    mathematical-formalisms
+  default-language: Haskell2010

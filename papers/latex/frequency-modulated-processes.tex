@@ -1,0 +1,899 @@
+\documentclass[12pt]{article}
+
+% Core math
+\usepackage{amsmath, amssymb, amsthm, mathrsfs}
+
+% Diagrams
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\usetikzlibrary{calc, arrows.meta, decorations.pathmorphing, decorations.markings}
+
+% References
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+% Graphics
+\usepackage{graphicx}
+
+% Page layout
+\usepackage[margin=1in]{geometry}
+
+% GrokRxiv sidebar
+\usepackage{everypage}
+\usepackage{xcolor}
+
+% Listings for code
+\usepackage{listings}
+\usepackage{url}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  showstringspaces=false,
+  columns=flexible,
+  keepspaces=true,
+}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% GrokRxiv DOI Sidebar
+\definecolor{grokgray}{RGB}{110,110,110}
+\AddEverypageHook{%
+  \ifnum\value{page}=1
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[
+        rotate=90,
+        anchor=south,
+        font=\Large\sffamily\bfseries\color{grokgray},
+        inner sep=0pt
+      ] at ([xshift=38pt, yshift=0.52\paperheight]current page.south west)
+      {GrokRxiv:2026.04.frequency-modulated-processes\quad
+       [\,cond-mat.str-el\,]\quad
+       30 Apr 2026};
+    \end{tikzpicture}
+  \fi
+}
+
+% Custom commands
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Cmplx}{\mathbb{C}}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\HF}{H_{F}}
+\newcommand{\Heff}{H_{\mathrm{eff}}}
+\newcommand{\Floq}{\mathsf{Floq}}
+\newcommand{\Ham}{\mathsf{Ham}}
+\newcommand{\QChan}{\mathsf{QChan}}
+\newcommand{\Phase}{\mathsf{Phase}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\BG}{\mathbf{B}G}
+\newcommand{\Res}{\mathrm{Res}}
+\newcommand{\Hilb}{\mathsf{Hilb}}
+
+\title{Law III --- Frequency-modulated Processes:\\
+Floquet Phases as Natural Transformations}
+\author{MagnetonIO Research \\
+\textit{Emergent Spacetime Dynamics Series} \\
+\textit{Paper 3 of 4 (Modular Composition)} \\
+\texttt{research@magneton.io}}
+\date{30 April 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We develop the third law of a four-paper modular framework for emergent phases of matter from quantum information through category theory. Building directly on Law~I (categorical primitives) and Law~II (functorial classification of equilibrium phases), Law~III lifts the static phase-classification framework to a temporal setting in which a periodic Hamiltonian $H(t+T)=H(t)$ defines a monoidal functor from the discrete circle category $\mathbf{B}\mathbb{Z}_T$ to the dagger-monoidal category of quantum channels. We show that Floquet evolution is naturally a $2$-categorical structure: a Floquet system is a $1$-cell, micromotion data are $2$-cells, and Floquet phase transitions are connected components of the space of natural transformations between Floquet functors. We prove that the Magnus expansion provides a colimit construction for an asymptotic effective Hamiltonian functor whose finite truncations factor through the Law~II equilibrium phase functor, formalising the prethermal correspondence between Floquet and equilibrium phase classifications. Two emergent phenomena are then characterised as natural-transformation invariants with no equilibrium analog: discrete time crystals, which we encode as obstruction $2$-cells detecting spontaneous breaking of the temporal $\mathbb{Z}_n$ symmetry of the drive, and anomalous Floquet topological insulators, classified by a Floquet winding number $\nu\in\mathbb{Z}$ on the spatio-temporal Brillouin torus $\mathrm{BZ}\times S^1$. We work out two extended examples --- the periodically kicked Ising chain (giving a paradigmatic discrete time crystal) and the periodically driven Su-Schrieffer-Heeger (SSH) model (giving an anomalous Floquet edge mode at quasi-energy $\pi$) --- and verify the framework numerically with a small Haskell library that implements a first-order Magnus solver, a stroboscopic kicked-Ising simulator, and property tests for unitarity and periodicity. We conclude by exhibiting explicit composition hooks for Law~IV: the Sambe-space functor $\mathcal{S}\colon \Floq \to \Hilb_\infty$ produces an extended quantum-information substrate from which the holographic and information-geometric structures of Law~IV can be assembled. We emphasise throughout that this is a \emph{modular} composition --- each layer adds one categorical dimension rather than collapsing into a single unified theory.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Position in the modular series}
+
+This is Paper~3 of the four-paper modular research programme \emph{Emergent Spacetime Dynamics}. The series formalises a hierarchy of emergent phenomena in quantum many-body systems through category theory, organised as a sequence of compositional liftings:
+\begin{equation}
+\label{eq:lifting-tower}
+\Cat_{\mathrm{mon}} \xrightarrow{\;\mathrm{Lift}_{\mathrm{I}\to\mathrm{II}}\;} \Phase_{\mathrm{eq}} \xrightarrow{\;\mathrm{Lift}_{\mathrm{II}\to\mathrm{III}}\;} \Phase_{\mathrm{Floq}} \xrightarrow{\;\mathrm{Lift}_{\mathrm{III}\to\mathrm{IV}}\;} \mathsf{InfoGeom}.
+\end{equation}
+We stress at the outset that this is a \emph{modular} framework, not a unified one: each lift is a distinct functor, and the emergent properties at each stage are produced by the composition itself rather than reducible to any single prior layer. The third paper, presented here, covers the lift from equilibrium-phase functors to Floquet-phase functors; that is, it extends the categorical phase-classification machinery of Law~II by one monoidal dimension --- time --- producing as emergent phenomena: (a)~discrete time-crystalline order, (b)~anomalous Floquet topological insulators with no equilibrium analog, and (c)~prethermal Floquet engineering of effective Hamiltonians.
+
+\subsection{Recap of Laws I and II}
+
+\paragraph{Law~I: Categorical Primitives.} Law~I established the shared categorical grammar: symmetric monoidal categories (SMCs)~\cite{maclane1998}, dagger-compact categories~\cite{abramsky2004}, sheaves, topoi~\cite{lurie2009}, operads, and their type-theoretic encodings. The central object is the SMC $(\C,\otimes,I)$ together with structural natural isomorphisms (associator, unitors, braiding) satisfying Mac Lane coherence~\cite{maclane1998}. Finite-dimensional quantum mechanics (which suffices for our lattice-model setting) is the dagger-compact category $\mathsf{FHilb}$ of finite-dimensional Hilbert spaces~\cite{abramsky2004}; processes are morphisms; tensor product is system composition; and string diagrams are sound and complete by Joyal--Street. Law~I distilled the slogan: a physical theory is a symmetric monoidal functor $Z\colon \C_{\mathrm{geo}} \to \mathsf{FHilb}$, with $\C_{\mathrm{geo}}$ a category of geometric or process data; the prototypical example is Atiyah's TQFT~\cite{atiyah1988} and its extended cousins~\cite{baezdolan1995}.
+
+\paragraph{Law~II: Phase-bound Matter.} Law~II used the Law~I grammar to classify equilibrium phases of matter as functors from a symmetry-group category to a category of gapped Hamiltonians, equipped with morphisms given by adiabatic deformations. Concretely, a phase with on-site symmetry group $G$ is a homotopy class of functors
+\begin{equation}
+F\colon \mathbf{B}G \longrightarrow \Ham_{\mathrm{gap}},
+\end{equation}
+where $\mathbf{B}G$ is the one-object delooping. Symmetry-protected topological (SPT) phases are classified by the (cobordism-) cohomology of $\mathbf{B}G$~\cite{chen2013}; topologically ordered phases are classified by modular tensor categories (MTCs)~\cite{kitaev2003,wen2004}; a phase transition is a natural transformation that fails to be invertible at the Hamiltonian level (the gap closes).
+
+\subsection{What Law~III adds}
+
+Law~III adjoins to Law~II a single new categorical dimension: a $\mathbb{Z}_T$-grading representing periodic time evolution. The Schr\"odinger equation with a $T$-periodic Hamiltonian $H(t+T)=H(t)$ produces, by the Floquet theorem~\cite{floquet1883,shirley1965}, a one-cycle unitary $U(T)= \mathcal{T}\exp\bigl(-i\!\int_0^T H(t)\,dt\bigr)$ whose spectrum (the quasi-energy spectrum) lives on a torus $S^1=(-\pi/T,\pi/T]$ rather than on the real line. Functorially, this means Floquet evolution is best understood as a monoidal functor from the discrete circle category to the category of quantum channels.
+
+The framework yields three emergent phenomena that are absent from Law~II:
+\begin{enumerate}
+\item \emph{Discrete time crystals} (DTCs)~\cite{else2016,khemani2016}: spontaneous breaking of the discrete time-translation symmetry of the drive, manifested as a local order parameter oscillating at $nT$ for some integer $n>1$.
+\item \emph{Anomalous Floquet topological insulators}~\cite{rudner2020}: phases with chiral edge modes at quasi-energy~$\pi$ despite vanishing Chern numbers in every band, classified by a $\mathbb{Z}$-valued Floquet winding number on $\mathrm{BZ}\times S^1$.
+\item \emph{Prethermal Floquet engineering}~\cite{bukov2015,abanin2015}: an exponentially long time window during which the dynamics is governed by an effective Hamiltonian $\Heff$ obtained by truncating the Magnus expansion, allowing engineered phases not present in the parent static system.
+\end{enumerate}
+
+The classification of Floquet topological phases by $K$-theory~\cite{roy2017} is the temporal analog of Kitaev's $10$-fold way; we recover it categorically in \cref{sec:floquet-topological}.
+
+\subsection{Outline}
+
+\Cref{sec:framework} sets up the categorical framework: the circle category, the Sambe-space construction, and the Floquet functor. \Cref{sec:periodic-endo} shows that periodic Hamiltonians are endomorphisms in a fibred $2$-category. \Cref{sec:magnus} develops the Magnus and Floquet--Magnus expansions as a natural construction of an asymptotic effective-Hamiltonian functor. \Cref{sec:dtc} treats discrete time crystals as obstruction $2$-cells. \Cref{sec:floquet-topological} classifies Floquet topological insulators. \Cref{sec:prethermal} discusses prethermalisation and heating. \Cref{sec:examples} works out two extended examples: the kicked Ising chain and the driven SSH model. \Cref{sec:open} lists open problems. \Cref{sec:conclusion} provides a brief conclusion and a precise statement of the composition hooks consumed by Law~IV.
+
+\section{Mathematical Framework: Floquet Theory in Categorical Form}
+\label{sec:framework}
+
+\subsection{The discrete circle category}
+
+\begin{definition}[Discrete circle category]
+\label{def:circle-cat}
+Fix a period $T>0$. The \emph{discrete circle category at scale $T$}, denoted $\mathbf{B}\Z_T$, is the delooping of the integers $\Z$ \emph{decorated by the parameter $T$}: it has a single object $*$ and morphism set $\mathrm{Hom}(*,*) = \Z$, with composition being addition. The subscript $T$ is \emph{not} a modulus and does not impose modular arithmetic on $\Z$; it is a metadatum recording the period that the generating morphism $1\in\Z$ is meant to represent (i.e.\ ``one period of duration $T$''). Equivalently, $\mathbf{B}\Z_T$ is the delooping of $\pi_1(S^1)\cong\Z$ viewed as the discrete-time-translation group of a continuous circle of circumference $T$. We write $\mathbf{B}\Z_T^+$ for the wide subcategory generated by the positive integers (forward time only).
+\end{definition}
+
+\begin{remark}[On the notation $\Z_T$]
+\label{rem:zt-notation}
+The subscript $T$ in $\Z_T$ is a notational decoration recording the period $T$ as a parameter, not a quotient. We use this slightly non-standard convention because the period $T$ enters the categorical Floquet picture only through its action on the morphisms (each morphism $n\in\Z$ stands for ``$n$ stroboscopic periods of duration $T$''), not through any modular reduction. Where modular arithmetic is genuinely intended in the paper (e.g.\ in $\R/T\Z$ for the continuum circle), we write the quotient explicitly.
+\end{remark}
+
+\begin{definition}[Continuous-time circle category]
+\label{def:cts-circle}
+The continuous-time circle category $\mathbf{B}S^1$ has one object and morphism space $S^1=\R/T\Z$ with composition given by addition modulo $T$. As a topological category, $\mathbf{B}S^1$ has trivial $\pi_0$ and $\pi_1(\mathbf{B}S^1)\cong\Z$ encoding winding number.
+\end{definition}
+
+The continuum-time analog above uses the topological group $S^1=\R/T\Z$ delooped to the topological category $\mathbf{B}S^1$.
+
+\subsection{The category of quantum channels}
+
+We work in the dagger-symmetric monoidal category $\QChan$ of finite-dimensional quantum channels. Objects are finite-dimensional Hilbert spaces $\Hcal$; morphisms $\Hcal\to\Hcal'$ are completely positive trace-preserving (CPTP) maps. Tensor product is the standard tensor of Hilbert spaces and Stinespring dilation of channels; the dagger is given by the adjoint channel under the Hilbert--Schmidt inner product.
+
+We will at times restrict to the wide subcategory $\mathsf{Unit}\subset\QChan$ of unitary channels, which is itself a dagger-monoidal subcategory. A unitary channel is the conjugation $\rho\mapsto U\rho U^\dagger$ for some unitary $U$.
+
+\subsection{The Floquet functor}
+
+\begin{definition}[Floquet functor]
+\label{def:floquet-functor}
+A \emph{Floquet system} on a Hilbert space $\Hcal$ with period $T$ is a strong monoidal functor
+\begin{equation}
+\Floq\colon \mathbf{B}\Z_T \longrightarrow \mathsf{Unit}\subset\QChan
+\end{equation}
+sending the generating morphism $1\in\Z=\mathrm{Hom}(*,*)$ to a unitary channel $\Floq(1)=\mathcal{U}_T\colon\Hcal\to\Hcal$, where $\mathcal{U}_T(\rho)=U(T)\,\rho\,U(T)^\dagger$ for the one-period evolution operator $U(T)$.
+\end{definition}
+
+\begin{remark}
+\Cref{def:floquet-functor} captures only the stroboscopic content of a Floquet system; the micromotion is recovered by lifting to the continuous-time category. The full Floquet system is a continuous functor $\widetilde{\Floq}\colon\mathbf{B}S^1\to\mathsf{Unit}$, whose restriction along the discretisation $\mathbf{B}\Z_T\hookrightarrow\mathbf{B}S^1$ recovers \cref{def:floquet-functor}.
+\end{remark}
+
+\begin{theorem}[Floquet decomposition, categorical form]
+\label{thm:floquet-decomp}
+Let $\widetilde{\Floq}\colon\mathbf{B}S^1\to\mathsf{Unit}$ be a continuous Floquet functor. Then there exist:
+\begin{enumerate}
+\item a unitary endomorphism $U_F=e^{-i\HF T}$ (the stroboscopic Floquet operator), uniquely determined by $\widetilde{\Floq}$ up to multiplication of $\HF$ by integer multiples of $\omega = 2\pi/T$,
+\item a continuous family $P\colon S^1\to\mathrm{End}(\Hcal)$ of unitary operators with $P(0)=\one$ (the micromotion), such that
+\end{enumerate}
+\begin{equation}
+\widetilde{\Floq}(t)(\rho) = P(t)\,e^{-i\HF t}\,\rho\,e^{i\HF t}\,P(t)^\dagger \qquad \forall t\in\R/T\Z.
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+This is the operator-level statement of the classical Floquet theorem~\cite{floquet1883}. Continuity of $\widetilde{\Floq}$ furnishes a continuous evolution $U(t,0)$ with $U(T,0)$ unitary. By spectral calculus, take any branch of the logarithm to define $\HF=\frac{i}{T}\log U(T,0)$; then $P(t):=U(t,0)\,e^{i\HF t}$ is by construction $T$-periodic and equals the identity at $t=0$. The functorial wrapping in $\QChan$ is just the conjugation action.
+\end{proof}
+
+\subsection{Sambe space and the spectral side}
+
+The quasi-energy spectrum lives on the Pontryagin dual $\widehat{\Z}=S^1$. To work with quasi-energies as a self-adjoint operator spectrum, we introduce the \emph{Sambe space}~\cite{sambe1973}.
+
+\begin{definition}[Sambe space]
+\label{def:sambe}
+Let $\Hcal$ be a finite-dimensional Hilbert space and $T>0$. The \emph{Sambe space} associated to the period $T$ is the (separable) Hilbert space
+\begin{equation}
+\mathcal{S}_T(\Hcal) \;:=\; L^2(S^1_T)\otimes\Hcal,
+\end{equation}
+where $S^1_T = \R/T\Z$ with normalised Haar measure $dt/T$. Its Fourier basis $\{e_n=e^{i n\omega t}\}_{n\in\Z}$ decomposes $\mathcal{S}_T(\Hcal)=\bigoplus_{n\in\Z}\Hcal_n$ with each $\Hcal_n\cong\Hcal$.
+\end{definition}
+
+\begin{definition}[Quasi-energy operator]
+\label{def:quasi-energy}
+For a smooth $T$-periodic curve $H\colon S^1_T\to\mathrm{Herm}(\Hcal)$,
+the \emph{quasi-energy operator} on $\mathcal{S}_T(\Hcal)$ is
+\begin{equation}
+K \;:=\; H(t)\;-\;i\partial_t.
+\end{equation}
+Its eigenvalues $\{\varepsilon_\alpha+n\omega : \alpha,n\}$ are organised in $\Z$-shifted ladders, and its eigenvectors $\psi_\alpha=e^{-i\varepsilon_\alpha t}u_\alpha(t)$ are the Floquet modes.
+\end{definition}
+
+\begin{proposition}[Sambe-space functor]
+\label{prop:sambe-functor}
+The assignment $\Hcal\mapsto\mathcal{S}_T(\Hcal)$, $f\mapsto\one\otimes f$ extends to a strong monoidal functor
+\begin{equation}
+\mathcal{S}_T\colon \QChan_{\mathrm{fin}} \longrightarrow \Hilb_{\mathrm{sep}},
+\end{equation}
+that intertwines the Floquet functor $\Floq$ with the diagonal action of $K$ on $\mathcal{S}_T(\Hcal)$.
+\end{proposition}
+
+\begin{proof}
+\emph{Strong monoidality.} We work with the natural lax-monoidal structure for which the structural map
+\begin{equation*}
+\mu_{\Hcal,\Hcal'}\colon \mathcal{S}_T(\Hcal)\otimes_{L^2(S^1_T)}\mathcal{S}_T(\Hcal')\;\xrightarrow{\;\cong\;}\;\mathcal{S}_T(\Hcal\otimes\Hcal')
+\end{equation*}
+sends a simple tensor $(f\otimes\psi)\otimes_{L^2(S^1_T)}(g\otimes\psi')$ to $(fg)\otimes(\psi\otimes\psi')$, where $fg$ denotes pointwise multiplication of $f,g\in L^2(S^1_T)\cap C^\infty(S^1_T)$ (the smooth subspace, which is dense). Here we view $\Hilb_{\mathrm{sep}}$ as enriched-monoidal over the commutative $C^*$-algebra $L^2(S^1_T)\cap L^\infty(S^1_T)$, and the relative tensor product $\otimes_{L^2(S^1_T)}$ is the standard module tensor over this algebra. With this convention, $\mu_{\Hcal,\Hcal'}$ is well-defined on the dense subspace of simple tensors of smooth functions and finite-rank Hilbert-space vectors, and extends by continuity (in the natural Hilbert-space norm on the relative tensor product) to a unitary isomorphism on the full tensor product space. The pentagon axiom for $\mu$ reduces to associativity of pointwise multiplication of smooth functions tensored with associativity of the standard $\otimes$ on Hilbert spaces; the triangle axiom is similarly straightforward. (If the relative tensor product is replaced by the bare tensor $\otimes$, then $\mu$ becomes lax-monoidal rather than strong-monoidal, with the failure measured by an $L^2(S^1_T)$-valued density; the proposition holds in either form, but only the relative-tensor version is strongly monoidal.).
+
+\emph{Intertwining of $\widetilde{\Floq}$ with $K$.} By \cref{thm:floquet-decomp},
+the continuous Floquet functor $\widetilde{\Floq}$ acts on the standard
+Hilbert space $\Hcal$ by conjugation with $U(t,0)=P(t)e^{-i\HF t}$. Lifting to
+the Sambe space $\mathcal{S}_T(\Hcal)$, we use the unitary isomorphism that
+maps a Floquet mode $\psi_\alpha\in\Hcal$ to the joint Sambe-eigenvector
+$e_n\otimes u_\alpha\in L^2(S^1_T)\otimes\Hcal$, where $u_\alpha(t)=
+e^{i\varepsilon_\alpha t}P(t)\psi_\alpha$. Under this identification:
+\begin{enumerate}
+\item The quasi-energy operator $K = H(t) - i\partial_t$ is diagonal on
+each $e_n\otimes u_\alpha$, with eigenvalue $\varepsilon_\alpha + n\omega$.
+This is the standard ladder structure of Sambe space \cite{sambe1973}.
+\item The conjugation-by-$\widetilde{\Floq}(t)$ on $\Hcal$ corresponds, after
+the same identification, to conjugation by $e^{-iKt}$ on $\mathcal{S}_T(\Hcal)$
+(both act on each ladder rung by multiplication by
+$e^{-i(\varepsilon_\alpha+n\omega)t}$ and on the $L^2(S^1_T)$ factor by
+shifting Fourier modes consistently with the periodicity of $P(t)$).
+\end{enumerate}
+Hence the diagram
+\begin{equation*}
+\begin{tikzcd}
+\Hcal \arrow[r,"\widetilde{\Floq}(t)"]\arrow[d,"\mathcal{S}_T"'] & \Hcal \arrow[d,"\mathcal{S}_T"]\\
+\mathcal{S}_T(\Hcal) \arrow[r,"\mathrm{Ad}(e^{-iKt})"'] & \mathcal{S}_T(\Hcal)
+\end{tikzcd}
+\end{equation*}
+commutes for every $t\in S^1_T$, which is exactly the intertwining claimed.
+\end{proof}
+
+\Cref{prop:sambe-functor} is the key bridge to Law~IV: the extended Hilbert space $\mathcal{S}_T(\Hcal)$ is exactly the kind of structure (graded by an external label $n\in\Z$) on which holographic codes (Law~IV) operate. We will use this in \cref{sec:conclusion}.
+
+\subsection{Notation and conventions}
+
+We set $\hbar=1$ throughout. Hamiltonians are bounded self-adjoint operators on a finite-dimensional Hilbert space; this restriction avoids domain issues but limits the framework to lattice models, which suffices for our purposes. The drive frequency is $\omega=2\pi/T$. The local energy scale is denoted $J$; the high-frequency regime is $\omega\gg J$.
+
+\section{Periodic Hamiltonians as Endomorphisms}
+\label{sec:periodic-endo}
+
+\subsection{The category of \texorpdfstring{$T$}{T}-periodic Hamiltonians}
+
+\begin{definition}[Periodic-Hamiltonian category]
+\label{def:phamcat}
+Fix a period $T>0$. The category $\Ham_T$ has:
+\begin{itemize}
+\item objects: pairs $(\Hcal,H)$ where $\Hcal$ is a finite-dimensional Hilbert space and $H\colon S^1_T\to\mathrm{Herm}(\Hcal)$ is a smooth $T$-periodic curve of self-adjoint operators;
+\item morphisms $(\Hcal,H)\to(\Hcal',H')$: linear isometries $V\colon\Hcal\to\Hcal'$ such that $VH(t)=H'(t)V$ for all $t$.
+\end{itemize}
+\end{definition}
+
+The category $\Ham_T$ is symmetric monoidal: the tensor product of objects $(\Hcal_1,H_1)$ and $(\Hcal_2,H_2)$ is the pair $(\Hcal_1\otimes\Hcal_2,\,H_1(t)\otimes\one+\one\otimes H_2(t))$, with structural isomorphisms inherited from $\Hilb$.
+
+\subsection{Floquet evolution as a strong monoidal functor}
+
+\begin{definition}[The graded unitary category $\mathsf{Unit}_{\Z}$]
+\label{def:unit-z}
+The \emph{$\Z$-graded unitary category} $\mathsf{Unit}_{\Z}$ has
+\begin{itemize}
+\item objects: finite-dimensional Hilbert spaces $\Hcal$;
+\item morphisms $\Hcal\to\Hcal'$: pairs $(n,W)$ with $n\in\Z$ and $W\colon\Hcal\to\Hcal'$ a unitary linear map (in particular, $\Hcal$ and $\Hcal'$ have the same dimension whenever a morphism exists between them);
+\item identity: $\mathrm{id}_{\Hcal}=(0,\one_{\Hcal})$;
+\item composition of $(m,W')\colon\Hcal'\to\Hcal''$ with $(n,W)\colon\Hcal\to\Hcal'$ is
+$(m,W')\circ(n,W) := (n+m,\,W'\,W)$.
+\end{itemize}
+The integer label $n$ records the number of stroboscopic periods that the morphism represents; it is additive under composition and trivial on identities. The category $\mathsf{Unit}_{\Z}$ inherits a symmetric monoidal structure from the standard tensor product of Hilbert spaces: on objects, $\Hcal\otimes\Hcal'$ is the usual tensor; on morphisms,
+\begin{equation*}
+(n,W)\otimes(n',W') := (n+n',\,W\otimes W')
+\end{equation*}
+i.e.\ the $\Z$-grading on a tensor product of morphisms is the \emph{sum} of the gradings (consistent with the additive structure of $\Z$ under composition), and the underlying unitaries tensor in the usual way. Equivalently, $\mathsf{Unit}_{\Z}$ is $\mathsf{Unit}$ enriched over the discrete strict monoidal category associated with $(\Z,+,0)$.
+\end{definition}
+
+To make the period-counting structure of Floquet evolution \emph{functorial}, we should not interpret intertwining isometries between distinct Floquet systems as carrying an a-priori period count. Instead, an intertwiner is a static identification of two systems and naturally has period count $0$; the period count is a separate piece of data, generated by the cyclic action of the Floquet operator on each fixed system. We make this precise as follows.
+
+\begin{theorem}[Floquet evolution as a functor to graded unitaries]
+\label{thm:floquet-evol}
+The Floquet evolution data assemble into a strong monoidal functor
+\begin{equation}
+\mathrm{Ev}_T\colon \Ham_T \longrightarrow \mathsf{Unit}_{\Z}
+\end{equation}
+defined on objects by $\mathrm{Ev}_T(\Hcal,H)=\Hcal$ and on morphisms by $\mathrm{Ev}_T(V)=(0,V)$ for every intertwining isometry $V\colon(\Hcal,H)\to(\Hcal',H')$ (including $V=\one$, which is sent to $(0,\one)$ as the identity of $\Hcal$).
+
+The Floquet operator data are encoded as an additional natural transformation
+\begin{equation}
+\Phi\colon \mathrm{Ev}_T \;\Longrightarrow\; \mathrm{Ev}_T,
+\end{equation}
+whose component at $(\Hcal,H)$ is the morphism $(1,U_F^{(H)})\in\mathrm{Hom}_{\mathsf{Unit}_{\Z}}(\Hcal,\Hcal)$, where $U_F^{(H)}=U_H(T,0)$ is the one-period stroboscopic operator of $H$. Naturality of $\Phi$ at an intertwiner $V$ is the relation
+\begin{equation}
+(0,V)\circ(1,U_F^{(H)}) \;=\; (1,U_F^{(H')})\circ(0,V),\qquad\text{i.e.}\qquad VU_F^{(H)}=U_F^{(H')}V,
+\end{equation}
+which holds because $V$ intertwines $H(t)$ and $H'(t)$ pointwise in $t$, hence intertwines their time-ordered exponentials.
+\end{theorem}
+
+\begin{remark}[Why intertwiners carry grading $0$]
+\label{rem:ev-grading-zero}
+A morphism in $\Ham_T$ is a \emph{static} identification of two periodic Hamiltonian systems, not a time evolution. Its image under $\mathrm{Ev}_T$ accordingly sits in the grading-$0$ part of $\mathsf{Unit}_{\Z}$, where ``no period elapses''. The temporal cyclic generator (the Floquet operator) is encoded by the natural transformation $\Phi$, which produces grading-$1$ endomorphisms of each individual object. Iterations $\Phi^{\circ k}$ have grading $k$, so the period-counting structure lives entirely in the natural-transformation slot, separate from the static categorical structure of $\Ham_T$. This separation is exactly the categorical analog of the operator-vs.-state distinction in physics: the Floquet operator $U_F$ is a dynamical generator, distinct from a structural identification of two systems.
+\end{remark}
+
+\begin{proof}[Proof of \cref{thm:floquet-evol}]
+\emph{Functoriality of $\mathrm{Ev}_T$.} On objects $\mathrm{Ev}_T$ is well-defined. On morphisms, $\mathrm{Ev}_T(\mathrm{id})=(0,\one)$ in $\mathsf{Unit}_{\Z}$, which matches the identity. For composition,
+\begin{equation*}
+\mathrm{Ev}_T(V'\circ V)=(0,V'V)=(0,V')\circ(0,V)=\mathrm{Ev}_T(V')\circ\mathrm{Ev}_T(V),
+\end{equation*}
+where the middle equality uses the composition rule of \cref{def:unit-z}. Thus $\mathrm{Ev}_T$ is a functor.
+
+\emph{Naturality of $\Phi$.} The intertwiner relation $VH(t)V^\dagger=H'(t)$ propagates through time-ordered exponentials: setting $U_H(t,0)=\mathcal{T}\exp(-i\int_0^t H(s)ds)$ and similarly for $U_{H'}$,
+\begin{equation*}
+VU_H(T,0) \;=\; \bigl(\mathcal{T}\exp(-i\!\smallint_0^T VH(s)V^\dagger V\,ds)\bigr)V \;=\; U_{H'}(T,0)V.
+\end{equation*}
+Hence the naturality square for $\Phi$ at $V$ commutes.
+
+\emph{Strong monoidality of $\mathrm{Ev}_T$.} On the underlying functor: $\mathrm{Ev}_T$ commutes with $\otimes$ on objects and morphisms because all morphisms are sent to grading $0$, and $(0,W_1)\otimes(0,W_2)=(0,W_1\otimes W_2)$. The structural isomorphism $\mu_{\Hcal_1,\Hcal_2}$ is the identity. The natural transformation $\Phi$ is monoidal in the sense that $\Phi_{\Hcal_1\otimes\Hcal_2}=\Phi_{\Hcal_1}\otimes\Phi_{\Hcal_2}$ exactly when the joint Hamiltonian is a sum of commuting pieces (which is the case in $\Ham_T$ as defined). This satisfies the pentagon and triangle coherence axioms trivially since $\mu$ is the identity.
+\end{proof}
+
+\subsection{Endomorphisms and stroboscopic dynamics}
+
+Restricting to a single Hilbert space, $\Ham_T$ becomes a one-object category whose endomorphisms are $T$-periodic Hamiltonians and whose composition is conjugation by the evolution. The image under $\mathrm{Ev}_T$ is then a one-object subcategory of $\mathsf{Unit}_{\Z}$, that is, a $\Z$-graded group of unitaries: stroboscopic dynamics is generated by $U(T)$, and the integer label tracks the number of periods. This is the precise sense in which a Floquet system is an endomorphism in the categorical framework.
+
+\begin{remark}
+The $\Z$-grading on $\mathsf{Unit}_{\Z}$ is essential: it is what distinguishes Floquet evolution from a static one-shot evolution. Forgetting the grading produces the underlying static functor; recalling it brings back the temporal structure that supports Floquet phases.
+\end{remark}
+
+\subsection{2-categorical extension}
+
+To accommodate continuous deformations of the drive (and to express Floquet phase transitions as connected components of a path space), we lift $\Ham_T$ to a $2$-category.
+
+\begin{definition}[The $2$-category $\mathfrak{H}_T$]
+\label{def:2cat-Ham}
+The $2$-category $\mathfrak{H}_T$ has the same objects and $1$-morphisms as $\Ham_T$, and $2$-morphisms given by smooth homotopies $h\colon[0,1]\to\Ham_T(H,H')$ between intertwining isometries, modulo reparametrisation. Vertical and horizontal compositions are concatenation and pointwise tensor.
+\end{definition}
+
+\begin{proposition}[Floquet evolution as a $2$-functor]
+\label{prop:2-floquet}
+The Floquet evolution map extends to a strict $2$-functor $\mathrm{Ev}_T\colon\mathfrak{H}_T\to\mathfrak{U}_{\Z}$, where $\mathfrak{U}_{\Z}$ is the $2$-category of $\Z$-graded unitaries with $2$-morphisms given by adiabatic homotopies.
+\end{proposition}
+
+The proof is a check of strict $2$-functoriality from naturality of time-ordered exponentials in the Hamiltonian curve; we omit details. The point is that Floquet phase transitions are connected components of the $2$-morphism space:
+\begin{equation}
+\pi_0\bigl(\mathrm{Hom}_{\mathfrak{U}_{\Z}}(U_F,U_F')\bigr) \;=\; \text{Floquet phase classes}.
+\end{equation}
+A natural transformation between Floquet functors is therefore precisely a path between drives that may or may not cross a quasi-energy gap closure; phase boundaries correspond to homotopy classes for which no gap-preserving path exists.
+
+\section{Magnus Expansion and Asymptotic Effective Hamiltonians}
+\label{sec:magnus}
+
+\subsection{Magnus expansion}
+
+\begin{theorem}[Magnus, 1954~\cite{magnus1954}]
+\label{thm:magnus}
+Let $A\colon[0,T]\to\mathrm{End}(\Hcal)$ be smooth. The unique solution $X(t)$ of $\dot X(t)=A(t)X(t)$, $X(0)=\one$, can be written $X(t)=\exp(\Omega(t))$ with $\Omega(t)=\sum_{n\geq 1}\Omega_n(t)$ and
+\begin{align}
+\Omega_1(t)&=\int_0^t A(t_1)\,dt_1,\\
+\Omega_2(t)&=\frac{1}{2}\int_0^t\!\!\int_0^{t_1} [A(t_1),A(t_2)]\,dt_2\,dt_1,\\
+\Omega_3(t)&=\frac{1}{6}\int_0^t\!\!\int_0^{t_1}\!\!\int_0^{t_2}\bigl([A(t_1),[A(t_2),A(t_3)]]+[[A(t_1),A(t_2)],A(t_3)]\bigr)\,dt_3\,dt_2\,dt_1,
+\end{align}
+and so on. The series converges for $\int_0^t\|A(s)\|\,ds < \pi$.
+\end{theorem}
+
+Specialising to a $T$-periodic Hamiltonian $H(t)$ and stroboscopic time $t=T$, the Magnus series gives the formal Floquet Hamiltonian:
+\begin{equation}
+\HF \;=\; \frac{1}{T}\sum_{n\geq 1}\Omega_n(T)\big|_{A(t)=-iH(t)}\,.
+\end{equation}
+
+\subsection{High-frequency expansion}
+
+\begin{theorem}[Floquet--Magnus expansion]
+\label{thm:fm-expansion}
+For $\omega=2\pi/T\gg J=\sup_t\|H(t)\|$, the Floquet Hamiltonian admits the asymptotic expansion
+\begin{align}
+\HF^{(0)} &= \overline{H} \;:=\; \frac{1}{T}\int_0^T H(t)\,dt,\\
+\HF^{(1)} &= \frac{1}{2iT}\int_0^T\!\int_0^{t_1}[H(t_1),H(t_2)]\,dt_2\,dt_1,\\
+\HF^{(2)} &= \mathcal{O}\bigl((J/\omega)^2 J\bigr),
+\end{align}
+with the truncation $\HF^{(\leq N)}=\sum_{n=0}^N\HF^{(n)}$ approximating $\HF$ up to a remainder bounded by $(J/\omega)^N J$ for $N$ less than an optimal order $N^*\sim\omega/J$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Combine \cref{thm:magnus} with the periodicity of $H$ and rescale by $T$. The remainder estimate uses Cauchy estimates on the iterated commutators with $\|[H(t_1),H(t_2)]\|\leq 2J^2$. The optimal truncation $N^*$ arises because the Magnus series is an asymptotic series (it does not converge for generic interacting models); see~\cite{bukov2015,abanin2015} for sharp bounds and the Abanin--De~Roeck--Huveneers proof that the prethermal time scale is $\tau^*\sim e^{c\omega/J}$.
+\end{proof}
+
+\subsection{The effective-Hamiltonian functor}
+
+\begin{definition}[Effective-Hamiltonian functor at order $N$]
+\label{def:Heff}
+Let $\Ham$ denote the category of (gapped) static Hamiltonians: objects are pairs $(\Hcal,H_0)$ with $H_0\in\mathrm{Herm}(\Hcal)$, and morphisms are intertwining isometries (the time-independent counterpart of $\Ham_T$). The order-$N$ effective-Hamiltonian functor $\Heff^{(\leq N)}\colon \Ham_T \to \Ham$ assigns to a $T$-periodic Hamiltonian $(\Hcal,H)$ the static operator $\HF^{(\leq N)}\in\mathrm{Herm}(\Hcal)$ defined by \cref{thm:fm-expansion}. To an intertwining isometry $V\colon(\Hcal,H)\to(\Hcal',H')$ in $\Ham_T$ (which by definition satisfies $VH(t)=H'(t)V$ for all $t\in S^1_T$) it assigns the \emph{same} underlying isometry $V$, now viewed as a morphism $(\Hcal,\HF^{(\leq N)})\to(\Hcal',\HF'^{(\leq N)})$ in $\Ham$. The fact that $V\HF^{(\leq N)} = \HF'^{(\leq N)} V$ --- i.e.\ that the isometry $V$ does intertwine the static effective Hamiltonians --- is the content of \cref{prop:heff-functor} below: $V$ intertwines all iterated commutators of $H$ with itself, hence each Magnus term $\Omega_n$, hence the truncated effective Hamiltonian $\HF^{(\leq N)}$.
+\end{definition}
+
+\begin{proposition}[Functoriality of $\Heff^{(\leq N)}$]
+\label{prop:heff-functor}
+$\Heff^{(\leq N)}$ is a well-defined functor for each $N\in\N$, and the family $\{\Heff^{(\leq N)}\}_{N\in\N}$ is a directed system in the functor category $[\Ham_T,\Ham]$.
+\end{proposition}
+
+\begin{proof}
+On morphisms: if $V$ intertwines $H$ and $H'$ at every $t$, then it intertwines all iterated commutators $[H(t_1),[\dots[H(t_{n-1}),H(t_n)]\dots]]$ and hence each $\Omega_n$, hence $\HF^{(\leq N)}$. Functoriality (preservation of identity and composition) is immediate. The system $\{\Heff^{(\leq N)}\}$ is directed because each $\Heff^{(\leq N+1)}$ differs from $\Heff^{(\leq N)}$ by the addition of a single new term. The colimit (in the limit sense, on objects where the Magnus series converges) is the formal Floquet Hamiltonian $\HF$.
+\end{proof}
+
+\subsection{Compositional lifting from Law~II}
+
+The crucial structural fact is that the prethermal regime allows us to view a Floquet phase as a Law~II equilibrium phase of $\Heff$.
+
+In what follows we use the symbol $\Floq_{(-)}$ to denote the \emph{Floquet phase-classification functor} with source $\Ham_T$ (rather than the bare Floquet system $\Floq$ of \cref{def:floquet-functor}, whose source is $\mathbf{B}\Z_T$). Concretely, $\Floq_{(-)}$ takes a $T$-periodic Hamiltonian $(\Hcal,H)$ and returns the connected component of its stroboscopic operator $U_F^{(H)}$ within the moduli space of gapped Floquet operators, i.e.\ its Floquet phase class. Similarly, $\Phase_{\Floq}$ denotes the discrete category of Floquet phase classes (objects: connected components of gapped Floquet operators; morphisms: identity components and inclusions of stratified strata).
+
+\begin{theorem}[Prethermal compositional lifting]
+\label{thm:prethermal-lift}
+There is a commutative diagram of functors (up to natural isomorphism, on the full prethermal subcategory $\Ham_T^{\mathrm{preth}}\subset\Ham_T$ on which the Magnus truncation error is below the gap):
+\begin{equation}
+\begin{tikzcd}
+\Ham_T^{\mathrm{preth}} \arrow[r,"\Heff^{(\leq N)}"] \arrow[d,"\Floq_{(-)}"'] & \Ham \arrow[d,"\mathrm{PhaseFunc}"]\\
+\Phase_{\Floq} \arrow[r,"\mathrm{Forget}"'] & \Phase_{\mathrm{eq}}
+\end{tikzcd}
+\end{equation}
+Here $\Ham$ denotes the category of static, gapped Hamiltonians with adiabatic-deformation morphisms, and $\mathrm{PhaseFunc}$ is the Law~II equilibrium-phase classification functor. The forgetful functor
+\begin{equation*}
+\mathrm{Forget}\colon\Phase_{\Floq}\to\Phase_{\mathrm{eq}}
+\end{equation*}
+drops the temporal $\Z$-grading by mapping a Floquet phase to the equilibrium phase of the underlying Hamiltonian.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+For times $t\leq\tau^*=e^{c\omega/J}$, the Floquet evolution is approximated by $e^{-i\Heff^{(\leq N)} t}$ to within an error of order $(J/\omega)^N$. Since gapped equilibrium phases are stable under perturbations of strength below the gap $\Delta$, restricting to the prethermal subcategory $\Ham_T^{\mathrm{preth}}$ on which the Magnus truncation error is below the gap guarantees that the prethermal Floquet phase agrees with the equilibrium phase of $\Heff^{(\leq N)}$. Beyond $\tau^*$, the heating regime takes over and the diagram fails to commute --- this failure is what supports genuinely non-equilibrium Floquet phases (\cref{sec:dtc,sec:floquet-topological}).
+\end{proof}
+
+\Cref{thm:prethermal-lift} is the precise sense in which Law~III lifts Law~II: \emph{prethermal} Floquet phases are equilibrium phases of an effective Hamiltonian, while \emph{anomalous} Floquet phases are obstructions to the lift.
+
+\section{Discrete Time-Crystal Phases}
+\label{sec:dtc}
+
+\subsection{Definition and physical setup}
+
+\begin{definition}[Discrete time crystal]
+\label{def:dtc}
+A \emph{discrete time crystal} (DTC) of order $n\geq 2$ is a Floquet system $\Floq\colon\mathbf{B}\Z_T\to\mathsf{Unit}$ together with a local order parameter $\mathcal{O}_x$ (Hermitian, supported in a region around site $x$) and a state $|\psi_0\rangle$ such that:
+\begin{enumerate}
+\item Spontaneous time-translation symmetry breaking: $\langle\psi_0|\Floq(k)\mathcal{O}_x\Floq(k)^\dagger|\psi_0\rangle$ has period exactly $nT$ in the stroboscopic step $k$, even though $\Floq$ has period $T$.
+\item Long-range order: the value of the order parameter does not decay in the thermodynamic limit, $\lim_{L\to\infty}|\langle\mathcal{O}_x\rangle|>0$.
+\item Robustness: the period-$nT$ oscillation persists under generic small perturbations of the drive that respect $T$-periodicity.
+\end{enumerate}
+\end{definition}
+
+The seminal construction~\cite{else2016} uses an MBL-stabilised Ising chain (\cref{sec:examples}). Experimental realisations are reported in~\cite{zhang2017,choi2017}.
+
+\subsection{DTC as an obstruction \texorpdfstring{$2$}{2}-cell}
+
+We now state our central categorical result for DTCs. Throughout this subsection, we work in the setting where the system has a global discrete symmetry $\Z_n$ acting unitarily by some operator $S$ commuting with the drive. The drive symmetry partitions the Hilbert space into a direct sum of \emph{symmetry sectors} indexed by $\Z_n$-characters, and the drive can spontaneously break $\Z_n$ to a smaller subgroup.
+
+\begin{definition}[Iterated and restricted Floquet functors]
+\label{def:iterated-restricted}
+Let $\Floq\colon\mathbf{B}\Z_T\to\mathsf{Unit}$ be a Floquet system with stroboscopic operator $U_F$. We define two associated Floquet functors:
+\begin{enumerate}
+\item the \emph{iterated} Floquet functor
+$\Floq^{[n]}\colon\mathbf{B}\Z_{nT}\to\mathsf{Unit}$
+that sends the generator of $\Z=\mathrm{Hom}_{\mathbf{B}\Z_{nT}}(*,*)$ to the unitary channel
+$\rho\mapsto U_F^n\,\rho\,(U_F^n)^\dagger$;
+\item the \emph{restricted} Floquet functor
+$\Res_{nT}\Floq\colon\mathbf{B}\Z_{nT}\to\mathsf{Unit}$
+obtained by restriction along the inclusion $\mathbf{B}(n\Z)\hookrightarrow\mathbf{B}\Z$ and the canonical re-labelling that views an $n$-fold iterated $T$-periodic dynamics as a single morphism in $\mathbf{B}\Z_{nT}$.
+\end{enumerate}
+On objects (Hilbert spaces) both functors agree; on morphisms they both send the generator of $\Z$ to a unitary channel implemented by $U_F^n$. The two functors are therefore literally equal as functors of plain (forgetful) data.
+\end{definition}
+
+The point is now that to detect a DTC one must \emph{enrich} both functors with the data of the global symmetry $S$ and ask whether they agree as functors landing in the symmetry-equivariant subcategory $\mathsf{Unit}^{\Z_n}\subset\mathsf{Unit}$.
+
+\begin{definition}[Symmetry-equivariant Floquet functors]
+\label{def:symmetric-floquet}
+Let $S\in U(\Hcal)$ implement a $\Z_n$ symmetry of the drive ($SH(t)=H(t)S$ for all $t$). Define the symmetry-equivariant lifts
+\begin{align}
+\Floq^{[n]}_S,\;\Res_{nT}\Floq^S\colon\mathbf{B}\Z_{nT}\;&\longrightarrow\;\mathsf{Unit}^{\Z_n},
+\end{align}
+where $\mathsf{Unit}^{\Z_n}$ is the category whose objects are pairs $(\Hcal, S)$ of a Hilbert space and a $\Z_n$-symmetry, and whose morphisms are unitaries that commute with $S$. The first sends the generator of $\Z$ to $U_F^n$ together with $S$; the second sends it to $U_F^n$ together with the \emph{stroboscopically-induced symmetry} $S' = U_F S U_F^{-1}$ (which need not equal $S$ when the drive permutes symmetry sectors).
+\end{definition}
+
+\begin{theorem}[DTC obstruction]
+\label{thm:dtc-obstruction}
+Let $(\Floq, S)$ be a Floquet system with $\Z_n$-symmetry $S$. The system realises a discrete time crystal of order $n$ if and only if the canonical natural transformation
+\begin{equation}
+\eta\colon \Res_{nT}\Floq^S \;\Longrightarrow\; \Floq^{[n]}_S
+\end{equation}
+(whose component at the unique object is the unitary $U_F^n$, intended to identify the two pairs $(\Hcal,U_F SU_F^{-1})$ and $(\Hcal,S)$) fails to be an isomorphism in $\mathsf{Unit}^{\Z_n}$. The failure occurs precisely because the two source/target pairs in the enriched category $\mathsf{Unit}^{\Z_n}$ have \emph{different} symmetry-generator data ($U_F SU_F^{-1}$ versus $S$), so any prospective component $U_F^n$ does not commute with the relevant symmetry data, breaking the equivariance condition required to be an isomorphism in $\mathsf{Unit}^{\Z_n}$. Equivalently, the relation $U_F S U_F^{-1} = S$ fails. After the symmetry-forgetting functor $\mathsf{Unit}^{\Z_n}\to\mathsf{Unit}$ (which drops the symmetry data), $\eta$ recovers being an isomorphism.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+``$\Rightarrow$'': If the system is a DTC of order $n$, then by \cref{def:dtc} there exists an order parameter $\mathcal{O}_x$ whose stroboscopic expectation has period exactly $nT$. Let $|\psi\rangle$ be a symmetry-broken state in the thermodynamic-limit sense, so $\langle\psi|\mathcal{O}_x|\psi\rangle\neq 0$ but $S$ permutes the $n$ symmetry-broken states cyclically. Then $U_F$ shifts the order parameter by one cyclic step in this $\Z_n$-orbit: $U_F\mathcal{O}_x U_F^{-1}=\zeta\,\mathcal{O}_x$ where $\zeta=e^{2\pi i k/n}$ for some $k$ coprime to $n$ (in the symmetry-broken sector). Equivalently, $U_F S U_F^{-1}\neq S$: the drive maps $S$ to $U_F S U_F^{-1}$, which is a conjugate of $S$ by $U_F$ (and not equal to $S$ itself), so the equivariance square fails. This is exactly the statement that $\eta$ fails to be an isomorphism in $\mathsf{Unit}^{\Z_n}$. Forgetting the symmetry, $\eta$ becomes the bare unitary $U_F^n$, which is an isomorphism.
+
+``$\Leftarrow$'': If $U_F S U_F^{-1}\neq S$ but $U_F^n S U_F^{-n}=S$ (which holds because conjugation by $U_F$ defines an action of $\Z$ on the symmetry generator that must factor through $\Z_n$ by finiteness of the symmetry data), then there is a non-trivial cyclic action of $\Z_n$ on $S$ by conjugation by $U_F$. Diagonalising $U_F$ in the simultaneous eigenbasis of $U_F^n$ shows that $U_F$ has eigenvalues $\zeta_k\,e^{-i\varepsilon}$ with $\zeta_k$ ranging over the $n$th roots of unity within each $U_F^n$-eigenspace. Picking an eigenvector and an order parameter operator overlapping multiple $\zeta_k$-sectors yields period-$nT$ oscillation of the expectation value, proving the system is a DTC of order $n$.
+\end{proof}
+
+\Cref{thm:dtc-obstruction} reformulates the physics of DTCs as an obstruction theory: a DTC is the obstruction to the relation $[U_F,S]=0$ holding strictly. The symmetry-forgetting functor witnesses that the obstruction is not visible to the bare stroboscopic dynamics; it lives in the $\Z_n$-equivariant enrichment.
+
+\subsection{Period-doubling and \texorpdfstring{$\Z_2$}{Z2} DTCs}
+
+The simplest case is $n=2$. The DTC obstruction class then lives in the $\Z_2$-graded part of $\mathrm{End}(U_F)$ that anticommutes with the drive symmetry. We will see in \cref{sec:examples} that the kicked Ising chain produces exactly this structure: $U_F$ has eigenvalues $\pm e^{-i\varepsilon}$ paired by the global Ising symmetry, giving period-$2T$ oscillation of $\langle\sigma^z_i\rangle$.
+
+\subsection{Stability and MBL}
+
+The Else--Bauer--Nayak theorem~\cite{else2016} guarantees stability of the DTC under generic perturbations preserving $T$-periodicity, provided the system is many-body localised (MBL). MBL is the obstruction to thermalisation in disordered interacting systems and protects the symmetry-broken sector from heating to infinite temperature. Recent reviews~\cite{else2020review} survey continuous time crystals and DTC variants in clean systems via prethermal mechanisms.
+
+\section{Floquet Topological Insulators}
+\label{sec:floquet-topological}
+
+\subsection{Floquet--Bloch theory}
+
+For a spatially periodic system on a $d$-dimensional lattice, the static Bloch theorem decomposes the Hamiltonian into a family $\{H(\mathbf{k})\}_{\mathbf{k}\in\mathrm{BZ}}$ on a finite-dimensional fibre. Adding $T$-periodic time dependence gives a family $H(\mathbf{k},t)$ doubly periodic in $(\mathbf{k},t)\in\mathrm{BZ}\times S^1$.
+
+\begin{definition}[Floquet--Bloch evolution]
+\label{def:floquet-bloch}
+The Floquet--Bloch unitary is the family
+\begin{equation*}
+U(\mathbf{k},t):=\mathcal{T}\exp\biggl(-i\!\int_0^t H(\mathbf{k},s)\,ds\biggr),
+\end{equation*}
+viewed as a smooth map $U\colon\mathrm{BZ}\times[0,T]\to\mathrm{U}(N)$ with $U(\mathbf{k},0)=\one$.
+\end{definition}
+
+\subsection{Floquet winding number}
+
+\begin{definition}[Floquet winding number, $d=2$]
+\label{def:winding}
+For a $2$-dimensional system with full quasi-energy gap at $\varepsilon=\pi$, the \emph{Floquet winding number} is
+\begin{equation}
+\nu \;:=\; \frac{1}{8\pi^2}\int_{\mathrm{BZ}\times S^1}\!\!\mathrm{Tr}\bigl[\bigl(U^\dagger\,dU\bigr)^3\bigr]\;\in\;\Z.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Anomalous Floquet bulk-boundary correspondence~\cite{rudner2020}]
+\label{thm:rudner-lindner}
+For a $2$D anomalous Floquet insulator with Floquet winding number $\nu$ at quasi-energy gap $\pi$, the open-boundary spectrum has $\nu$ chiral edge modes traversing the gap, even when all bulk Bloch bands have vanishing Chern number.
+\end{theorem}
+
+The proof uses a homotopy from $U(\mathbf{k},t)$ to a periodic ``return map'' that explicitly counts the chiral edge modes; we refer to~\cite{rudner2020} for details.
+
+\subsection{Categorical reformulation}
+
+Functorially, the Floquet--Bloch evolution is a functor $\mathrm{BZ}\times \mathbf{B}S^1\to\mathsf{Unit}$ where $\mathrm{BZ}$ is viewed as the discrete symmetric monoidal groupoid of crystal momenta. The winding number arises as a degree of the map to $\mathrm{U}(N)$; this is precisely a homotopy-class invariant of the natural transformation classifying the Floquet system.
+
+\begin{definition}[Trivial Floquet--Bloch evolution]
+\label{def:trivial-fb}
+The \emph{trivial Floquet--Bloch evolution} on a $2$D system with $N$ bands is the constant functor
+$U_{\mathrm{triv}}\colon\mathrm{BZ}\times[0,T]\to\mathrm{U}(N)$,
+$(\mathbf{k},t)\mapsto\one_N$. As a Floquet--Bloch evolution it produces zero quasi-energy spectrum (gap at $\pi$ trivially) and zero edge modes.
+\end{definition}
+
+\begin{proposition}[Floquet topological invariant as natural-transformation class]
+\label{prop:floquet-natural}
+Let $\mathrm{Floq}^{2D}_\Delta$ denote the moduli space of $2$D Floquet--Bloch evolutions with full quasi-energy gap at $\varepsilon=\pi$ of size at least $\Delta>0$, viewed as a topological space with the compact-open topology. Then:
+\begin{enumerate}
+\item $\pi_0(\mathrm{Floq}^{2D}_\Delta) \cong \Z$, with the isomorphism given by the Floquet winding number $\nu$ of \cref{def:winding}.
+\item Equivalently, two gapped Floquet--Bloch systems $U,U'$ are connected by a gap-preserving path in $\mathrm{Floq}^{2D}_\Delta$ if and only if $\nu(U)=\nu(U')$.
+\item The Floquet winding number $\nu(U)$ is therefore the obstruction class, in $\pi_0(\mathrm{Floq}^{2D}_\Delta)\cong\Z$, to the existence of a gap-preserving natural transformation (i.e.\ homotopy of Floquet--Bloch functors) from the trivial Floquet--Bloch evolution $U_{\mathrm{triv}}$ of \cref{def:trivial-fb} to $U$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+A gapped Floquet--Bloch evolution $U(\mathbf{k},t)$ defines a continuous map $\mathrm{BZ}\times[0,T]\to\mathrm{U}(N)$ which, by full $\pi$-gap and the Floquet decomposition, can be deformed (without closing the $\pi$-gap) to a periodic ``return map'' $\widetilde{U}\colon\mathrm{BZ}\times S^1\to\mathrm{U}(N)$. As $\mathrm{BZ}\times S^1\cong T^3$ and $\pi_3(\mathrm{U}(N))=\Z$ for $N$ large, the homotopy classes of such maps are labelled by an integer; the integral expression in \cref{def:winding} computes precisely this homotopy class. Item~(2) follows because a gap-preserving path is a homotopy in $\mathrm{Floq}^{2D}_\Delta$, which preserves the connected component. Item~(3) is the special case where one endpoint is the trivial evolution: the obstruction class to homotoping any $U$ to $U_{\mathrm{triv}}$ is exactly $\nu(U)\in\Z$.
+\end{proof}
+
+\subsection{Periodic table for Floquet topological insulators}
+
+The full periodic table of Floquet topological phases extends the equilibrium $10$-fold way (Altland--Zirnbauer) by a $\Z_2$-graded $K$-theory enhancement; the result~\cite{roy2017} is that each entry of the equilibrium table acquires (at most) one extra $\Z$ or $\Z_2$ factor for the anomalous Floquet contribution.
+
+\begin{theorem}[Roy--Harper periodic table~\cite{roy2017}]
+\label{thm:roy-harper}
+Let $K_{\mathrm{eq}}^{s,d}$ denote the equilibrium $K$-theory group for symmetry class $s$ in spatial dimension $d$ (Kitaev table). The Floquet $K$-theory satisfies
+\begin{equation}
+K_{\mathrm{Floq}}^{s,d} \;\cong\; K_{\mathrm{eq}}^{s,d}\;\oplus\;K_{\mathrm{eq}}^{s,d-1}.
+\end{equation}
+\end{theorem}
+
+The first summand classifies bands individually (the equilibrium Chern numbers); the second summand classifies the anomalous Floquet contribution (the Floquet winding numbers).
+
+\begin{remark}
+\Cref{thm:roy-harper} can be read categorically as the splitting of a long exact sequence in $K$-theory induced by the cofibre sequence $S^1\to D^2\to S^2$ and the K\"unneth theorem applied to $\mathrm{BZ}\times S^1$. The categorical content is: the temporal direction $S^1$ is one categorical dimension lower than the spatial one, and adds one shifted copy of the equilibrium classification.
+\end{remark}
+
+\section{Prethermalisation and Heating}
+\label{sec:prethermal}
+
+\subsection{Prethermal time scale}
+
+\begin{theorem}[Abanin--De Roeck--Ho--Huveneers~\cite{abanin2015}]
+\label{thm:abanin}
+Let $H(t)$ be a $T$-periodic, locally-bounded Hamiltonian on a lattice with local energy scale $J$. There exist constants $C,c>0$ depending only on the lattice geometry such that, for $\omega>CJ$, there is a quasi-local effective Hamiltonian $\Heff$ with
+\begin{equation}
+\bigl\|U(nT)-e^{-i\Heff\,nT}\bigr\| \leq C n J\,e^{-c\omega/J}\qquad\text{for}\quad nT\leq\tau^*=\frac{1}{J}\,e^{c\omega/J}.
+\end{equation}
+\end{theorem}
+
+In words: the stroboscopic dynamics is approximated by a static effective Hamiltonian for an exponentially long time scale.
+
+\subsection{Three regimes}
+
+The Floquet dynamics on a generic interacting lattice has three regimes:
+\begin{enumerate}
+\item \emph{Initial transient}, $t\lesssim T$: full $H(t)$ matters; Magnus expansion not yet an approximation.
+\item \emph{Prethermal}, $T\lesssim t\lesssim\tau^*$: dynamics governed by $\Heff^{(\leq N^*)}$. Here \cref{thm:prethermal-lift} applies and Floquet phases are equilibrium phases of $\Heff$.
+\item \emph{Heating}, $t\gtrsim\tau^*$: system absorbs energy from the drive, eventually reaching infinite temperature in a generic interacting bulk~\cite{lazarides2014,dalessio2014}.
+\end{enumerate}
+
+\subsection{MBL evades heating}
+
+Many-body localised (MBL) systems do not thermalise: emergent local integrals of motion forbid energy absorption beyond a finite bandwidth. Consequently, MBL Floquet systems can support \emph{stable} (rather than just prethermal) DTC and SPT phases. This is the rigorous content of the Else--Bauer--Nayak theorem.
+
+\begin{remark}
+The prethermal-vs-MBL distinction is reflected in the categorical framework: prethermal phases factor through \cref{thm:prethermal-lift}, while MBL Floquet phases do not (the diagram fails to close even on an exponentially long time scale; the obstruction class is non-trivial). This is the precise sense in which DTCs and AFIs are genuinely non-equilibrium phases.
+\end{remark}
+
+\section{Worked Examples}
+\label{sec:examples}
+
+\subsection{The kicked Ising chain (DTC)}
+
+\subsubsection{Definition}
+
+The kicked Ising chain on $L$ sites is governed by the period-$T$ Hamiltonian
+\begin{equation}
+H(t) = \begin{cases}
+H_x = \sum_i h_x\,\sigma^x_i & 0\leq t<T/2,\\
+H_z = \sum_i J_i\,\sigma^z_i\sigma^z_{i+1}+\sum_i h_z^{(i)}\,\sigma^z_i & T/2\leq t<T,
+\end{cases}
+\end{equation}
+with $J_i,h_z^{(i)}$ disordered couplings (drawn i.i.d.\ from a uniform distribution to enable MBL). The Floquet operator is
+\begin{equation}
+U_F = e^{-iH_z T/2}\,e^{-iH_x T/2}.
+\end{equation}
+
+\subsubsection{Period-doubling at the \texorpdfstring{$\pi$}{pi}-pulse}
+
+For $h_x T/2 = \pi/2$ (a perfect $\pi$-pulse), $e^{-iH_x T/2}=\prod_i\sigma^x_i=:P$ flips every spin. Then $U_F = e^{-iH_z T/2}P$ commutes with $\prod_i\sigma^z_i$ but anticommutes with the $\sigma^z_i$ operators on every site. Consequently, $\langle\psi_0|\sigma^z_i(nT)|\psi_0\rangle=(-1)^n\langle\sigma^z_i\rangle$ for any product state polarised in $\sigma^z$.
+
+\begin{proposition}
+\label{prop:kicked-ising-dtc}
+The kicked Ising chain at $h_x T/2=\pi/2+\delta$ with disordered $J_i,h_z^{(i)}$ realises a $\Z_2$ DTC for $|\delta|<\delta_c$, where $\delta_c>0$ is the MBL stability threshold. The DTC obstruction $\eta$ of \cref{thm:dtc-obstruction} has order exactly $2$.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+At $\delta=0$ the DTC is exact. For $\delta\neq 0$, the perturbation $e^{-i\delta\sum_i\sigma^x_i}$ tilts the spin-flip but, because of MBL, the dressed local order parameter $\widetilde{\sigma}^z_i$ continues to anticommute with the dressed spin-flip $\widetilde{P}$. Stability is the content of~\cite{else2016}; we have nothing to add.
+\end{proof}
+
+\subsubsection{Numerical verification}
+
+{\sloppy
+The accompanying Haskell library (in the companion repository under \texttt{src/frequency-mo\-du\-la\-ted-processes/}) implements a stroboscopic simulator of the kicked Ising chain on $L\leq 6$ sites, and verifies the period-doubling of $\langle\sigma^z_i(nT)\rangle$ over multiple stroboscopic steps. The simulation uses an exact construction of the $2^L\times 2^L$ Floquet operator (via ordered exponentials of the piecewise-constant kicked Hamiltonian) and tracks the local magnetisation of a $\hat{z}$-polarised initial state. The numerical output of \texttt{cabal run fmp-demo} shows
+\par}
+\begin{equation*}
+\langle\sigma^z_0(nT)\rangle = (-1)^n + \mathcal{O}(10^{-13})\quad\text{for}\;n=0,1,\ldots,10
+\end{equation*}
+which is the period-$2T$ DTC signature claimed by \cref{prop:kicked-ising-dtc}.
+
+\subsection{The driven SSH model (AFI edge mode at \texorpdfstring{$\varepsilon=\pi$}{epsilon=pi})}
+
+\subsubsection{Definition}
+
+The Su--Schrieffer--Heeger model is a $1$D bipartite hopping chain. We periodically modulate the dimerisation:
+\begin{equation}
+H(t) = \begin{cases}
+H_{\mathrm{intra}} = \sum_n J_1\bigl(c_{n,A}^\dagger c_{n,B}+\mathrm{h.c.}\bigr) & 0\leq t<T/2,\\
+H_{\mathrm{inter}} = \sum_n J_2\bigl(c_{n,B}^\dagger c_{n+1,A}+\mathrm{h.c.}\bigr) & T/2\leq t<T,
+\end{cases}
+\end{equation}
+where $A,B$ label sublattices.
+
+\subsubsection{Floquet edge modes at \texorpdfstring{$\varepsilon=0$}{epsilon=0} and \texorpdfstring{$\varepsilon=\pi$}{epsilon=pi}}
+
+For $J_1 T/2 = J_2 T/2 = \pi/2$, the Floquet operator on a cylinder has zero-energy edge modes at both quasi-energies $\varepsilon=0$ and $\varepsilon=\pi$, even though the time-averaged Hamiltonian is gapless and topologically trivial. The phase is detected by a non-zero Floquet winding number on a $\Z_2$-graded extension of \cref{def:winding} appropriate to $1$D systems.
+
+\begin{proposition}
+\label{prop:driven-ssh}
+The driven SSH model in the regime $J_1 T/2,J_2T/2\in(\pi/4,3\pi/4)$ realises an anomalous Floquet topological insulator with one chiral edge mode at $\varepsilon=\pi$ and one at $\varepsilon=0$.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Compute the Floquet--Bloch unitary $U(k,T)=e^{-iH_{\mathrm{inter}}(k)T/2}\,e^{-iH_{\mathrm{intra}}(k)T/2}$. At the special point $J_1T/2=J_2T/2=\pi/2$ both factors are $\pi$-rotations on opposite sublattice axes; their product traces out a $2\pi$-winding of the Floquet--Bloch unitary $U(k,t)$ as $(k,t)$ ranges over the spatio-temporal Brillouin torus, contributing winding number $1$ in the homotopy class $\pi_3(\mathrm{U}(N))=\Z$. By bulk--boundary correspondence~\cite{rudner2020}, this gives one chiral edge mode at $\varepsilon=\pi$.
+\end{proof}
+
+\subsubsection{Comparison with equilibrium}
+
+The static SSH model has only the $\varepsilon=0$ edge mode (when topological); the $\varepsilon=\pi$ edge mode is genuinely Floquet --- it has no equilibrium counterpart and is detected only by the Floquet winding number, not by any time-averaged invariant.
+
+\section{Open Problems}
+\label{sec:open}
+
+\begin{enumerate}
+\item \emph{Continuous time crystals.} Spontaneous breaking of \emph{continuous} time-translation symmetry in a closed quantum system is forbidden by Watanabe--Oshikawa~\cite{watanabe2015} for the ground state, but variations under drive or in dissipative settings remain open~\cite{khemani2019}.
+\item \emph{Floquet phases in $(3+1)$D.} Extending the Roy--Harper periodic table~\cite{roy2017} to interacting systems in $3+1$ dimensions, including possible non-Abelian Floquet phases.
+\item \emph{Floquet many-body scars.} Periodic drive stabilising scar states in non-integrable models; relationship between scars and DTC order.
+\item \emph{Categorical Floquet RG.} A renormalisation-group fixed-point structure on $\Ham_T$, in particular the existence of Floquet conformal field theories as fixed points of the temporal periodicity.
+\item \emph{Composition with Law~IV.} What is the holographic dual of a Floquet CFT? Does the AdS bulk become time-dependent, or does it acquire a temporal $S^1$ factor (giving an AdS-cylindrical bulk)? Initial work~\cite{anous2020} suggests both.
+\item \emph{Beyond stroboscopic equivalence.} The categorical equivalence relation on $\Ham_T$ that captures Floquet phases is broader than stroboscopic equivalence (which fixes $U_F$ up to similarity) but narrower than micromotion-blind equivalence; identifying the correct intermediate equivalence is open.
+\end{enumerate}
+
+\section{Discussion: The Modular Composition Hooks}
+\label{sec:discussion}
+
+We close by stating explicitly the data that Law~III exposes for consumption by Law~IV.
+
+\begin{enumerate}
+\item \emph{Sambe-space functor} $\mathcal{S}_T\colon\QChan\to\Hilb_{\mathrm{sep}}$ (\cref{prop:sambe-functor}). Law~IV will use $\mathcal{S}_T$ as the source category for an information-geometric extension: the Bures metric on $\mathcal{S}_T(\Hcal)$, restricted to a smooth family of Floquet states, is the candidate Floquet Fisher metric whose holographic interpretation will be developed in Paper~4.
+\item \emph{Effective-Hamiltonian functor} $\Heff^{(\leq N)}$ (\cref{def:Heff}). Law~IV uses this to reduce holographic Floquet questions to (perturbed) holographic equilibrium questions in the prethermal regime, leveraging existing AdS/CFT results.
+\item \emph{Floquet topological invariants} (\cref{def:winding,prop:floquet-natural}). Law~IV interprets these as $K$-theoretic data on the boundary of an emergent bulk; the AFI winding number will be the temporal companion to the bulk Chern--Simons level.
+\item \emph{DTC obstruction $2$-cells} (\cref{thm:dtc-obstruction}). In Law~IV these will become non-trivial $2$-cells in the holographic functor, plausibly dual to time-periodic bulk geometries (perhaps related to Floquet-analog wormholes; cf.~\cite{anous2020}).
+\end{enumerate}
+
+We emphasise once more: this is a \emph{modular} pipeline. Law~IV does not subsume Law~III, nor does Law~III subsume Law~II. Each lift is a proper functor with its own emergent invariants. The composition $\mathrm{Lift}_{\mathrm{III}\to\mathrm{IV}}\circ\mathrm{Lift}_{\mathrm{II}\to\mathrm{III}}$ produces precisely the categorical substrate over which the Fisher--Bures information geometry of Law~IV is defined.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have presented Law~III of the modular Emergent Spacetime Dynamics framework: a categorical theory of frequency-modulated quantum processes. The central technical contributions are:
+\begin{itemize}
+\item A $2$-categorical formulation of Floquet evolution as a strict $2$-functor $\mathrm{Ev}_T\colon\mathfrak{H}_T\to\mathfrak{U}_{\Z}$ (\cref{prop:2-floquet}).
+\item A directed-system formulation of the Magnus expansion as an asymptotic effective-Hamiltonian functor (\cref{prop:heff-functor}), and a precise prethermal compositional lifting theorem (\cref{thm:prethermal-lift}).
+\item A reformulation of discrete time crystals as obstruction $2$-cells in the comparison between restricted and iterated Floquet drives (\cref{thm:dtc-obstruction}).
+\item A reformulation of Floquet winding numbers as obstruction classes for natural transformations between Floquet--Bloch functors (\cref{prop:floquet-natural}), recovering the Roy--Harper periodic table~\cite{roy2017}.
+\item Explicit composition hooks --- the Sambe-space functor, the effective-Hamiltonian functor, the Floquet topological invariants, and the DTC obstruction $2$-cells --- for Law~IV.
+\end{itemize}
+
+The Haskell artifacts in the accompanying repository implement a first-order Magnus solver, a kicked-Ising-chain simulator, and property tests for unitarity and periodicity, providing an executable correspondence between the categorical framework and concrete numerics.
+
+The next paper in the series, Law~IV (\emph{Information-bearing Structures}), takes the categorical substrate exhibited by the composition $\mathrm{Lift}_{\mathrm{II}\to\mathrm{III}}\circ\mathrm{Lift}_{\mathrm{I}\to\mathrm{II}}$ and lifts it once more, this time to information geometry: the Fisher--Bures metric on the space of Floquet states becomes a Riemannian structure from which holographic spacetime emerges. The full hierarchy
+\begin{equation*}
+\mathrm{MonCat}\;\longrightarrow\;\Phase_{\mathrm{eq}}\;\longrightarrow\;\Phase_{\Floq}\;\longrightarrow\;\mathsf{InfoGeom}
+\end{equation*}
+is the modular pipeline through which classical spacetime emerges from categorical quantum information. The present paper provides the third stage; the fourth is the subject of Paper~4.
+
+\section*{Acknowledgements}
+
+The author thanks the authors of~\cite{floquet1883,shirley1965,bukov2015,else2016,khemani2016,rudner2020,roy2017} for providing the conceptual scaffolding on which the categorical reformulation rests. The Haskell community is acknowledged for the linear-types extension that makes type-level encoding of unitary evolution practical.
+
+\emergencystretch=2em
+\begin{thebibliography}{99}
+
+\bibitem{floquet1883}
+G.~Floquet,
+\emph{Sur les \'equations diff\'erentielles lin\'eaires \`a coefficients p\'eriodiques},
+Annales de l'\'Ecole Normale Sup\'erieure \textbf{12} (1883), 47--88.
+
+\bibitem{shirley1965}
+J.~H.~Shirley,
+\emph{Solution of the Schr\"odinger equation with a Hamiltonian periodic in time},
+Phys.\ Rev.\ \textbf{138} (1965), B979--B987.
+
+\bibitem{magnus1954}
+W.~Magnus,
+\emph{On the exponential solution of differential equations for a linear operator},
+Comm.\ Pure Appl.\ Math.\ \textbf{7} (1954), 649--673.
+
+\bibitem{sambe1973}
+H.~Sambe,
+\emph{Steady states and quasi-energies of a quantum-mechanical system in an oscillating field},
+Phys.\ Rev.\ A \textbf{7} (1973), 2203--2213.
+
+\bibitem{bukov2015}
+M.~Bukov, L.~D'Alessio, A.~Polkovnikov,
+\emph{Universal high-frequency behavior of periodically driven systems: from dynamical stabilization to Floquet engineering},
+Adv.\ Phys.\ \textbf{64} (2015), 139--226.
+
+\bibitem{else2016}
+D.~V.~Else, B.~Bauer, C.~Nayak,
+\emph{Floquet time crystals},
+Phys.\ Rev.\ Lett.\ \textbf{117} (2016), 090402.
+
+\bibitem{khemani2016}
+V.~Khemani, A.~Lazarides, R.~Moessner, S.~L.~Sondhi,
+\emph{Phase structure of driven quantum systems},
+Phys.\ Rev.\ Lett.\ \textbf{116} (2016), 250401.
+
+\bibitem{rudner2020}
+M.~S.~Rudner, N.~H.~Lindner,
+\emph{Band structure engineering and non-equilibrium dynamics in Floquet topological insulators},
+Nature Reviews Physics \textbf{2} (2020), 229--244.
+
+\bibitem{roy2017}
+R.~Roy, F.~Harper,
+\emph{Periodic table for Floquet topological insulators},
+Phys.\ Rev.\ B \textbf{96} (2017), 155118.
+
+\bibitem{abanin2015}
+D.~A.~Abanin, W.~De~Roeck, F.~Huveneers,
+\emph{Exponentially slow heating in periodically driven many-body systems},
+Phys.\ Rev.\ Lett.\ \textbf{115} (2015), 256803.
+
+\bibitem{zhang2017}
+J.~Zhang \emph{et al.},
+\emph{Observation of a discrete time crystal},
+Nature \textbf{543} (2017), 217--220.
+
+\bibitem{choi2017}
+S.~Choi \emph{et al.},
+\emph{Observation of discrete time-crystalline order in a disordered dipolar many-body system},
+Nature \textbf{543} (2017), 221--225.
+
+\bibitem{else2020review}
+D.~V.~Else, C.~Monroe, C.~Nayak, N.~Y.~Yao,
+\emph{Discrete time crystals},
+Annual Review of Condensed Matter Physics \textbf{11} (2020), 467--499.
+
+\bibitem{watanabe2015}
+H.~Watanabe, M.~Oshikawa,
+\emph{Absence of quantum time crystals},
+Phys.\ Rev.\ Lett.\ \textbf{114} (2015), 251603.
+
+\bibitem{khemani2019}
+V.~Khemani, R.~Moessner, S.~L.~Sondhi,
+\emph{A brief history of time crystals},
+arXiv:1910.10745 (2019).
+
+\bibitem{anous2020}
+T.~Anous, J.~Sonner,
+\emph{Phases of scrambling in eigenstates},
+SciPost Phys.\ \textbf{7} (2019), 003. (Cited for Floquet/holographic discussion.)
+
+\bibitem{lurie2009}
+J.~Lurie,
+\emph{Higher Topos Theory},
+Annals of Math.\ Studies \textbf{170}, Princeton University Press, 2009.
+
+\bibitem{maclane1998}
+S.~Mac Lane,
+\emph{Categories for the Working Mathematician}, 2nd ed.,
+Springer GTM \textbf{5}, 1998.
+
+\bibitem{abramsky2004}
+S.~Abramsky, B.~Coecke,
+\emph{A categorical semantics of quantum protocols},
+Proc.\ 19th IEEE LICS (2004), 415--425.
+
+\bibitem{baezdolan1995}
+J.~C.~Baez, J.~Dolan,
+\emph{Higher-dimensional algebra and topological quantum field theory},
+J.\ Math.\ Phys.\ \textbf{36} (1995), 6073--6105.
+
+\bibitem{atiyah1988}
+M.~F.~Atiyah,
+\emph{Topological quantum field theories},
+Publ.\ Math.\ IH\'ES \textbf{68} (1988), 175--186.
+
+\bibitem{wen2004}
+X.-G.~Wen,
+\emph{Quantum Field Theory of Many-body Systems}, Oxford, 2004.
+
+\bibitem{kitaev2003}
+A.~Y.~Kitaev,
+\emph{Fault-tolerant quantum computation by anyons},
+Annals Phys.\ \textbf{303} (2003), 2--30.
+
+\bibitem{chen2013}
+X.~Chen, Z.-C.~Gu, Z.-X.~Liu, X.-G.~Wen,
+\emph{Symmetry protected topological orders and the group cohomology of their symmetry group},
+Phys.\ Rev.\ B \textbf{87} (2013), 155114.
+
+\bibitem{lazarides2014}
+A.~Lazarides, A.~Das, R.~Moessner,
+\emph{Equilibrium states of generic quantum systems subject to periodic driving},
+Phys.\ Rev.\ E \textbf{90} (2014), 012110.
+
+\bibitem{dalessio2014}
+L.~D'Alessio, M.~Rigol,
+\emph{Long-time behavior of isolated periodically driven interacting lattice systems},
+Phys.\ Rev.\ X \textbf{4} (2014), 041048.
+
+\end{thebibliography}
+
+\end{document}

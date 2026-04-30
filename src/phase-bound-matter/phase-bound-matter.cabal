@@ -1,0 +1,59 @@
+cabal-version:      2.2
+name:               phase-bound-matter
+version:            0.1.0.0
+synopsis:           Law II - Functorial classification of phases of matter
+description:
+  Haskell verification suite for Law II of the modular series
+  "Emergent Spacetime Dynamics".
+  .
+  Encodes the principal categorical primitives of Law II:
+  the Phase data type with its equivalence relation, finite
+  symmetry groups with group cohomology in low degrees, the
+  toric code stabilizer code on a small torus, and the
+  topological entanglement entropy on a 2x2 toric code.
+  Property tests verify phase invariance under symmetric
+  perturbations.
+license:            BSD-3-Clause
+author:             MagnetonIO Research
+maintainer:         research@magnetonio.example
+category:           Math
+build-type:         Simple
+
+common warnings
+  ghc-options:        -Wall -Wno-unused-imports -Wno-unused-matches
+
+library
+  import:             warnings
+  exposed-modules:
+    PhaseBoundMatter.Phase
+    PhaseBoundMatter.Symmetry
+    PhaseBoundMatter.GroupCohomology
+    PhaseBoundMatter.Anyon
+    PhaseBoundMatter.ToricCode
+    PhaseBoundMatter.Entropy
+    PhaseBoundMatter.Functor
+  build-depends:
+    , base       >= 4.14 && < 5
+    , containers >= 0.6
+  hs-source-dirs:     src
+  default-language:   Haskell2010
+
+executable phase-bound-matter-demo
+  import:             warnings
+  main-is:            Main.hs
+  hs-source-dirs:     app
+  build-depends:
+    , base
+    , phase-bound-matter
+  default-language:   Haskell2010
+
+test-suite phase-bound-matter-test
+  import:             warnings
+  type:               exitcode-stdio-1.0
+  main-is:            Spec.hs
+  hs-source-dirs:     test
+  build-depends:
+    , base
+    , phase-bound-matter
+    , containers
+  default-language:   Haskell2010

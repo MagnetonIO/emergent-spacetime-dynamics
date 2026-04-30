@@ -1,0 +1,28 @@
+{
+  "domain": "mathematical-physics / category-theory / quantum-information / cosmology",
+  "palette": {
+    "--bg": "#0a0a0f",
+    "--surface": "#10101a",
+    "--surface-hover": "#181826",
+    "--accent": "#7c6fff",
+    "--accent-hover": "#9d8fff",
+    "--accent-glow": "rgba(124, 111, 255, 0.12)",
+    "--accent-secondary": "#22d3ee",
+    "--text": "#e8e8f0",
+    "--text-muted": "#9898b8",
+    "--text-dim": "#5a5a7a",
+    "--border": "#1e1e32",
+    "--border-hover": "#2e2e50",
+    "--code-bg": "#0e0e1e",
+    "--success": "#34d399",
+    "--warning": "#fbbf24",
+    "--gradient-hero": "radial-gradient(ellipse at top left, rgba(124, 111, 255, 0.15) 0%, rgba(34, 211, 238, 0.05) 40%, transparent 70%)",
+    "--gradient-card": "linear-gradient(135deg, rgba(124, 111, 255, 0.05) 0%, rgba(34, 211, 238, 0.03) 100%)"
+  },
+  "typography": {
+    "heading": "Space Grotesk",
+    "body": "Inter",
+    "mono": "JetBrains Mono"
+  },
+  "notes": "Cross-disciplinary blend: deep near-black (#0a0a0f) for void/spacetime, violet-indigo accent (#7c6fff) for category theory/mathematics, cyan secondary (#22d3ee) for quantum/information. Cards have subtle gradient overlays and glow on hover. Hero uses radial gradient suggesting emergent geometry."
+}

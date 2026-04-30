@@ -1,0 +1,1439 @@
+<h1 id="sec:intro">Introduction</h1>
+<p>This paper is Law IV of a four-paper modular research series. Before
+stating the contributions of Law IV proper, we briefly recapitulate the
+prior laws so that the compositional structure we exploit here is
+unambiguous.</p>
+<h2 id="sec:recap">Recap: the prior laws</h2>
+<h4 id="law-i-mathematical-formalisms.">Law I — Mathematical
+Formalisms.</h4>
+<p>Law I establishes that the natural language of compositional physics
+is that of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal categories,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>∞</mi><annotation encoding="application/x-tex">\infty</annotation></semantics></math>-toposes,
+sheaves, operads, and linear type theory <span class="citation"
+data-cites="atiyah1988 baezdolan1995 baezstay2009 abramskycoecke2004 lurie2009 schreibershulman2014 lawvere1963"></span>.
+Its core artefacts—the string diagram calculus, the cobordism
+hypothesis, and the Curry–Howard–Lambek correspondence—become, in Law
+IV, the tensor network calculus, the holographic functor, and the
+type-theoretic encoding of bulk reconstruction respectively.</p>
+<h4 id="law-ii-phase-bound-matter.">Law II — Phase-bound Matter.</h4>
+<p>Law II classifies equilibrium phases of matter functorially: a Landau
+phase with symmetry group
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics></math>
+is a functor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo>:</mo><mi>B</mi><mi>G</mi><mo>→</mo><mrow><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒂</mi><mi mathvariant="bold-italic">𝒎</mi></mrow></mrow><annotation encoding="application/x-tex">F\colon BG \to \mathbf{Ham}</annotation></semantics></math>
+in the delooping bicategory; topological order is captured by unitary
+modular tensor categories; SPT phases are classified by group cohomology
+and, more generally, by twisted equivariant cobordism <span
+class="citation"
+data-cites="kitaev2003 wen1990 levinwen2005 chen2013 kitaevpreskill2006"></span>.
+Law II provides the long-range entangled substrate that, in Law IV, acts
+as the carrier of a quantum error-correcting code structure.</p>
+<h4 id="law-iii-frequency-modulated-processes.">Law III —
+Frequency-modulated Processes.</h4>
+<p>Law III lifts Law II by adjoining a periodic temporal dimension,
+modelling drives as monoidal functors over the circle category and
+Floquet phases as functorial classes <span class="citation"
+data-cites="else2016 khemani2016 bukov2015 rudner2020 roy2017"></span>.
+Time crystals appear as natural transformations encoding spontaneous
+breaking of discrete time-translation symmetry; Floquet topological
+invariants are obstructions to homotopies of Floquet functors. In Law
+IV, the Floquet structure becomes modular flow: time evolution generated
+by the modular Hamiltonian
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>A</mi></msub><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><msub><mi>ρ</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">K_A = -\log\rho_A</annotation></semantics></math>
+of a reduced state.</p>
+<h2 id="sec:position">Position of Law IV in the modular composition</h2>
+<p>The series is <em>modular</em>, not unified: each law is a
+self-standing layer that composes onto the prior layers via functorial
+liftings. Law IV is the capstone in the sense that it consumes the
+compositional output of Laws I–III and produces a new emergent
+structure, namely a Riemannian metric on the space of states, from which
+spacetime geometry emerges.</p>
+<p>The modular thesis specialised to Law IV is precise:</p>
+<blockquote>
+<p><em>No single prior law produces a metric on state space. Law I gives
+only a categorical grammar with traces; Law II gives long-range
+entanglement and topological invariants but no metric; Law III gives
+temporal flow but still no metric. Only the composition of all three is
+rich enough that the Fisher–Bures metric on parametrised state families
+becomes definable, and only then does the Ryu–Takayanagi area law of an
+emergent surface become an instance of OAQEC complementary
+recovery.</em></p>
+</blockquote>
+<p>We make this thesis precise in <a href="#sec:composition"
+data-reference-type="ref+Label" data-reference="sec:composition">8</a>
+via a 2-categorical lifting diagram and a non-derivability proposition
+(<a href="#prop:nonderivability" data-reference-type="ref+Label"
+data-reference="prop:nonderivability">30</a>).</p>
+<h2 id="sec:audience">Audience and intent</h2>
+<p>Because the paper synthesises material from condensed matter
+(topological order, Floquet phases), quantum information (QEC,
+holographic codes), and high-energy theory (holography, ER=EPR), some
+clarification of intent is in order. This paper is best read as a
+<em>manifesto for a research programme</em>: a synthesis that brings
+together rigorous discrete results (HaPPY codes, Knill–Laflamme, Fisher
+metrics on Gaussian families) with conjectural continuum extensions
+(categorical AdS/CFT, the Miyaji–Takayanagi conjecture, the
+entanglement-continuity of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Γ</mi><annotation encoding="application/x-tex">\Gamma</annotation></semantics></math>).
+It is not a primary research result in any single sub-discipline, nor a
+comprehensive review of any one area. Its novelty lies in the proposed
+organising schema — the modular composition of Laws I–III into Law IV —
+and in the explicit non-derivability statement (<a
+href="#prop:nonderivability" data-reference-type="ref+Label"
+data-reference="prop:nonderivability">30</a>) at the level of the worked
+examples we exhibit. Specialists will recognise the constituent results;
+the contribution we offer is the compositional reading.</p>
+<h2 id="sec:contributions">Contributions</h2>
+<ol>
+<li><p>We give a fully categorical formulation of quantum error
+correction as a sub-object embedding
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>:</mo><msub><mrow><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒊</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒃</mi></mrow><mi>L</mi></msub><mo>↪</mo><msub><mrow><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒊</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒃</mi></mrow><mi>P</mi></msub></mrow><annotation encoding="application/x-tex">\mathrm{enc}\colon \mathbf{Hilb}_L \hookrightarrow \mathbf{Hilb}_P</annotation></semantics></math>
+in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-Hilb,
+and reformulate the Knill–Laflamme conditions as a naturality square (<a
+href="#sec:qec-functor" data-reference-type="ref+Label"
+data-reference="sec:qec-functor">3</a>).</p></li>
+<li><p>We present the HaPPY holographic code on a small pentagon-tile
+arrangement, prove its bulk-to-boundary isometry, and verify the
+discrete Ryu–Takayanagi formula in the worked example (<a
+href="#sec:happy,sec:examples" data-reference-type="ref+Label"
+data-reference="sec:happy,sec:examples">[sec:happy,sec:examples]</a>).</p></li>
+<li><p>We define the Fisher information metric and the Bures metric,
+prove monotonicity (Chentsov), and exhibit the Fisher metric on the
+manifold of Gaussian states (<a href="#sec:fisher,sec:examples"
+data-reference-type="ref+Label"
+data-reference="sec:fisher,sec:examples">[sec:fisher,sec:examples]</a>).</p></li>
+<li><p>We give Van Raamsdonk’s entanglement-as-glue argument a
+categorical formulation as continuity of the metric functor under
+decoherence (<a href="#sec:vanraamsdonk" data-reference-type="ref+Label"
+data-reference="sec:vanraamsdonk">7</a>).</p></li>
+<li><p>We propose the modular composition framework (<a
+href="#rem:composition" data-reference-type="ref+Label"
+data-reference="rem:composition">29</a>) as a conjectural organising
+schema for the emergence of geometry from Laws I–III. We then prove the
+non-derivability statement (<a href="#prop:nonderivability"
+data-reference-type="ref+Label"
+data-reference="prop:nonderivability">30</a>) at the level of the
+explicit examples we exhibit, showing that no individual prior law
+produces the Fisher–Bures metric or the Ryu–Takayanagi area law in
+isolation.</p></li>
+<li><p>We complement the theoretical framework with a companion software
+package that implements a stabiliser-code framework, a toy HaPPY-style
+holographic code on a small tile arrangement, a Fisher metric calculator
+for Gaussian families, and property tests for code distance and
+complementary recovery; the package architecture is summarised in <a
+href="#app:haskell" data-reference-type="ref+Label"
+data-reference="app:haskell">13</a>.</p></li>
+</ol>
+<h2 id="sec:notation">Notation</h2>
+<p>Throughout the paper,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒊</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒃</mi></mrow><annotation encoding="application/x-tex">\mathbf{Hilb}</annotation></semantics></math>
+denotes the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal category of complex Hilbert spaces with bounded linear maps;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑭</mi><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒊</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒃</mi></mrow><annotation encoding="application/x-tex">\mathbf{FHilb}</annotation></semantics></math>
+is its full subcategory on finite-dimensional spaces. We write
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑪</mi><mi mathvariant="bold-italic">𝑷</mi></mrow><annotation encoding="application/x-tex">\mathbf{CP}</annotation></semantics></math>
+for the category of finite-dimensional
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi mathvariant="normal">C</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\mathrm{C}^\ast</annotation></semantics></math>-algebras
+and completely positive trace-preserving (CPTP) maps. A density matrix
+is denoted
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>,
+and the modular Hamiltonian of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mi>A</mi></msub><annotation encoding="application/x-tex">\rho_A</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>A</mi></msub><mo>:=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><msub><mi>ρ</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">K_A := -\log \rho_A</annotation></semantics></math>.
+We use
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mi>−</mi><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>ρ</mi><mi>A</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><msub><mi>ρ</mi><mi>A</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(A) := -\operatorname{Tr}(\rho_A \log \rho_A)</annotation></semantics></math>
+for the von Neumann entropy and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo stretchy="false" form="postfix">∥</mo><mi>σ</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>σ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(\rho \| \sigma) := \operatorname{Tr}(\rho \log \rho) - \operatorname{Tr}(\rho \log \sigma)</annotation></semantics></math>
+for the relative entropy. Newton’s constant is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>G</mi><mi>N</mi></msub><annotation encoding="application/x-tex">G_N</annotation></semantics></math>,
+set to unit conventions where convenient. The Pauli matrices are
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>,</mo><mi>Y</mi><mo>,</mo><mi>Z</mi></mrow><annotation encoding="application/x-tex">X,Y,Z</annotation></semantics></math>.</p>
+<h1 id="sec:framework">Mathematical Framework</h1>
+<p>We collect the categorical and operator-theoretic prerequisites used
+throughout the paper. Detailed expositions of the underlying machinery
+appear in Law I; here we restate only what is required for Law IV.</p>
+<h2
+id="dagger-symmetric-monoidal-categories"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal categories</h2>
+<div id="def:dagger-smc" class="definition">
+<p><strong>Definition 1</strong>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal category). A
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal category is a tuple
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="script">𝒞</mi><mo>,</mo><mi>⊗</mi><mo>,</mo><mi>I</mi><mo>,</mo><mi>α</mi><mo>,</mo><mi>λ</mi><mo>,</mo><mi>ρ</mi><mo>,</mo><mi>σ</mi><mo>,</mo><mi>†</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\mathcal{C},\otimes, I, \alpha,\lambda,\rho,\sigma,\dagger)</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="script">𝒞</mi><mo>,</mo><mi>⊗</mi><mo>,</mo><mi>I</mi><mo>,</mo><mi>α</mi><mo>,</mo><mi>λ</mi><mo>,</mo><mi>ρ</mi><mo>,</mo><mi>σ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\mathcal{C},\otimes,I,\alpha,\lambda,\rho,\sigma)</annotation></semantics></math>
+is a symmetric monoidal category and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>†</mi><mo>:</mo><msup><mi mathvariant="script">𝒞</mi><mrow><mi mathvariant="normal">o</mi><mi mathvariant="normal">p</mi></mrow></msup><mo>→</mo><mi mathvariant="script">𝒞</mi></mrow><annotation encoding="application/x-tex">\dagger\colon \mathcal{C}^{\mathrm{op}} \to \mathcal{C}</annotation></semantics></math>
+is a contravariant involutive identity-on-objects functor satisfying
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msup><mi>f</mi><mo>†</mo></msup><msup><mo stretchy="false" form="postfix">)</mo><mo>†</mo></msup><mo>=</mo><mi>f</mi></mrow><annotation encoding="application/x-tex">(f^\dagger)^\dagger = f</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo>∘</mo><mi>f</mi><msup><mo stretchy="false" form="postfix">)</mo><mo>†</mo></msup><mo>=</mo><msup><mi>f</mi><mo>†</mo></msup><mo>∘</mo><msup><mi>g</mi><mo>†</mo></msup></mrow><annotation encoding="application/x-tex">(g\circ f)^\dagger = f^\dagger \circ g^\dagger</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo>⊗</mo><mi>g</mi><msup><mo stretchy="false" form="postfix">)</mo><mo>†</mo></msup><mo>=</mo><msup><mi>f</mi><mo>†</mo></msup><mo>⊗</mo><msup><mi>g</mi><mo>†</mo></msup></mrow><annotation encoding="application/x-tex">(f\otimes g)^\dagger = f^\dagger \otimes g^\dagger</annotation></semantics></math>,
+and compatibility with the structural isomorphisms.</p>
+</div>
+<div class="example">
+<p><strong>Example 2</strong>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑭</mi><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒊</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒃</mi></mrow><annotation encoding="application/x-tex">\mathbf{FHilb}</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>⊗</mi><annotation encoding="application/x-tex">\otimes</annotation></semantics></math>
+the tensor product over
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="double-struck">ℂ</mi><annotation encoding="application/x-tex">\mathbb{C}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>=</mo><mi mathvariant="double-struck">ℂ</mi></mrow><annotation encoding="application/x-tex">I = \mathbb{C}</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>
+the Hermitian adjoint is a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal compact closed category. Every map
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>:</mo><mi>H</mi><mo>→</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">f\colon H \to K</annotation></semantics></math>
+has a unique adjoint
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>†</mo></msup><mo>:</mo><mi>K</mi><mo>→</mo><mi>H</mi></mrow><annotation encoding="application/x-tex">f^\dagger\colon K\to H</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is unitary iff
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>†</mo></msup><mo>∘</mo><mi>f</mi><mo>=</mo><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><mi>H</mi></msub></mrow><annotation encoding="application/x-tex">f^\dagger \circ f = \mathrm{id}_H</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>∘</mo><msup><mi>f</mi><mo>†</mo></msup><mo>=</mo><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><mi>K</mi></msub></mrow><annotation encoding="application/x-tex">f\circ f^\dagger = \mathrm{id}_K</annotation></semantics></math>.</p>
+</div>
+<div id="def:isometry" class="definition">
+<p><strong>Definition 3</strong> (Isometry). A morphism
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>:</mo><mi>A</mi><mo>→</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">V\colon A \to B</annotation></semantics></math>
+in a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-category
+is an <em>isometry</em> if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>V</mi><mo>†</mo></msup><mo>∘</mo><mi>V</mi><mo>=</mo><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">V^\dagger \circ V = \mathrm{id}_A</annotation></semantics></math>.
+It is a <em>coisometry</em> if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>∘</mo><msup><mi>V</mi><mo>†</mo></msup><mo>=</mo><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">V\circ V^\dagger = \mathrm{id}_B</annotation></semantics></math>,
+and a <em>unitary</em> if both.</p>
+</div>
+<h2 id="quantum-channels-and-the-cp-category">Quantum channels and the
+CP category</h2>
+<div class="definition">
+<p><strong>Definition 4</strong> (Quantum channel). A <em>quantum
+channel</em> is a CPTP map
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">𝒩</mi><mo>:</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>A</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>B</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{N}\colon \mathcal{B}(H_A) \to \mathcal{B}(H_B)</annotation></semantics></math>.
+Every channel admits a Stinespring dilation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">𝒩</mi><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mi>E</mi></msub><mo stretchy="false" form="prefix">[</mo><mi>V</mi><mi>ρ</mi><msup><mi>V</mi><mo>†</mo></msup><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\mathcal{N}(\rho) = \operatorname{Tr}_E[V\rho V^\dagger]</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>:</mo><msub><mi>H</mi><mi>A</mi></msub><mo>→</mo><msub><mi>H</mi><mi>B</mi></msub><mo>⊗</mo><msub><mi>H</mi><mi>E</mi></msub></mrow><annotation encoding="application/x-tex">V\colon H_A \to H_B \otimes H_E</annotation></semantics></math>
+an isometry. Equivalently,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">𝒩</mi><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>K</mi><mi>k</mi></msub><mi>ρ</mi><msubsup><mi>K</mi><mi>k</mi><mo>†</mo></msubsup></mrow><annotation encoding="application/x-tex">\mathcal{N}(\rho) = \sum_k K_k \rho K_k^\dagger</annotation></semantics></math>
+with Kraus operators satisfying
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>k</mi></msub><msubsup><mi>K</mi><mi>k</mi><mo>†</mo></msubsup><msub><mi>K</mi><mi>k</mi></msub><mo>=</mo><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow></mrow><annotation encoding="application/x-tex">\sum_k K_k^\dagger K_k = \mathrm{id}</annotation></semantics></math>.</p>
+</div>
+<p>The category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑪</mi><mi mathvariant="bold-italic">𝑷</mi></mrow><annotation encoding="application/x-tex">\mathbf{CP}</annotation></semantics></math>
+has
+C<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mo>*</mo></msup><annotation encoding="application/x-tex">^*</annotation></semantics></math>-algebras
+as objects and CPTP maps as morphisms; it is symmetric monoidal under
+tensor product and is the natural codomain category for noise models in
+quantum error correction.</p>
+<h2 id="subsystems-reduced-states-and-the-modular-operator">Subsystems,
+reduced states and the modular operator</h2>
+<p>For a bipartite state
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub><annotation encoding="application/x-tex">\rho_{AB}</annotation></semantics></math>,
+the reduced state is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mi>A</mi></msub><mo>:=</mo><msub><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mi>B</mi></msub><mo stretchy="false" form="prefix">[</mo><msub><mi>ρ</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\rho_A := \operatorname{Tr}_B[\rho_{AB}]</annotation></semantics></math>.
+The von Neumann entropy is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mi>−</mi><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>ρ</mi><mi>A</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><msub><mi>ρ</mi><mi>A</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(A) := -\operatorname{Tr}(\rho_A \log \rho_A)</annotation></semantics></math>,
+and the modular Hamiltonian is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>A</mi></msub><mo>:=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><msub><mi>ρ</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">K_A := -\log \rho_A</annotation></semantics></math>.
+Modular flow is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>A</mi><mi>t</mi></msubsup><mo stretchy="false" form="prefix">(</mo><mi>O</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msup><mi>e</mi><mrow><mi>i</mi><mi>t</mi><msub><mi>K</mi><mi>A</mi></msub></mrow></msup><mi>O</mi><msup><mi>e</mi><mrow><mi>−</mi><mi>i</mi><mi>t</mi><msub><mi>K</mi><mi>A</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\sigma_A^t(O) := e^{itK_A} O e^{-itK_A}</annotation></semantics></math>;
+in vacuum states of a Lorentz-invariant QFT restricted to a half-space,
+modular flow is by Bisognano–Wichmann a boost (cf. <span
+class="citation" data-cites="bisognano1976"></span>).</p>
+<div id="thm:klein" class="theorem">
+<p><strong>Theorem 5</strong> (Klein’s inequality). <em>For density
+matrices
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>,</mo><mi>σ</mi></mrow><annotation encoding="application/x-tex">\rho,\sigma</annotation></semantics></math>
+on the same Hilbert space, the relative entropy satisfies
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo stretchy="false" form="postfix">∥</mo><mi>σ</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>σ</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>0</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">S(\rho \| \sigma) := \operatorname{Tr}(\rho \log \rho) - \operatorname{Tr}(\rho \log \sigma) \geq 0,</annotation></semantics></math>
+with equality iff
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>=</mo><mi>σ</mi></mrow><annotation encoding="application/x-tex">\rho = \sigma</annotation></semantics></math>.</em></p>
+</div>
+<p>This will play a foundational role: in holography, the positivity of
+relative entropy implies the Bousso bound and the linearised positive
+energy theorem in the bulk.</p>
+<h1 id="sec:qec-functor">Quantum Error Correction as a Categorical
+Functor</h1>
+<h2 id="codes-as-sub-objects-in-dagger-hilb">Codes as sub-objects in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-Hilb</h2>
+<div id="def:qecc" class="definition">
+<p><strong>Definition 6</strong> (Quantum error-correcting code). A
+<em>quantum error-correcting code</em> is a triple
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo>,</mo><msub><mi>H</mi><mi>P</mi></msub><mo>,</mo><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(H_L, H_P, \mathrm{enc})</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi>L</mi></msub><mo>,</mo><msub><mi>H</mi><mi>P</mi></msub></mrow><annotation encoding="application/x-tex">H_L,H_P</annotation></semantics></math>
+are Hilbert spaces and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>:</mo><msub><mi>H</mi><mi>L</mi></msub><mo>→</mo><msub><mi>H</mi><mi>P</mi></msub></mrow><annotation encoding="application/x-tex">\mathrm{enc}\colon H_L \to H_P</annotation></semantics></math>
+is an isometry (<a href="#def:isometry" data-reference-type="ref+Label"
+data-reference="def:isometry">3</a>). The image
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>⊆</mo><msub><mi>H</mi><mi>P</mi></msub></mrow><annotation encoding="application/x-tex">\mathrm{enc}(H_L) \subseteq H_P</annotation></semantics></math>
+is the <em>code subspace</em>.</p>
+</div>
+<p>Operationally, an isometric encoder admits a left inverse
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">c</mi></mrow><mo>:=</mo><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup><mo>:</mo><msub><mi>H</mi><mi>P</mi></msub><mo>→</mo><msub><mi>H</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">\mathrm{dec}:= \mathrm{enc}^\dagger\colon H_P \to H_L</annotation></semantics></math>
+such that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">c</mi></mrow><mo>∘</mo><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>=</mo><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><msub><mi>H</mi><mi>L</mi></msub></msub></mrow><annotation encoding="application/x-tex">\mathrm{dec}\circ \mathrm{enc}= \mathrm{id}_{H_L}</annotation></semantics></math>.
+Errors are modelled as a finite set
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℰ</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><msub><mi>E</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>E</mi><mi>m</mi></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\mathcal{E} = \{E_1,\dots,E_m\}</annotation></semantics></math>
+of bounded operators on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mi>P</mi></msub><annotation encoding="application/x-tex">H_P</annotation></semantics></math>.</p>
+<div id="thm:knilllaflamme" class="theorem">
+<p><strong>Theorem 7</strong> (Knill–Laflamme conditions). <em>A code
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo>,</mo><msub><mi>H</mi><mi>P</mi></msub><mo>,</mo><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(H_L,H_P,\mathrm{enc})</annotation></semantics></math>
+corrects the error set
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="script">ℰ</mi><annotation encoding="application/x-tex">\mathcal{E}</annotation></semantics></math>
+if and only if there exists a Hermitian matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>C</mi><mrow><mi>a</mi><mi>b</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">C = (C_{ab})</annotation></semantics></math>
+with
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup><mspace width="0.167em"></mspace><msubsup><mi>E</mi><mi>a</mi><mo>†</mo></msubsup><msub><mi>E</mi><mi>b</mi></msub><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><msub><mi>C</mi><mrow><mi>a</mi><mi>b</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><msub><mi>H</mi><mi>L</mi></msub></msub><mspace width="2.0em"></mspace><mo>∀</mo><mi>a</mi><mo>,</mo><mi>b</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathrm{enc}^\dagger \, E_a^\dagger E_b\, \mathrm{enc}\;=\; C_{ab}\, \mathrm{id}_{H_L} \qquad \forall a,b.</annotation></semantics></math></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>⇒</mo><annotation encoding="application/x-tex">\Rightarrow</annotation></semantics></math>)
+Suppose a recovery channel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℛ</mi><mo>:</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{R}\colon \mathcal{B}(H_P) \to \mathcal{B}(H_L)</annotation></semantics></math>
+exists, satisfying
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℛ</mi><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msub><mi>E</mi><mi>a</mi></msub><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mi>ρ</mi><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup><msubsup><mi>E</mi><mi>b</mi><mo>†</mo></msubsup><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><msub><mi>c</mi><mrow><mi>a</mi><mi>b</mi></mrow></msub><mspace width="0.167em"></mspace><mi>ρ</mi></mrow><annotation encoding="application/x-tex">\mathcal{R}\bigl(E_a \mathrm{enc}\rho \mathrm{enc}^\dagger E_b^\dagger\bigr) \;=\; c_{ab}\,\rho</annotation></semantics></math>
+on the code subspace. By considering the action of the recovery channel
+on a basis of code-subspace states and matching matrix elements, one
+shows that the products
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup><msubsup><mi>E</mi><mi>a</mi><mo>†</mo></msubsup><msub><mi>E</mi><mi>b</mi></msub><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow></mrow><annotation encoding="application/x-tex">\mathrm{enc}^\dagger E_a^\dagger E_b \mathrm{enc}</annotation></semantics></math>
+cannot distinguish logical states; hence each must be a scalar multiple
+of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><msub><mi>H</mi><mi>L</mi></msub></msub><annotation encoding="application/x-tex">\mathrm{id}_{H_L}</annotation></semantics></math>,
+the scalar being
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>C</mi><mrow><mi>a</mi><mi>b</mi></mrow></msub><annotation encoding="application/x-tex">C_{ab}</annotation></semantics></math>.</p>
+<p>(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>⇐</mo><annotation encoding="application/x-tex">\Leftarrow</annotation></semantics></math>)
+Given the scalar condition, diagonalise the Hermitian matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
+as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>=</mo><mi>U</mi><mi>D</mi><msup><mi>U</mi><mo>†</mo></msup></mrow><annotation encoding="application/x-tex">C = UDU^\dagger</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
+diagonal and non-negative. Define new error operators
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>E</mi><mi>a</mi><mo>′</mo></msubsup><mo>:=</mo><msub><mo>∑</mo><mi>b</mi></msub><msubsup><mi>U</mi><mrow><mi>b</mi><mi>a</mi></mrow><mo>*</mo></msubsup><msub><mi>E</mi><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">E&#39;_a := \sum_b U^*_{ba} E_b</annotation></semantics></math>;
+these act as mutually orthogonal isometries on the code subspace, in the
+sense that
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msubsup><mi>E</mi><mi>a</mi><mo>′</mo></msubsup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><msup><mo stretchy="false" form="postfix">)</mo><mo>†</mo></msup><mo stretchy="false" form="prefix">(</mo><msubsup><mi>E</mi><mi>b</mi><mo>′</mo></msubsup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><msub><mi>D</mi><mrow><mi>a</mi><mi>a</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>δ</mi><mrow><mi>a</mi><mi>b</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><msub><mi>H</mi><mi>L</mi></msub></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">(E&#39;_a \mathrm{enc})^\dagger (E&#39;_b \mathrm{enc}) \;=\; D_{aa}\,\delta_{ab}\,\mathrm{id}_{H_L}.</annotation></semantics></math>
+Each
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>E</mi><mi>a</mi><mo>′</mo></msubsup><annotation encoding="application/x-tex">E&#39;_a</annotation></semantics></math>
+thus sends the code subspace to a distinguishable orthogonal subspace,
+so a syndrome measurement projecting onto these subspaces uniquely
+identifies the error and a controlled inverse-isometry recovers the
+encoded state. Equivalently, the Petz transpose recovery map
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">ℛ</mi><mi>P</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>σ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>:=</mo><mspace width="0.278em"></mspace><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup><mspace width="0.167em"></mspace><msubsup><mi>ρ</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msubsup><mspace width="0.167em"></mspace><msup><mi mathvariant="script">𝒩</mi><mo>*</mo></msup><mspace width="-0.167em"></mspace><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msubsup><mi>ρ</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msubsup><mi>σ</mi><msubsup><mi>ρ</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msubsup><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mspace width="0.167em"></mspace><msubsup><mi>ρ</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msubsup><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow></mrow><annotation encoding="application/x-tex">\mathcal{R}_P(\sigma) \;:=\; \mathrm{enc}^\dagger\,\rho_{\mathrm{enc}}^{1/2}\,\mathcal{N}^*\!\bigl(\rho_{\mathrm{enc}}^{-1/2}\sigma\rho_{\mathrm{enc}}^{-1/2}\bigr)\,\rho_{\mathrm{enc}}^{1/2}\,\mathrm{enc}</annotation></semantics></math>
+inverts the noise exactly on the code subspace; see <span
+class="citation" data-cites="nielsenchuang"></span> for the explicit
+construction. ◻</p>
+</div>
+<div class="remark">
+<p><em>Remark 8</em> (Categorical reading). <a href="#thm:knilllaflamme"
+data-reference-type="ref+Label" data-reference="thm:knilllaflamme">7</a>
+can be read as a naturality condition. Define the functor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Φ</mi><mo>:</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Phi\colon \mathcal{B}(H_L) \to \mathcal{B}(H_P)</annotation></semantics></math>
+by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mi>ρ</mi><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup></mrow><annotation encoding="application/x-tex">\Phi(\rho) := \mathrm{enc}\rho \mathrm{enc}^\dagger</annotation></semantics></math>.
+Then the Knill–Laflamme condition is the assertion that the diagram
+<span class="math display">$$\begin{tikzcd}[column sep=large]
+\mathcal{B}(H_L) \arrow[r,"\Phi"] \arrow[d,"\mathrm{id}"'] &amp;
+\mathcal{B}(H_P) \arrow[d,"\mathcal{E}_{ab}"] \\
+\mathcal{B}(H_L) \arrow[r,"\Phi"'] &amp; \mathcal{B}(H_P)
+\end{tikzcd}$$</span> commutes up to multiplication by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mrow><mi>a</mi><mi>b</mi></mrow></msub><mo>∈</mo><mi mathvariant="double-struck">ℂ</mi></mrow><annotation encoding="application/x-tex">C_{ab} \in \mathbb{C}</annotation></semantics></math>,
+i.e. the noise
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="script">ℰ</mi><mrow><mi>a</mi><mi>b</mi></mrow></msub><annotation encoding="application/x-tex">\mathcal{E}_{ab}</annotation></semantics></math>
+is, on the image of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Φ</mi><annotation encoding="application/x-tex">\Phi</annotation></semantics></math>,
+indistinguishable from a scalar.</p>
+</div>
+<h2 id="operator-algebra-quantum-error-correction">Operator algebra
+quantum error correction</h2>
+<p>A more refined picture, developed in <span class="citation"
+data-cites="beny2007 almheiridongharlow2015 harlow2017"></span>, is the
+operator-algebra version (OAQEC). Instead of correcting all errors on
+the whole code, OAQEC asks: what is the maximal subalgebra
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">𝒜</mi><mo>⊆</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{A} \subseteq \mathcal{B}(H_L)</annotation></semantics></math>
+whose action survives the noise?</p>
+<div id="def:oaqec" class="definition">
+<p><strong>Definition 9</strong> (Operator-algebra QEC). A code
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo>,</mo><msub><mi>H</mi><mi>P</mi></msub><mo>,</mo><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(H_L,H_P,\mathrm{enc})</annotation></semantics></math>
+<em>corrects
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="script">ℰ</mi><annotation encoding="application/x-tex">\mathcal{E}</annotation></semantics></math>
+for the subalgebra
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="script">𝒜</mi><annotation encoding="application/x-tex">\mathcal{A}</annotation></semantics></math></em>
+if there exists a recovery channel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℛ</mi><mo>:</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{R}\colon \mathcal{B}(H_P) \to \mathcal{B}(H_L)</annotation></semantics></math>
+such that for every
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>∈</mo><mi mathvariant="script">𝒜</mi></mrow><annotation encoding="application/x-tex">a \in \mathcal{A}</annotation></semantics></math>,
+every error
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>∈</mo><mi mathvariant="script">ℰ</mi></mrow><annotation encoding="application/x-tex">E \in \mathcal{E}</annotation></semantics></math>,
+and every code state
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>∈</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\rho \in \mathcal{B}(H_L)</annotation></semantics></math>,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">[</mo><mspace width="0.167em"></mspace><mi>a</mi><mspace width="0.167em"></mspace><mi mathvariant="script">ℛ</mi><mo stretchy="false" form="prefix">(</mo><mi>E</mi><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mi>ρ</mi><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup><msup><mi>E</mi><mo>†</mo></msup><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">]</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">[</mo><mi>a</mi><mi>ρ</mi><mo stretchy="false" form="postfix">]</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">\operatorname{Tr}\bigl[\,a\, \mathcal{R}(E\, \mathrm{enc}\rho\mathrm{enc}^\dagger E^\dagger)\bigr] \;=\; \operatorname{Tr}[a\rho].</annotation></semantics></math></p>
+</div>
+<p>OAQEC is the precise tool for holography: in a holographic code,
+different boundary regions correspond to different subalgebras of bulk
+operators, and complementary recovery says that for any boundary
+bipartition
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>⊔</mo><msup><mi>A</mi><mi>c</mi></msup></mrow><annotation encoding="application/x-tex">A \sqcup A^c</annotation></semantics></math>,
+the bulk algebra
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="script">𝒜</mi><mi>W</mi></msub><annotation encoding="application/x-tex">\mathcal{A}_W</annotation></semantics></math>
+in the entanglement wedge
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W(A)</annotation></semantics></math>
+is reconstructable from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>.</p>
+<h2 id="the-encoding-functor">The encoding functor</h2>
+<div id="prop:enc-monomorphism" class="proposition">
+<p><strong>Proposition 10</strong> (Encoding as a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-monomorphism).
+<em>An encoding isometry
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>:</mo><msub><mi>H</mi><mi>L</mi></msub><mo>→</mo><msub><mi>H</mi><mi>P</mi></msub></mrow><annotation encoding="application/x-tex">\mathrm{enc}\colon H_L \to H_P</annotation></semantics></math>
+is a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-monomorphism
+in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑭</mi><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒊</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒃</mi></mrow><annotation encoding="application/x-tex">\mathbf{FHilb}</annotation></semantics></math>,
+i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup><mo>∘</mo><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>=</mo><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><msub><mi>H</mi><mi>L</mi></msub></msub></mrow><annotation encoding="application/x-tex">\mathrm{enc}^\dagger \circ \mathrm{enc}= \mathrm{id}_{H_L}</annotation></semantics></math>.
+Conversely, any
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-monic
+morphism in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑭</mi><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒊</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒃</mi></mrow><annotation encoding="application/x-tex">\mathbf{FHilb}</annotation></semantics></math>
+is an encoding isometry up to unitary normalisation.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> By definition of isometry,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup><mo>∘</mo><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>=</mo><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow></mrow><annotation encoding="application/x-tex">\mathrm{enc}^\dagger \circ \mathrm{enc}= \mathrm{id}</annotation></semantics></math>.
+For the converse,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-monic
+in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑭</mi><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒊</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒃</mi></mrow><annotation encoding="application/x-tex">\mathbf{FHilb}</annotation></semantics></math>
+means there exists a left inverse
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>∘</mo><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>=</mo><msub><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">d</mi></mrow><msub><mi>H</mi><mi>L</mi></msub></msub></mrow><annotation encoding="application/x-tex">g \circ \mathrm{enc}= \mathrm{id}_{H_L}</annotation></semantics></math>.
+Setting
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup></mrow><annotation encoding="application/x-tex">g = \mathrm{enc}^\dagger</annotation></semantics></math>
+recovers the isometry condition. ◻</p>
+</div>
+<p>The full encoding-and-recovery loop is best described at the level of
+channels rather than mixing isometries with superoperators. Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℰ</mi><mo>:</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>P</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{E}\colon \mathcal{B}(H_L) \to \mathcal{B}(H_P)</annotation></semantics></math>
+be the encoding channel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">ℰ</mi><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mi>ρ</mi><msup><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><mo>†</mo></msup></mrow><annotation encoding="application/x-tex">\mathcal{E}(\rho) := \mathrm{enc}\rho \mathrm{enc}^\dagger</annotation></semantics></math>.
+Then the loop is the diagram <span
+class="math display">$$\begin{equation}
+\label{eq:qec-loop}
+\begin{tikzcd}[column sep=huge]
+\mathcal{B}(H_L) \arrow[r,"\mathcal{E}"] &amp; \mathcal{B}(H_P)
+\arrow[r,"\mathcal{N}"] &amp; \mathcal{B}(H_P) \arrow[r,"\mathcal{R}"]
+&amp; \mathcal{B}(H_L)
+\end{tikzcd}
+\end{equation}$$</span> with the recovery condition
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="script">ℛ</mi><mo>∘</mo><mi mathvariant="script">𝒩</mi><mo>∘</mo><mi mathvariant="script">ℰ</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mi>ρ</mi><mspace width="2.0em"></mspace><mrow><mtext mathvariant="normal">for every code-subspace state </mtext><mspace width="0.333em"></mspace></mrow><mi>ρ</mi><mo>∈</mo><mi mathvariant="script">ℬ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>H</mi><mi>L</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">(\mathcal{R} \circ \mathcal{N} \circ \mathcal{E})(\rho) \;=\; \rho \qquad \text{for every code-subspace state } \rho \in \mathcal{B}(H_L).</annotation></semantics></math>
+Naturality with respect to the choice of basis is the statement that
+codes are intrinsic, depending only on the embedding of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mi>L</mi></msub><annotation encoding="application/x-tex">H_L</annotation></semantics></math>
+into
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mi>P</mi></msub><annotation encoding="application/x-tex">H_P</annotation></semantics></math>.</p>
+<h1 id="sec:happy">Holographic Codes (HaPPY) and Bulk
+Reconstruction</h1>
+<h2 id="perfect-tensors">Perfect tensors</h2>
+<div id="def:perfect" class="definition">
+<p><strong>Definition 11</strong> (Perfect tensor). A tensor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>∈</mo><mo stretchy="false" form="prefix">(</mo><msup><mi mathvariant="double-struck">ℂ</mi><mi>d</mi></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mn>2</mn><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">T \in (\mathbb{C}^d)^{\otimes 2n}</annotation></semantics></math>
+is <em>perfect</em> if for every bipartition of its
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">2n</annotation></semantics></math>
+indices into two equal-sized sets
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>A</mi><mo stretchy="false" form="prefix">|</mo><mo>=</mo><mo stretchy="false" form="prefix">|</mo><mi>B</mi><mo stretchy="false" form="prefix">|</mo><mo>=</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">|A| = |B| = n</annotation></semantics></math>,
+the linear map
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>T</mi><mi>A</mi><mi>B</mi></msubsup><mo>:</mo><mo stretchy="false" form="prefix">(</mo><msup><mi mathvariant="double-struck">ℂ</mi><mi>d</mi></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mi>n</mi></mrow></msup><mo>→</mo><mo stretchy="false" form="prefix">(</mo><msup><mi mathvariant="double-struck">ℂ</mi><mi>d</mi></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">T_A^B\colon (\mathbb{C}^d)^{\otimes n} \to (\mathbb{C}^d)^{\otimes n}</annotation></semantics></math>
+obtained by treating
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>-indices
+as inputs and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>-indices
+as outputs is a unitary (equivalently,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
+has maximal entanglement across every balanced cut).</p>
+</div>
+<p>Equivalently, viewing
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
+as a state
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>T</mi><mo stretchy="false" form="postfix">⟩</mo><mo>∈</mo><mo stretchy="false" form="prefix">(</mo><msup><mi mathvariant="double-struck">ℂ</mi><mi>d</mi></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mn>2</mn><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">|T\rangle \in (\mathbb{C}^d)^{\otimes 2n}</annotation></semantics></math>,
+every reduced density matrix on any half of the legs is maximally mixed.
+Perfect tensors are also known as absolutely maximally entangled (AME)
+states.</p>
+<div id="ex:5qubit" class="example">
+<p><strong>Example 12</strong> (Five-qubit code as a perfect tensor).
+The
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mo stretchy="false" form="prefix">[</mo><mn>5</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[[5,1,3]]</annotation></semantics></math>
+five-qubit code due to Bennett–DiVincenzo–Smolin–Wootters and
+Laflamme–Miquel–Paz–Zurek encodes one logical qubit into five physical
+qubits and corrects an arbitrary single-qubit error. Its codeword state
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mover><mn>0</mn><mo accent="true">¯</mo></mover><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">|\overline{0}\rangle</annotation></semantics></math>,
+viewed as a state on six qubits (one logical input, five physical
+outputs), is a perfect tensor of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>n</mi><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">2n=6</annotation></semantics></math>
+legs over
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">d=2</annotation></semantics></math>.</p>
+</div>
+<h2 id="the-happy-tensor-network">The HaPPY tensor network</h2>
+<p>The HaPPY code <span class="citation" data-cites="pyhp2015"></span>
+is built by tiling the hyperbolic disk with pentagons (the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>5</mn><mo>,</mo><mn>4</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{5,4\}</annotation></semantics></math>
+tiling) and assigning a perfect tensor to each pentagon. Each perfect
+tensor, viewed as an isometry, takes a designated subset of legs as
+inputs and the remaining legs as outputs. In the HaPPY construction, one
+leg of each tensor is left “dangling” inward and serves as the input
+bulk logical leg; the remaining legs are contracted with neighbouring
+tensors along shared edges, with the legs reaching the outer boundary of
+the disk being the boundary physical qubits.</p>
+<figure id="fig:happy" data-latex-placement="htbp">
+
+<figcaption>Schematic representation of the HaPPY tensor network on a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>5</mn><mo>,</mo><mn>4</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{5,4\}</annotation></semantics></math>
+pentagon tiling of the hyperbolic disk. Each pentagon hosts a perfect
+tensor (an isometry from a chosen subset of legs to the remainder); one
+“dangling” leg per tile is the bulk logical qubit, and the uncontracted
+legs terminating at the boundary (marked by red dots) represent the
+physical qubits of the code.</figcaption>
+</figure>
+<div id="thm:happy" class="theorem">
+<p><strong>Theorem 13</strong> (Pastawski–Yoshida–Harlow–Preskill,
+2015). <em>The HaPPY tensor network on a finite region of the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>5</mn><mo>,</mo><mn>4</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{5,4\}</annotation></semantics></math>
+tiling defines an isometry
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>:</mo><msub><mi>H</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">k</mi></mrow></msub><mo>→</mo><msub><mi>H</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">y</mi></mrow></msub></mrow><annotation encoding="application/x-tex">V\colon H_{\mathrm{bulk}} \to H_{\mathrm{boundary}}</annotation></semantics></math>.
+For any connected boundary region
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>,
+the entanglement entropy of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">|</mo><mi>ψ</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">V|\psi\rangle</annotation></semantics></math>
+on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+satisfies the discrete Ryu–Takayanagi formula
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mo stretchy="false" form="prefix">|</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="prefix">|</mo><mi>⋅</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>d</mi><mspace width="0.278em"></mspace><mo>+</mo><mspace width="0.278em"></mspace><msub><mi>S</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">k</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">S(A) \;=\; |\gamma_A| \cdot \log d \;+\; S_{\mathrm{bulk}}(W(A)),</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">|\gamma_A|</annotation></semantics></math>
+is the minimum number of bulk legs cut to disconnect
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+from its complement,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+is the bond dimension, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">k</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_{\mathrm{bulk}}(W(A))</annotation></semantics></math>
+is the bulk entanglement entropy in the entanglement wedge
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W(A)</annotation></semantics></math>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof sketch.</em> The isometry property follows by induction on
+the number of tiles: contracting a single perfect tensor into a partial
+network preserves isometry because perfect tensors are unitary across
+every balanced cut. Given the isometry, the entropy formula follows by
+the greedy algorithm: any minimum cut separates
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+from its complement through exactly
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">|\gamma_A|</annotation></semantics></math>
+bulk legs, each contributing
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">\log d</annotation></semantics></math>
+to the entropy, plus the entropy of any bulk operators in the
+entanglement wedge. See <span class="citation"
+data-cites="pyhp2015"></span> for full proof. ◻</p>
+</div>
+<h2 id="bulk-reconstruction-and-complementary-recovery">Bulk
+reconstruction and complementary recovery</h2>
+<div id="def:ew" class="definition">
+<p><strong>Definition 14</strong> (Entanglement wedge). For a connected
+boundary region
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>,
+the <em>entanglement wedge</em>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W(A)</annotation></semantics></math>
+is the set of bulk tiles homologous to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>,
+i.e. those reachable from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+by greedily “swallowing” tiles whose contracted indices lie strictly
+within
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+or have already been swallowed.</p>
+</div>
+<div id="thm:ewr" class="theorem">
+<p><strong>Theorem 15</strong> (Entanglement-wedge reconstruction).
+<em>For the HaPPY code, any bulk operator
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϕ</mi><annotation encoding="application/x-tex">\phi</annotation></semantics></math>
+supported in the entanglement wedge
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W(A)</annotation></semantics></math>
+admits a boundary representation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>ϕ</mi><mo accent="true">̂</mo></mover><mi>A</mi></msub><annotation encoding="application/x-tex">\hat\phi_A</annotation></semantics></math>
+supported on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+such that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi>ϕ</mi><mo>=</mo><msub><mover><mi>ϕ</mi><mo accent="true">̂</mo></mover><mi>A</mi></msub><mi>V</mi></mrow><annotation encoding="application/x-tex">V\phi = \hat\phi_A V</annotation></semantics></math>
+on the code subspace. (This formulation is due to Almheiri, Dong, and
+Harlow <span class="citation"
+data-cites="almheiridongharlow2015"></span>.)</em></p>
+</div>
+<p>The proof uses the perfect-tensor property: at every step of the
+greedy algorithm one can “push” the bulk operator through the network
+using the unitarity of the local perfect tensors.</p>
+<h1 id="sec:rt">Ryu–Takayanagi and Entanglement Entropy as Area</h1>
+<h2 id="the-continuum-formula">The continuum formula</h2>
+<p>In a continuum holographic
+CFT<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mi>d</mi></msub><annotation encoding="application/x-tex">_d</annotation></semantics></math>
+dual to
+AdS<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mrow><mi>d</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">_{d+1}</annotation></semantics></math>
+gravity, Ryu and Takayanagi <span class="citation"
+data-cites="ryutakayanagi2006"></span> proposed:</p>
+<div id="thm:rt" class="theorem">
+<p><strong>Theorem 16</strong> (Ryu–Takayanagi). <em>For a static
+spatial region
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+on the boundary of a holographic CFT in a state with semiclassical bulk
+dual,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mfrac><mrow><mrow><mi mathvariant="normal">Area</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mn>4</mn><msub><mi>G</mi><mi>N</mi></msub></mrow></mfrac><mo>,</mo></mrow><annotation encoding="application/x-tex">S(A) \;=\; \frac{\operatorname{Area}(\gamma_A)}{4 G_N},</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>γ</mi><mi>A</mi></msub><annotation encoding="application/x-tex">\gamma_A</annotation></semantics></math>
+is the codimension-2 minimal-area bulk surface homologous to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>,
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><msub><mi>γ</mi><mi>A</mi></msub><mo>=</mo><mi>∂</mi><mi>A</mi></mrow><annotation encoding="application/x-tex">\partial \gamma_A = \partial A</annotation></semantics></math>.</em></p>
+</div>
+<div class="remark">
+<p><em>Remark 17</em>. The HaPPY discrete RT formula in <a
+href="#thm:happy" data-reference-type="ref+Label"
+data-reference="thm:happy">13</a> is the statement that the lattice
+analog of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">Area</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>4</mn><msub><mi>G</mi><mi>N</mi></msub></mrow><annotation encoding="application/x-tex">\operatorname{Area}(\gamma_A)/4G_N</annotation></semantics></math>,
+namely
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="prefix">|</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">|\gamma_A| \log d</annotation></semantics></math>,
+is exact in the code Hilbert space.</p>
+</div>
+<h2 id="linearised-einstein-from-the-entanglement-first-law">Linearised
+Einstein from the entanglement first law</h2>
+<p>Faulkner–Guica–Hartman–Myers–Van Raamsdonk <span class="citation"
+data-cites="fghmv2014"></span> proved:</p>
+<div id="thm:linEinstein" class="theorem">
+<p><strong>Theorem 18</strong> (Linearised Einstein from entanglement).
+<em>The entanglement first law
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>δ</mi><mo stretchy="false" form="prefix">⟨</mo><msub><mi>K</mi><mi>A</mi></msub><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\delta S(A) = \delta \langle K_A\rangle</annotation></semantics></math>
+for all spherical boundary regions
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>,
+taken to first order in metric perturbations around vacuum AdS, is
+equivalent to the linearised Einstein equations in the bulk.</em></p>
+</div>
+<p>We sketch the argument. On the boundary, the entanglement first law
+states that the variation of the entanglement entropy of a region
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+equals the variation of the expectation value of the modular
+Hamiltonian:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>δ</mi><mo stretchy="false" form="prefix">⟨</mo><msub><mi>K</mi><mi>A</mi></msub><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\delta S(A) = \delta \langle K_A\rangle</annotation></semantics></math>.
+Apply the Ryu–Takayanagi formula (<a href="#thm:rt"
+data-reference-type="ref+Label" data-reference="thm:rt">16</a>) to the
+left-hand side:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>δ</mi><mrow><mi mathvariant="normal">Area</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>4</mn><msub><mi>G</mi><mi>N</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\delta S(A) = \delta\operatorname{Area}(\gamma_A)/(4G_N)</annotation></semantics></math>,
+the variation of the bulk minimal surface area. On the right-hand side,
+the modular Hamiltonian for a ball-shaped region in vacuum CFT has, by
+Bisognano–Wichmann together with the Casini–Huerta–Myers <span
+class="citation" data-cites="casini2011"></span> relation, an expression
+in terms of the boundary stress tensor; its variation is then a CFT
+correlator. Equating the geometric variation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mi mathvariant="normal">Area</mi></mrow><annotation encoding="application/x-tex">\delta \operatorname{Area}</annotation></semantics></math>
+with the CFT correlator, and using the holographic dictionary to convert
+the latter into a bulk source, yields exactly the integrated linearised
+Einstein equation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∫</mo><mo stretchy="false" form="prefix">(</mo><msubsup><mi>G</mi><mrow><mi>μ</mi><mi>ν</mi></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo>−</mo><mn>8</mn><mi>π</mi><msub><mi>G</mi><mi>N</mi></msub><msubsup><mi>T</mi><mrow><mi>μ</mi><mi>ν</mi></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msup><mi>ξ</mi><mi>μ</mi></msup><msup><mi>n</mi><mi>ν</mi></msup><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\int (G^{(1)}_{\mu\nu} - 8\pi G_N T^{(1)}_{\mu\nu})\,\xi^\mu n^\nu = 0</annotation></semantics></math>
+for every ball-shaped region; demanding this for all balls is equivalent
+to the local linearised Einstein equation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>G</mi><mrow><mi>μ</mi><mi>ν</mi></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo>=</mo><mn>8</mn><mi>π</mi><msub><mi>G</mi><mi>N</mi></msub><mspace width="0.167em"></mspace><msubsup><mi>T</mi><mrow><mi>μ</mi><mi>ν</mi></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></msubsup></mrow><annotation encoding="application/x-tex">G^{(1)}_{\mu\nu} = 8\pi G_N\, T^{(1)}_{\mu\nu}</annotation></semantics></math>.
+See <span class="citation" data-cites="fghmv2014"></span> for the full
+proof.</p>
+<h2 id="sec:functor-adscft">AdS/CFT as a functor</h2>
+<div id="rem:hol-functor" class="remark">
+<p><em>Remark 19</em> (Holographic functor: a conjectural framework).
+The full categorical formalisation of AdS/CFT <span class="citation"
+data-cites="maldacena1997"></span> remains an open research programme;
+the following is intended as a <em>conjectural framework</em>, not as an
+established definition. We posit a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal functor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">Φ</mi><mrow><mi mathvariant="normal">h</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi></mrow></msub><mo>:</mo><mrow><mi mathvariant="bold-italic">𝑩</mi><mi mathvariant="bold-italic">𝒖</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒌</mi></mrow><mo>→</mo><mrow><mi mathvariant="bold-italic">𝑩</mi><mi mathvariant="bold-italic">𝒅</mi><mi mathvariant="bold-italic">𝒚</mi></mrow></mrow><annotation encoding="application/x-tex">\Phi_{\mathrm{hol}}\colon \mathbf{Bulk} \to \mathbf{Bdy}</annotation></semantics></math>
+between
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal categories
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑩</mi><mi mathvariant="bold-italic">𝒖</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒌</mi></mrow><annotation encoding="application/x-tex">\mathbf{Bulk}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑩</mi><mi mathvariant="bold-italic">𝒅</mi><mi mathvariant="bold-italic">𝒚</mi></mrow><annotation encoding="application/x-tex">\mathbf{Bdy}</annotation></semantics></math>
+(the precise definition of which is itself part of the programme)
+satisfying:</p>
+<ol>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi mathvariant="normal">h</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{\mathrm{hol}}</annotation></semantics></math>
+on objects sends bulk Hilbert spaces
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">k</mi></mrow></msub><annotation encoding="application/x-tex">H_{\mathrm{bulk}}</annotation></semantics></math>
+to boundary Hilbert spaces
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mi>∂</mi></msub><annotation encoding="application/x-tex">H_{\partial}</annotation></semantics></math>;</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi mathvariant="normal">h</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{\mathrm{hol}}</annotation></semantics></math>
+on morphisms sends bulk evolutions to boundary evolutions and is an
+isometry of inner products;</p></li>
+<li><p>For every boundary subregion
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>,
+the restriction of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi mathvariant="normal">h</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{\mathrm{hol}}</annotation></semantics></math>
+to bulk operators in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W(A)</annotation></semantics></math>
+takes values in boundary operators on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>.</p></li>
+</ol>
+<p>Property (3) is the entanglement-wedge reconstruction (<a
+href="#thm:ewr" data-reference-type="ref+Label"
+data-reference="thm:ewr">15</a>); property (2) is the inner product
+preservation that, combined with (3), implies the Ryu–Takayanagi formula
+via the entropy formula for isometric embeddings. In the discrete HaPPY
+model (<a href="#sec:happy" data-reference-type="ref+Label"
+data-reference="sec:happy">4</a>) all three properties hold rigorously;
+in the continuum they constitute the holographic-functor research
+programme <span class="citation"
+data-cites="harlow2017 almheiridongharlow2015"></span>.</p>
+</div>
+<h1 id="sec:fisher">Fisher Information Metric and Statistical
+Manifolds</h1>
+<h2 id="classical-fisher-metric">Classical Fisher metric</h2>
+<div id="def:stat-manifold" class="definition">
+<p><strong>Definition 20</strong> (Statistical manifold). A
+<em>statistical manifold</em> is a smooth manifold
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+together with a smoothly-parametrised family
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>p</mi><mi>θ</mi></msub><mo>:</mo><mi>θ</mi><mo>∈</mo><mi>M</mi><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{p_\theta : \theta \in M\}</annotation></semantics></math>
+of probability density functions on a measure space
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="script">𝒳</mi><mo>,</mo><mi>μ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\mathcal{X},\mu)</annotation></semantics></math>.</p>
+</div>
+<div id="def:fisher" class="definition">
+<p><strong>Definition 21</strong> (Fisher information metric). On a
+statistical manifold
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+with coordinates
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msup><mi>θ</mi><mn>1</mn></msup><mo>,</mo><mi>…</mi><mo>,</mo><msup><mi>θ</mi><mi>n</mi></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\theta = (\theta^1,\dots,\theta^n)</annotation></semantics></math>,
+the <em>Fisher information metric</em> is the rank-2 tensor
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>:=</mo><mspace width="0.278em"></mspace><msub><mi mathvariant="double-struck">𝔼</mi><mi>θ</mi></msub><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>∂</mi><mi>i</mi></msub><mi mathvariant="normal">log</mi><msub><mi>p</mi><mi>θ</mi></msub><mspace width="0.167em"></mspace><msub><mi>∂</mi><mi>j</mi></msub><mi mathvariant="normal">log</mi><msub><mi>p</mi><mi>θ</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mo>−</mo><msub><mi mathvariant="double-struck">𝔼</mi><mi>θ</mi></msub><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>∂</mi><mi>i</mi></msub><msub><mi>∂</mi><mi>j</mi></msub><mi mathvariant="normal">log</mi><msub><mi>p</mi><mi>θ</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">g_{ij}(\theta) \;:=\; \mathbb{E}_\theta\!\left[\partial_i \log p_\theta\, \partial_j \log p_\theta\right] \;=\; -\mathbb{E}_\theta\!\left[\partial_i \partial_j \log p_\theta\right].</annotation></semantics></math></p>
+</div>
+<p>The Fisher metric is positive semidefinite and is positive definite
+under the regularity condition that the score functions
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>∂</mi><mi>i</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><msub><mi>p</mi><mi>θ</mi></msub></mrow><annotation encoding="application/x-tex">\partial_i \log p_\theta</annotation></semantics></math>
+are linearly independent.</p>
+<div id="thm:chentsov" class="theorem">
+<p><strong>Theorem 22</strong> (Chentsov). <em>On the simplex of
+probability distributions over a finite alphabet, the Fisher metric is
+the unique (up to positive scalar) Riemannian metric that is monotone
+non-increasing under stochastic (Markov) maps.</em></p>
+</div>
+<div class="proof">
+<p><em>Sketch.</em> Monotonicity forces the metric to satisfy a
+contraction inequality under Markov morphisms; by the Stinespring/Choi
+structure on stochastic maps and a representation-theoretic argument,
+the only invariant rank-2 tensor on the simplex satisfying this
+inequality is, up to scale, the Fisher metric. See Amari–Nagaoka <span
+class="citation" data-cites="amari"></span> for a full treatment. ◻</p>
+</div>
+<div id="ex:gaussian-fisher" class="example">
+<p><strong>Example 23</strong> (Univariate Gaussian family). For
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mrow><mi>μ</mi><mo>,</mo><mi>σ</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mi>π</mi><msup><mi>σ</mi><mn>2</mn></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>μ</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi>/</mi><mn>2</mn><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p_{\mu,\sigma}(x) = (2\pi\sigma^2)^{-1/2} \exp(-(x-\mu)^2/2\sigma^2)</annotation></semantics></math>,
+the Fisher metric is
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn><mi>/</mi><msup><mi>σ</mi><mn>2</mn></msup></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2</mn><mi>/</mi><msup><mi>σ</mi><mn>2</mn></msup></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">g \;=\; \begin{pmatrix} 1/\sigma^2 &amp; 0 \\ 0 &amp; 2/\sigma^2 \end{pmatrix},</annotation></semantics></math>
+in coordinates
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>μ</mi><mo>,</mo><mi>σ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\mu,\sigma)</annotation></semantics></math>.
+This is the hyperbolic metric on the upper half-plane
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mi>σ</mi><mo>&gt;</mo><mn>0</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{\sigma &gt; 0\}</annotation></semantics></math>
+up to a constant scaling. The
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math>-axis
+is at infinite distance from the boundary
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\sigma \to 0</annotation></semantics></math>.</p>
+</div>
+<p><a href="#ex:gaussian-fisher" data-reference-type="ref+Label"
+data-reference="ex:gaussian-fisher">23</a> is striking: the Fisher
+metric on the simplest non-trivial parametric family is the
+AdS<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mn>2</mn></msub><annotation encoding="application/x-tex">_2</annotation></semantics></math>
+metric (up to scale). This is the prototype of <em>emergent hyperbolic
+geometry from information</em>.</p>
+<h2 id="quantum-fisher-metric">Quantum Fisher metric</h2>
+<div id="def:sld" class="definition">
+<p><strong>Definition 24</strong> (Symmetric logarithmic derivative).
+For a smooth family
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\rho_\theta</annotation></semantics></math>
+of density matrices, the <em>symmetric logarithmic derivative</em> (SLD)
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>i</mi></msub><annotation encoding="application/x-tex">L_i</annotation></semantics></math>
+at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+is the Hermitian operator satisfying
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>∂</mi><mi>i</mi></msub><msub><mi>ρ</mi><mi>θ</mi></msub><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mstyle displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mi>i</mi></msub><msub><mi>ρ</mi><mi>θ</mi></msub><mo>+</mo><msub><mi>ρ</mi><mi>θ</mi></msub><msub><mi>L</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">\partial_i \rho_\theta \;=\; \tfrac{1}{2}(L_i \rho_\theta + \rho_\theta L_i).</annotation></semantics></math></p>
+</div>
+<div id="def:qfm" class="definition">
+<p><strong>Definition 25</strong> (Quantum Fisher metric). The
+<em>quantum Fisher metric</em> is
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>g</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>Q</mi></msubsup><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>:=</mo><mspace width="0.278em"></mspace><mstyle displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>ρ</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">{</mo><msub><mi>L</mi><mi>i</mi></msub><mo>,</mo><msub><mi>L</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">}</mo><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">g^Q_{ij}(\theta) \;:=\; \tfrac{1}{2}\,\operatorname{Tr}\!\left[\rho_\theta\{L_i, L_j\}\right].</annotation></semantics></math></p>
+</div>
+<div id="thm:petz" class="theorem">
+<p><strong>Theorem 26</strong> (Quantum Fisher monotonicity). <em>The
+quantum Fisher metric is monotone non-increasing under CPTP maps: for
+any quantum channel
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="script">𝒩</mi><annotation encoding="application/x-tex">\mathcal{N}</annotation></semantics></math>
+acting on the family
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\rho_\theta</annotation></semantics></math>,
+the induced metric on the parameter manifold
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>↦</mo><mi mathvariant="script">𝒩</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>ρ</mi><mi>θ</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\theta \mapsto \mathcal{N}(\rho_\theta)</annotation></semantics></math>
+is bounded above by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>g</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>Q</mi></msubsup><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g^Q_{ij}(\theta)</annotation></semantics></math>.
+This is a special case of the broader monotonicity of the quantum Rényi
+divergences established by Petz <span class="citation"
+data-cites="petz1986"></span> and standard in quantum information theory
+<span class="citation"
+data-cites="amari nielsenchuang"></span>.</em></p>
+</div>
+<p>The Bures metric is most naturally defined via the quantum fidelity
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo>,</mo><mi>σ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>:=</mo><mspace width="0.278em"></mspace><mrow><mi mathvariant="normal">Tr</mi><mo>&#8289;</mo></mrow><mspace width="-0.167em"></mspace><mo minsize="180%" maxsize="180%" stretchy="true" form="prefix">[</mo><msqrt><mrow><msqrt><mi>ρ</mi></msqrt><mspace width="0.167em"></mspace><mi>σ</mi><mspace width="0.167em"></mspace><msqrt><mi>ρ</mi></msqrt></mrow></msqrt><mo minsize="180%" maxsize="180%" stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">F(\rho,\sigma) \;:=\; \operatorname{Tr}\!\Bigl[\sqrt{\sqrt{\rho}\,\sigma\,\sqrt{\rho}}\Bigr]</annotation></semantics></math>
+as the line element
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msubsup><mi>s</mi><mi>B</mi><mn>2</mn></msubsup><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo>,</mo><mi>ρ</mi><mo>+</mo><mi>d</mi><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>:=</mo><mspace width="0.278em"></mspace><mn>2</mn><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo>,</mo><mi>ρ</mi><mo>+</mo><mi>d</mi><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">ds_B^2(\rho,\rho + d\rho) \;:=\; 2\bigl(1 - F(\rho,\rho+d\rho)\bigr).</annotation></semantics></math>
+For a smoothly parametrised family
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\rho_\theta</annotation></semantics></math>,
+this equals one quarter of the quantum Fisher metric:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msubsup><mi>s</mi><mi>B</mi><mn>2</mn></msubsup><mo>=</mo><mstyle displaystyle="false"><mfrac><mn>1</mn><mn>4</mn></mfrac></mstyle><mspace width="0.167em"></mspace><msubsup><mi>g</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>Q</mi></msubsup><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>d</mi><msup><mi>θ</mi><mi>i</mi></msup><mspace width="0.167em"></mspace><mi>d</mi><msup><mi>θ</mi><mi>j</mi></msup></mrow><annotation encoding="application/x-tex">ds_B^2 = \tfrac{1}{4}\,g^Q_{ij}(\theta)\,d\theta^i\,d\theta^j</annotation></semantics></math>.
+The Bures metric is a Riemannian metric on the manifold of full-rank
+density matrices.</p>
+<h2 id="information-geometry-on-cft-state-space">Information geometry on
+CFT state space</h2>
+<p>The Miyaji–Takayanagi conjecture <span class="citation"
+data-cites="miyaji2015"></span> posits that the Fisher–Bures metric on
+the space of CFT states (taken with respect to a sliding-window family
+of half-space modular Hamiltonians) reproduces, in the holographic
+limit, the bulk AdS metric. Concretely, for a
+CFT<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mn>2</mn></msub><annotation encoding="application/x-tex">_2</annotation></semantics></math>
+vacuum and a one-parameter family of states obtained by sliding the
+entangling interval along the boundary, the induced Bures metric is, to
+leading order in the conformal dimension, the
+AdS<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mn>3</mn></msub><annotation encoding="application/x-tex">_3</annotation></semantics></math>
+metric on the entangling-interval moduli space.</p>
+<h1 id="sec:vanraamsdonk">Van Raamsdonk-style Entanglement-as-Glue</h1>
+<h2 id="the-thermofield-double-argument">The thermofield double
+argument</h2>
+<p>The thermofield double state of two copies of a CFT,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mrow><mi mathvariant="normal">T</mi><mi mathvariant="normal">F</mi><mi mathvariant="normal">D</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>β</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">⟩</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mfrac><mn>1</mn><msqrt><mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>β</mi><mo stretchy="false" form="postfix">)</mo></mrow></msqrt></mfrac><munder><mo>∑</mo><mi>n</mi></munder><msup><mi>e</mi><mrow><mi>−</mi><mi>β</mi><msub><mi>E</mi><mi>n</mi></msub><mi>/</mi><mn>2</mn></mrow></msup><mo stretchy="false" form="prefix">|</mo><mi>n</mi><msub><mo stretchy="false" form="postfix">⟩</mo><mi>L</mi></msub><mo stretchy="false" form="prefix">|</mo><mi>n</mi><msub><mo stretchy="false" form="postfix">⟩</mo><mi>R</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">|\mathrm{TFD}(\beta)\rangle \;=\; \frac{1}{\sqrt{Z(\beta)}} \sum_n e^{-\beta E_n/2} |n\rangle_L |n\rangle_R,</annotation></semantics></math>
+is dual to the eternal AdS–Schwarzschild black hole <span
+class="citation" data-cites="maldacena2003"></span>. The two CFT copies
+live on the two asymptotic boundaries; the wormhole connecting them is
+the maximally extended bulk.</p>
+<p>Van Raamsdonk <span class="citation"
+data-cites="vanraamsdonk2010"></span> observed: if one disentangles the
+two CFTs by Schmidt-decomposing
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mrow><mi mathvariant="normal">T</mi><mi mathvariant="normal">F</mi><mi mathvariant="normal">D</mi></mrow><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">|\mathrm{TFD}\rangle</annotation></semantics></math>
+and partially erasing the off-diagonal terms, the resulting state’s bulk
+dual is a pair of <em>disconnected</em> AdS spaces. The bulk
+Einstein–Rosen bridge <em>thins</em>, then <em>pinches off</em> as
+entanglement is removed.</p>
+<p>The conclusion: <em>spacetime connectivity is proportional to
+entanglement</em>.</p>
+<h2 id="categorical-reformulation">Categorical reformulation</h2>
+<p>We give a categorical version of the Van Raamsdonk argument. Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi mathvariant="bold-italic">𝑺</mi><mi mathvariant="bold-italic">𝒕</mi><mi mathvariant="bold-italic">𝒂</mi><mi mathvariant="bold-italic">𝒕</mi><mi mathvariant="bold-italic">𝒆</mi></mrow><mi>ρ</mi></msub><annotation encoding="application/x-tex">\mathbf{State}_\rho</annotation></semantics></math>
+be the (small) groupoid of CFT states accessible by unitary boundary
+operations, and let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑮</mi><mi mathvariant="bold-italic">𝒆</mi><mi mathvariant="bold-italic">𝒐</mi><mi mathvariant="bold-italic">𝒎</mi></mrow><annotation encoding="application/x-tex">\mathbf{Geom}</annotation></semantics></math>
+be the groupoid of asymptotically AdS bulk geometries with the same
+boundary data, with morphisms isometries. Define a functor
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Γ</mi><mo>:</mo><msub><mrow><mi mathvariant="bold-italic">𝑺</mi><mi mathvariant="bold-italic">𝒕</mi><mi mathvariant="bold-italic">𝒂</mi><mi mathvariant="bold-italic">𝒕</mi><mi mathvariant="bold-italic">𝒆</mi></mrow><mi>ρ</mi></msub><mo>→</mo><mrow><mi mathvariant="bold-italic">𝑮</mi><mi mathvariant="bold-italic">𝒆</mi><mi mathvariant="bold-italic">𝒐</mi><mi mathvariant="bold-italic">𝒎</mi></mrow></mrow><annotation encoding="application/x-tex">\Gamma\colon \mathbf{State}_\rho \to \mathbf{Geom}</annotation></semantics></math>
+that sends a CFT state to its bulk dual.</p>
+<div id="rem:gamma-cont" class="remark">
+<p><em>Remark 27</em> (Entanglement continuity of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Γ</mi><annotation encoding="application/x-tex">\Gamma</annotation></semantics></math>:
+a conjecture). We <em>conjecture</em> that the functor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Γ</mi><annotation encoding="application/x-tex">\Gamma</annotation></semantics></math>
+is continuous with respect to the Bures distance on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi mathvariant="bold-italic">𝑺</mi><mi mathvariant="bold-italic">𝒕</mi><mi mathvariant="bold-italic">𝒂</mi><mi mathvariant="bold-italic">𝒕</mi><mi mathvariant="bold-italic">𝒆</mi></mrow><mi>ρ</mi></msub><annotation encoding="application/x-tex">\mathbf{State}_\rho</annotation></semantics></math>
+and the Gromov–Hausdorff distance on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑮</mi><mi mathvariant="bold-italic">𝒆</mi><mi mathvariant="bold-italic">𝒐</mi><mi mathvariant="bold-italic">𝒎</mi></mrow><annotation encoding="application/x-tex">\mathbf{Geom}</annotation></semantics></math>,
+in the sense that if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>ψ</mi><mi>n</mi></msub><mo stretchy="false" form="postfix">⟩</mo><mo>→</mo><mo stretchy="false" form="prefix">|</mo><mi>ψ</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">|\psi_n\rangle \to |\psi\rangle</annotation></semantics></math>
+in Bures metric then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">|</mo><msub><mi>ψ</mi><mi>n</mi></msub><mo stretchy="false" form="postfix">⟩</mo><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">|</mo><mi>ψ</mi><mo stretchy="false" form="postfix">⟩</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Gamma(|\psi_n\rangle) \to \Gamma(|\psi\rangle)</annotation></semantics></math>
+in Gromov–Hausdorff distance, with the entanglement entropy
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_n(A)</annotation></semantics></math>
+converging to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(A)</annotation></semantics></math>.
+This continuity is conjectural in the continuum; in the HaPPY discrete
+model it follows rigorously from the discrete Ryu–Takayanagi formula,
+which gives an explicit Lipschitz continuity of the bulk graph distance
+with respect to entanglement perturbations. We give the quantitative
+discrete form in <a href="#prop:happy-lipschitz"
+data-reference-type="ref+Label"
+data-reference="prop:happy-lipschitz">31</a> below.</p>
+</div>
+<h2 id="erepr">ER=EPR</h2>
+<p>The ER=EPR conjecture <span class="citation"
+data-cites="maldacena2013"></span> asserts that every pair of entangled
+subsystems is connected by a (possibly Planck-scale) Einstein–Rosen
+bridge in the bulk dual. In our framework this is the statement that the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Γ</mi><annotation encoding="application/x-tex">\Gamma</annotation></semantics></math>
+functor is faithful: distinct entanglement structures correspond to
+distinct bulk topologies.</p>
+<div class="remark">
+<p><em>Remark 28</em> (ER=EPR as faithfulness). The ER=EPR conjecture,
+framed in the modular language, is the assertion that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Γ</mi><annotation encoding="application/x-tex">\Gamma</annotation></semantics></math>
+is faithful on the subgroupoid generated by entanglement-creating
+boundary operations. Faithfulness means no information about the
+entanglement structure is forgotten in passing to the bulk geometry.</p>
+</div>
+<h1 id="sec:composition">Modular Composition: How Laws I–III Combine to
+Produce Emergent Geometry</h1>
+<h2 id="ingredients-of-the-modular-composition">Ingredients of the
+modular composition</h2>
+<p>We make precise the assertion that Law IV’s emergent geometry arises
+from the synthesis of three ingredients drawn from Laws I–III. We
+emphasise that the formal language of “lifting functors” below is an
+organising schema, not a rigid hierarchy: Law I provides the categorical
+<em>language</em>, while Laws II and III contribute distinct
+<em>physical inputs</em> (long-range entanglement and modular/temporal
+flow) that combine with that language to define Law IV.</p>
+<p>Schematically, recall the lifting functors of the series: <span
+class="math display">$$\begin{tikzcd}[column sep=large]
+\mathrm{Law\,I}
+   \arrow[r, "L_{I\to II}"]
+&amp; \mathrm{Law\,II}
+   \arrow[r, "L_{II\to III}"]
+&amp; \mathrm{Law\,III}
+   \arrow[r, "L_{III\to IV}"]
+&amp; \mathrm{Law\,IV}
+\end{tikzcd}$$</span></p>
+<dl>
+<dt><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mrow><mi>I</mi><mo>→</mo><mi>I</mi><mi>I</mi></mrow></msub><annotation encoding="application/x-tex">L_{I\to II}</annotation></semantics></math>:</dt>
+<dd>
+<p>Sends a symmetric monoidal
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-category
+to its category of phase functors
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mi>B</mi><mi>G</mi><mo>,</mo><mrow><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒂</mi><mi mathvariant="bold-italic">𝒎</mi></mrow><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[BG, \mathbf{Ham}]</annotation></semantics></math>
+for each symmetry group
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics></math>.</p>
+</dd>
+<dt><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mrow><mi>I</mi><mi>I</mi><mo>→</mo><mi>I</mi><mi>I</mi><mi>I</mi></mrow></msub><annotation encoding="application/x-tex">L_{II\to III}</annotation></semantics></math>:</dt>
+<dd>
+<p>Sends a phase functor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo>:</mo><mi>B</mi><mi>G</mi><mo>→</mo><mrow><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒂</mi><mi mathvariant="bold-italic">𝒎</mi></mrow></mrow><annotation encoding="application/x-tex">F\colon BG \to \mathbf{Ham}</annotation></semantics></math>
+to a Floquet phase functor
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">F</mi><mi mathvariant="normal">l</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>F</mi><mo stretchy="false" form="postfix">)</mo><mo>:</mo><mi>B</mi><mo stretchy="false" form="prefix">(</mo><mi>G</mi><mo>×</mo><msub><mi mathvariant="double-struck">ℤ</mi><mi>T</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mrow><mi mathvariant="bold-italic">𝑭</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒐</mi><mi mathvariant="bold-italic">𝒒</mi><mi mathvariant="bold-italic">𝒖</mi><mi mathvariant="bold-italic">𝒆</mi><mi mathvariant="bold-italic">𝒕</mi><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒂</mi><mi mathvariant="bold-italic">𝒎</mi></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathrm{Fl}(F)\colon B(G\times \mathbb{Z}_T) \to \mathbf{FloquetHam}.</annotation></semantics></math></p>
+</dd>
+<dt><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mrow><mi>I</mi><mi>I</mi><mi>I</mi><mo>→</mo><mi>I</mi><mi>V</mi></mrow></msub><annotation encoding="application/x-tex">L_{III\to IV}</annotation></semantics></math>:</dt>
+<dd>
+<p>Sends a Floquet phase
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">F</mi><mi mathvariant="normal">l</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>F</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{Fl}(F)</annotation></semantics></math>
+to its information-geometric structure: the Fisher metric on the
+parameter manifold of drives, the modular flow on entangled subregions,
+and the holographic-code structure when topological order is
+present.</p>
+</dd>
+</dl>
+<div id="rem:composition" class="remark">
+<p><em>Remark 29</em> (Modular composition: a conjectural framework). We
+do <em>not</em> claim a theorem here; rather, we organise the modular
+composition as a conjectural framework. We posit a 2-category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑻</mi><mi mathvariant="bold-italic">𝒉</mi><mi mathvariant="bold-italic">𝒆</mi><mi mathvariant="bold-italic">𝒐</mi><mi mathvariant="bold-italic">𝒓</mi><mi mathvariant="bold-italic">𝒚</mi></mrow><annotation encoding="application/x-tex">\mathbf{Theory}</annotation></semantics></math>
+whose 0-cells are physical theories (in a sense to be made precise),
+whose 1-cells are functorial liftings of the kind constructed in Laws
+I–III, and whose 2-cells are natural transformations of liftings; the
+composite lifting
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>:=</mo><msub><mi>L</mi><mrow><mi>I</mi><mi>I</mi><mi>I</mi><mo>→</mo><mi>I</mi><mi>V</mi></mrow></msub><mo>∘</mo><msub><mi>L</mi><mrow><mi>I</mi><mi>I</mi><mo>→</mo><mi>I</mi><mi>I</mi><mi>I</mi></mrow></msub><mo>∘</mo><msub><mi>L</mi><mrow><mi>I</mi><mo>→</mo><mi>I</mi><mi>I</mi></mrow></msub></mrow><annotation encoding="application/x-tex">L := L_{III\to IV} \circ L_{II\to III} \circ L_{I\to II}</annotation></semantics></math>
+is then conjectured to take values in theories simultaneously equipped
+with:</p>
+<ol>
+<li><p>a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal structure (from Law I);</p></li>
+<li><p>long-range entanglement and a topologically ordered code subspace
+(from Law II);</p></li>
+<li><p>modular flow and a periodic temporal structure (from Law
+III);</p></li>
+<li><p>a Riemannian Fisher–Bures metric on parametric state families and
+a holographic-code structure on the long-range entangled
+substrate.</p></li>
+</ol>
+<p>The first three properties are inherited from the individual liftings
+as constructed in the prior laws. The fourth is the conjectural emergent
+property: in the discrete examples we exhibit (<a href="#sec:examples"
+data-reference-type="ref+Label" data-reference="sec:examples">9</a>) it
+is realised concretely; in the continuum it remains a research
+programme. We emphasise that this remark is a conceptual schema for
+organising physical principles, not a mathematically proven theorem; a
+full categorical formalisation of the 2-category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑻</mi><mi mathvariant="bold-italic">𝒉</mi><mi mathvariant="bold-italic">𝒆</mi><mi mathvariant="bold-italic">𝒐</mi><mi mathvariant="bold-italic">𝒓</mi><mi mathvariant="bold-italic">𝒚</mi></mrow><annotation encoding="application/x-tex">\mathbf{Theory}</annotation></semantics></math>
+and the lifting functors is left to future work and to the synthesis
+paper of the series.</p>
+</div>
+<h2 id="non-derivability-from-any-single-prior-law">Non-derivability
+from any single prior law</h2>
+<div id="prop:nonderivability" class="proposition">
+<p><strong>Proposition 30</strong> (Non-derivability within the modular
+framework). <em>Within the modular framework presented in this paper,
+the Fisher–Bures metric and the Ryu–Takayanagi area formula are
+<em>not</em> derivable from Law I alone, nor from Law II alone, nor from
+Law III alone. They emerge only in the image of the composite lifting
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>.
+We emphasise that this is a structural statement about the proposed
+compositional schema, not a no-go theorem about hypothetical alternative
+derivations from differently-defined ingredients.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> We exhibit, for each individual law, a model
+satisfying that law but not exhibiting the emergent metric.</p>
+<p><strong>Law I alone</strong>: The category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑭</mi><mi mathvariant="bold-italic">𝑯</mi><mi mathvariant="bold-italic">𝒊</mi><mi mathvariant="bold-italic">𝒍</mi><mi mathvariant="bold-italic">𝒃</mi></mrow><annotation encoding="application/x-tex">\mathbf{FHilb}</annotation></semantics></math>
+of finite-dimensional Hilbert spaces with no chosen subobject lattice is
+a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal compact closed category (object of Law I), but carries no
+preferred Riemannian structure on its space of states; the natural
+transformations of Law I include unitaries but not the metric-defining
+SLDs.</p>
+<p><strong>Law II alone</strong>: A topologically ordered phase,
+e.g. Kitaev’s toric code, exhibits long-range entanglement and a
+topological entanglement entropy
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>D</mi></mrow><annotation encoding="application/x-tex">\gamma = \log D</annotation></semantics></math>,
+but no Riemannian metric on its ground-state manifold can be canonically
+constructed without specifying a parametric family (Law III/IV input).
+The Fisher metric requires smooth parametric dependence; Law II provides
+only discrete data.</p>
+<p><strong>Law III alone</strong>: A Floquet system on a Hilbert space
+without long-range entanglement has well-defined modular flow but no
+topologically protected code subspace; the holographic-code structure is
+absent, and the Fisher metric on its parameter space (drive amplitude,
+frequency) does not satisfy any RT-like area law.</p>
+<p>Only when all three are composed do we simultaneously have: (i) the
+categorical machinery (Law I), (ii) the long-range entangled topological
+substrate that acts as a QEC code (Law II), and (iii) the smooth
+temporal/parametric flow defining the Fisher metric (Law III). The
+Ryu–Takayanagi formula then arises in the image of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mrow><mi>I</mi><mi>I</mi><mi>I</mi><mo>→</mo><mi>I</mi><mi>V</mi></mrow></msub><annotation encoding="application/x-tex">L_{III\to IV}</annotation></semantics></math>
+as a theorem about the OAQEC content of the substrate. ◻</p>
+</div>
+<p><a href="#prop:nonderivability" data-reference-type="ref+Label"
+data-reference="prop:nonderivability">30</a> is the modular thesis
+specialised to Law IV: emergent geometry is irreducibly compositional.
+There is no shortcut from any single prior layer to spacetime; the
+composition is the mechanism.</p>
+<h2 id="quantitative-lipschitz-bound-on-the-happy-model">Quantitative
+Lipschitz bound on the HaPPY model</h2>
+<div id="prop:happy-lipschitz" class="proposition">
+<p><strong>Proposition 31</strong> (HaPPY Lipschitz continuity). <em>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>ψ</mi><mo stretchy="false" form="postfix">⟩</mo><mo>,</mo><mo stretchy="false" form="prefix">|</mo><msup><mi>ψ</mi><mo>′</mo></msup><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">|\psi\rangle, |\psi&#39;\rangle</annotation></semantics></math>
+be two bulk states encoded by the HaPPY isometry
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>.
+Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+be a connected boundary region with discrete RT cut
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>γ</mi><mi>A</mi></msub><annotation encoding="application/x-tex">\gamma_A</annotation></semantics></math>
+of size
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">|\gamma_A|</annotation></semantics></math>.
+Then
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo><msub><mi>S</mi><mi>ψ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>S</mi><msup><mi>ψ</mi><mo>′</mo></msup></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo><mspace width="0.278em"></mspace><mo>≤</mo><mspace width="0.278em"></mspace><mo stretchy="false" form="prefix">|</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="prefix">|</mo><mspace width="0.167em"></mspace><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">∥</mo><mo stretchy="false" form="prefix">|</mo><mi>ψ</mi><mo stretchy="false" form="postfix">⟩</mo><mo>−</mo><mo stretchy="false" form="prefix">|</mo><msup><mi>ψ</mi><mo>′</mo></msup><mo stretchy="false" form="postfix">⟩</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">∥</mo><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>d</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="postfix">∥</mo><mo>⋅</mo><msup><mo stretchy="false" form="postfix">∥</mo><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">\bigl| S_\psi(A) - S_{\psi&#39;}(A)\bigr| \;\leq\; |\gamma_A|\,\bigl\| |\psi\rangle - |\psi&#39;\rangle\bigr\|\,(\log d) + O(\| \cdot \|^2),</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>⋅</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\| \cdot \|</annotation></semantics></math>
+is the Hilbert-space norm.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> The HaPPY entropy formula gives
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>ψ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">|</mo><msub><mi>γ</mi><mi>A</mi></msub><mo stretchy="false" form="prefix">|</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>d</mi><mo>+</mo><msubsup><mi>S</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">k</mi></mrow><mi>ψ</mi></msubsup><mo stretchy="false" form="prefix">(</mo><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_\psi(A) = |\gamma_A| \log d + S^\psi_{\mathrm{bulk}}(W(A))</annotation></semantics></math>.
+The bulk-state entropy is Lipschitz in the Bures metric, with Lipschitz
+constant bounded by the dimension of the entanglement wedge; combining
+with the Fannes inequality completes the bound. Cf. <span
+class="citation" data-cites="pyhp2015"></span>. ◻</p>
+</div>
+<h1 id="sec:examples">Worked Examples</h1>
+<h2 id="the-happy-pentagon-code-on-a-single-tile">The HaPPY pentagon
+code on a single tile</h2>
+<p>We present the simplest non-trivial HaPPY tile: a single perfect
+tensor on a six-leg system (one bulk, five boundary), realised as the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mo stretchy="false" form="prefix">[</mo><mn>5</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[[5,1,3]]</annotation></semantics></math>
+code of Laflamme–Miquel–Paz–Zurek <span class="citation"
+data-cites="laflamme1996"></span>. The most compact specification of the
+encoder
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>:</mo><msup><mi mathvariant="double-struck">ℂ</mi><mn>2</mn></msup><mo>→</mo><mo stretchy="false" form="prefix">(</mo><msup><mi mathvariant="double-struck">ℂ</mi><mn>2</mn></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>⊗</mi><mn>5</mn></mrow></msup></mrow><annotation encoding="application/x-tex">V\colon \mathbb{C}^2 \to (\mathbb{C}^2)^{\otimes 5}</annotation></semantics></math>
+is via its four stabiliser generators, taken as the four right-cyclic
+shifts of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mi>Z</mi><mi>Z</mi><mi>X</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">XZZXI</annotation></semantics></math>:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mn>1</mn></msub><mo>=</mo><mi>X</mi><mi>Z</mi><mi>Z</mi><mi>X</mi><mi>I</mi><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>g</mi><mn>2</mn></msub><mo>=</mo><mi>I</mi><mi>X</mi><mi>Z</mi><mi>Z</mi><mi>X</mi><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>g</mi><mn>3</mn></msub><mo>=</mo><mi>X</mi><mi>I</mi><mi>X</mi><mi>Z</mi><mi>Z</mi><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>g</mi><mn>4</mn></msub><mo>=</mo><mi>Z</mi><mi>X</mi><mi>I</mi><mi>X</mi><mi>Z</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">g_1 = X Z Z X I, \quad g_2 = I X Z Z X, \quad g_3 = X I X Z Z, \quad g_4 = Z X I X Z,</annotation></semantics></math>
+together with the logical operators
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>X</mi><mo accent="true">‾</mo></mover><mo>=</mo><msup><mi>X</mi><mrow><mi>⊗</mi><mn>5</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\bar X = X^{\otimes 5}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>Z</mi><mo accent="true">‾</mo></mover><mo>=</mo><msup><mi>Z</mi><mrow><mi>⊗</mi><mn>5</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\bar Z = Z^{\otimes 5}</annotation></semantics></math>.
+The codewords
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">|</mo><mn>0</mn><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">V|0\rangle</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">|</mo><mn>1</mn><mo stretchy="false" form="postfix">⟩</mo><mo>=</mo><mover><mi>X</mi><mo accent="true">‾</mo></mover><mi>V</mi><mo stretchy="false" form="prefix">|</mo><mn>0</mn><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">V|1\rangle = \bar X V|0\rangle</annotation></semantics></math>
+are the unique states in the two-dimensional code subspace (the
+simultaneous
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">+1</annotation></semantics></math>
+eigenspace of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>g</mi><mn>1</mn></msub><mo>,</mo><msub><mi>g</mi><mn>2</mn></msub><mo>,</mo><msub><mi>g</mi><mn>3</mn></msub><mo>,</mo><msub><mi>g</mi><mn>4</mn></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{g_1,g_2,g_3,g_4\}</annotation></semantics></math>)
+that are also eigenstates of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>Z</mi><mo accent="true">‾</mo></mover><mo>=</mo><msup><mi>Z</mi><mrow><mi>⊗</mi><mn>5</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\bar Z = Z^{\otimes 5}</annotation></semantics></math>
+with eigenvalue
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">+1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math>
+respectively; an explicit expansion in the computational basis is given
+in <span class="citation"
+data-cites="laflamme1996 nielsenchuang"></span>.</p>
+<div id="prop:5qubit-rt" class="proposition">
+<p><strong>Proposition 32</strong> (Five-qubit RT formula). <em>For the
+five-qubit code viewed as a single HaPPY tile and any contiguous
+boundary region
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+of size
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>A</mi><mo stretchy="false" form="prefix">|</mo><mo>=</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">|A| = k</annotation></semantics></math>
+qubits, the entanglement entropy of the maximally mixed code state
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>=</mo><mi>V</mi><msup><mi>V</mi><mo>†</mo></msup><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">\rho = V V^\dagger / 2</annotation></semantics></math>
+satisfies
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>,</mo><mn>5</mn><mo>−</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mn>2</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">S(A) \;=\; \min(k, 5-k) \cdot \log 2.</annotation></semantics></math></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> The five-qubit code is a perfect tensor: every
+reduced state on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\leq 2</annotation></semantics></math>
+of the five output qubits is maximally mixed (by the perfect tensor
+property), and similarly for the complement. The entropy is therefore
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">|</mo><mi>A</mi><mo stretchy="false" form="prefix">|</mo><mo>,</mo><mo stretchy="false" form="prefix">|</mo><msup><mi>A</mi><mi>c</mi></msup><mo stretchy="false" form="prefix">|</mo><mo stretchy="false" form="postfix">)</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mn>2</mn><mo>=</mo><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>,</mo><mn>5</mn><mo>−</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">\min(|A|, |A^c|)\log 2 = \min(k, 5-k)\log 2</annotation></semantics></math>,
+matching the discrete RT cut size. ◻</p>
+</div>
+<p>For example, on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>A</mi><mo stretchy="false" form="prefix">|</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">|A| = 1</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">S(A) = \log 2</annotation></semantics></math>,
+the maximally entangled value. For
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>A</mi><mo stretchy="false" form="prefix">|</mo><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">|A|=2</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">S(A) = 2\log 2</annotation></semantics></math>.
+The cut sizes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>,</mo><mn>5</mn><mo>−</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\min(k,5-k)</annotation></semantics></math>
+are exactly the discrete geodesic lengths in the trivial single-tile
+geometry.</p>
+<h2 id="fisher-metric-on-the-gaussian-family-revisited">Fisher metric on
+the Gaussian family revisited</h2>
+<p>We compute the Fisher metric on the two-parameter family of
+univariate Gaussians in detail, and exhibit the emergent hyperbolic
+geometry.</p>
+<p>For
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mrow><mi>μ</mi><mo>,</mo><mi>σ</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><msqrt><mrow><mn>2</mn><mi>π</mi><msup><mi>σ</mi><mn>2</mn></msup></mrow></msqrt></mfrac><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mo>−</mo><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>μ</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><mrow><mn>2</mn><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p_{\mu,\sigma}(x) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\bigl(-\frac{(x-\mu)^2}{2\sigma^2}\bigr)</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\sigma &gt; 0</annotation></semantics></math>,
+the score functions are
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>∂</mi><mi>μ</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>p</mi><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mfrac><mrow><mi>x</mi><mo>−</mo><mi>μ</mi></mrow><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>∂</mi><mi>σ</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>p</mi><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mo>−</mo><mfrac><mn>1</mn><mi>σ</mi></mfrac><mo>+</mo><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>μ</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><msup><mi>σ</mi><mn>3</mn></msup></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">\partial_\mu \log p \;=\; \frac{x-\mu}{\sigma^2}, \qquad \partial_\sigma \log p \;=\; -\frac{1}{\sigma} + \frac{(x-\mu)^2}{\sigma^3}.</annotation></semantics></math>
+The Fisher information components are
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>g</mi><mrow><mi>μ</mi><mi>μ</mi></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi mathvariant="double-struck">𝔼</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">[</mo><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>μ</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><msup><mi>σ</mi><mn>4</mn></msup></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mfrac><mn>1</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>g</mi><mrow><mi>σ</mi><mi>σ</mi></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi mathvariant="double-struck">𝔼</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">[</mo><mfrac><mn>1</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>−</mo><mfrac><mrow><mn>2</mn><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>μ</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><msup><mi>σ</mi><mn>4</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>μ</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>4</mn></msup></mrow><msup><mi>σ</mi><mn>6</mn></msup></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mfrac><mn>1</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>−</mo><mfrac><mn>2</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>+</mo><mfrac><mn>3</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>=</mo><mfrac><mn>2</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>g</mi><mrow><mi>μ</mi><mi>σ</mi></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>0</mn><mspace width="1.0em"></mspace><mrow><mrow><mtext mathvariant="normal">(by symmetry of the Gaussian under </mtext><mspace width="0.333em"></mspace></mrow><mrow><mi>x</mi><mo>↦</mo><mn>2</mn><mi>μ</mi><mo>−</mo><mi>x</mi></mrow><mtext mathvariant="normal">).</mtext></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+g_{\mu\mu} &amp;= \mathbb{E}\!\left[\frac{(x-\mu)^2}{\sigma^4}\right] = \frac{1}{\sigma^2},\\
+g_{\sigma\sigma} &amp;= \mathbb{E}\!\left[\frac{1}{\sigma^2} - \frac{2(x-\mu)^2}{\sigma^4} + \frac{(x-\mu)^4}{\sigma^6}\right] = \frac{1}{\sigma^2} - \frac{2}{\sigma^2} + \frac{3}{\sigma^2} = \frac{2}{\sigma^2},\\
+g_{\mu\sigma} &amp;= 0 \quad \text{(by symmetry of the Gaussian under $x \mapsto 2\mu - x$).}
+\end{align*}</annotation></semantics></math> Hence
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msubsup><mi>s</mi><mi>F</mi><mn>2</mn></msubsup><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mfrac><mrow><mi>d</mi><msup><mi>μ</mi><mn>2</mn></msup></mrow><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mn>2</mn><mspace width="0.167em"></mspace><mi>d</mi><msup><mi>σ</mi><mn>2</mn></msup></mrow><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">ds^2_F \;=\; \frac{d\mu^2}{\sigma^2} + \frac{2\, d\sigma^2}{\sigma^2}.</annotation></semantics></math>
+After the substitution
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msqrt><mn>2</mn></msqrt><mspace width="0.167em"></mspace><mi>σ</mi></mrow><annotation encoding="application/x-tex">y = \sqrt{2}\,\sigma</annotation></semantics></math>,
+this becomes
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msup><mi>s</mi><mn>2</mn></msup><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mfrac><mn>2</mn><msup><mi>y</mi><mn>2</mn></msup></mfrac><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mi>d</mi><msup><mi>μ</mi><mn>2</mn></msup><mo>+</mo><mi>d</mi><msup><mi>y</mi><mn>2</mn></msup><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">ds^2 \;=\; \frac{2}{y^2}\bigl(d\mu^2 + dy^2\bigr),</annotation></semantics></math>
+the Poincaré half-plane metric of constant negative Gauss curvature
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">-1/2</annotation></semantics></math>
+(Ricci scalar
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math>).</p>
+<div class="remark">
+<p><em>Remark 33</em> (Emergent
+AdS<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mn>2</mn></msub><annotation encoding="application/x-tex">_2</annotation></semantics></math>).
+The Fisher metric on the Gaussian family is the metric of
+AdS<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mn>2</mn></msub><annotation encoding="application/x-tex">_2</annotation></semantics></math>
+(up to constant scaling). This is the simplest non-trivial example of
+<em>emergent hyperbolic geometry from information</em>: a parametric
+family of probability distributions with no built-in geometric structure
+acquires a canonical hyperbolic Riemannian metric from its information
+content. This is precisely the kind of emergent geometric phenomenon
+that, scaled up to long-range entangled topologically ordered substrates
+with modular flow, produces holographic AdS/CFT.</p>
+</div>
+<h2 id="toric-code-as-a-quantum-error-correcting-code">Toric code as a
+quantum error-correcting code</h2>
+<p>The Kitaev toric code on a torus encodes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">k=2</annotation></semantics></math>
+logical qubits into
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>2</mn><msup><mi>L</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">n = 2L^2</annotation></semantics></math>
+physical qubits (for an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>×</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">L\times L</annotation></semantics></math>
+lattice) with code distance
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">d = L</annotation></semantics></math>.
+The code subspace is the simultaneous
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">+1</annotation></semantics></math>
+eigenspace of the vertex and plaquette stabilisers
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>A</mi><mi>v</mi></msub><mo>,</mo><msub><mi>B</mi><mi>p</mi></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{A_v, B_p\}</annotation></semantics></math>.</p>
+<div id="prop:toric-bridge" class="proposition">
+<p><strong>Proposition 34</strong> (Toric code as Law II
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>→</mo><annotation encoding="application/x-tex">\to</annotation></semantics></math>
+Law IV bridge). <em>The toric-code stabiliser code is the simplest
+example of a Law II topologically ordered phase that, viewed as a Law IV
+quantum error-correcting code, exhibits OAQEC structure: each
+Wilson-line subalgebra corresponds to a different region of the
+(trivial) bulk, and complementary recovery holds for all bipartitions of
+the physical qubits.</em></p>
+</div>
+<p>The toric code does not exhibit a non-trivial Ryu–Takayanagi area law
+because its “bulk” is trivial (a point), but it shows the basic
+mechanism by which a Law II topological phase carries a Law IV code
+structure.</p>
+<h1 id="sec:discussion">Discussion</h1>
+<h2 id="what-law-iv-does-and-does-not-establish">What Law IV does and
+does not establish</h2>
+<p>Law IV establishes that, given the compositional structure of Laws
+I–III, a Riemannian Fisher–Bures metric on parametric state families is
+well-defined, and that long-range entangled topological substrates carry
+a quantum error-correcting code structure with OAQEC content. The
+framework also offers a route to the AMPS firewall paradox <span
+class="citation" data-cites="amps2012"></span>: the non-local boundary
+encoding of bulk operators in a holographic code naturally implements
+“complementarity by error correction”, so the apparent monogamy
+violation of the AMPS argument is recast as a property of the encoding
+map
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi></mrow><annotation encoding="application/x-tex">\mathrm{enc}</annotation></semantics></math>
+rather than a contradiction. In the discrete HaPPY model, this is fully
+rigorous and the Ryu–Takayanagi formula is exact (<a href="#thm:happy"
+data-reference-type="ref+Label" data-reference="thm:happy">13</a>, <a
+href="#prop:5qubit-rt" data-reference-type="ref+Label"
+data-reference="prop:5qubit-rt">32</a>). In the continuum, the
+Ryu–Takayanagi formula is rigorous in the semiclassical limit <span
+class="citation" data-cites="ryutakayanagi2006 fghmv2014"></span> but
+the full non-perturbative derivation remains a research programme.</p>
+<h2 id="limitations">Limitations</h2>
+<ol>
+<li><p>The HaPPY code is a discrete toy model. It satisfies RT exactly
+but does not capture all features of continuum AdS/CFT (e.g. Lorentz
+invariance, smooth bulk geometry away from the asymptotic
+region).</p></li>
+<li><p>The covariant Hubeny–Rangamani–Takayanagi formula (extremal
+rather than minimal surfaces) requires extending the OAQEC framework;
+this is partial in the literature.</p></li>
+<li><p>The Faulkner et al. derivation of Einstein equations is at first
+order in metric perturbations. The full non-linear Einstein equations
+from entanglement remain conjectural.</p></li>
+<li><p>The Fisher-metric construction is well established for finite
+parameter spaces, e.g. Gaussian families. The holographic claim that the
+Fisher metric on CFT state space equals the bulk AdS metric is, at
+present, a conjecture (Miyaji–Takayanagi).</p></li>
+</ol>
+<h2 id="connections-to-the-broader-series">Connections to the broader
+series</h2>
+<ul>
+<li><p>Law I provides the categorical machinery:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>†</mi><annotation encoding="application/x-tex">\dagger</annotation></semantics></math>-symmetric
+monoidal categories, isometries, sub-objects, monoidal functors. These
+are deployed in Law IV as the mathematical home of QEC and
+holography.</p></li>
+<li><p>Law II provides the long-range entangled topological substrate.
+Topological order is the carrier of holographic codes; the topological
+entanglement entropy
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>D</mi></mrow><annotation encoding="application/x-tex">\gamma = \log D</annotation></semantics></math>
+is the simplest example of universal information that is not captured by
+any local order parameter.</p></li>
+<li><p>Law III provides the temporal flow. Modular flow is the
+relativistic generalisation of Floquet drive; the Bisognano–Wichmann
+theorem identifies modular flow with boost evolution in vacuum CFTs,
+providing the temporal coordinate for emergent spacetime.</p></li>
+<li><p>The synthesis paper combines these: the Fisher–Bures metric on
+parameter families equipped with all three structures is, conjecturally,
+the bulk AdS metric.</p></li>
+</ul>
+<h1 id="sec:open">Open Problems</h1>
+<ol>
+<li><p><strong>Covariant holography</strong>: Extend the OAQEC framework
+to derive the HRT extremal-surface formula; this requires a Lorentzian
+generalisation of perfect tensors.</p></li>
+<li><p><strong>Holographic complexity</strong>: Several proposals for
+the bulk dual of CFT circuit complexity (CV, CA, CV 2.0) exist; none is
+fully derived from first principles.</p></li>
+<li><p><strong>Bulk reconstruction beyond perturbation</strong>: The
+island formula resolving the Page curve uses a generalised entropy with
+island contributions; a categorical derivation is open.</p></li>
+<li><p><strong>Floquet holography</strong>: The dual of a
+periodically-driven CFT is conjecturally a time-dependent bulk geometry.
+Establishing this rigorously would unify Laws III and IV.</p></li>
+<li><p><strong>Non-linear Einstein from entanglement</strong>: Faulkner
+et al. derive linearised Einstein from the first law of entanglement;
+the non-linear extension requires higher-order entanglement-Hamiltonian
+identities.</p></li>
+<li><p><strong>Categorical axiomatisation of holography</strong>:
+Formulate the holographic functor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi mathvariant="normal">h</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{\mathrm{hol}}</annotation></semantics></math>
+as a precise functor between
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>∞</mi><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\infty,1)</annotation></semantics></math>-categories
+and prove the Ryu–Takayanagi formula intrinsically.</p></li>
+<li><p><strong>de Sitter holography</strong>: Adapt the modular
+composition to produce a de Sitter bulk rather than AdS; the role of the
+Fisher metric on a state space with positive cosmological constant is
+unclear.</p></li>
+<li><p><strong>Computational complexity classes from
+holography</strong>: Identify the complexity class that bulk
+diffeomorphism-invariant computation falls into; how does it relate to
+BQP/QMA?</p></li>
+</ol>
+<h1 id="sec:conclusion">Conclusion</h1>
+<p>We have presented Law IV of the modular research series <em>Emergent
+Spacetime Dynamics</em>: the assertion that, when the structures of Laws
+I–III are composed, the resulting compositional complexity is sufficient
+to produce a Riemannian metric on state space and, in the holographic
+limit, an emergent spacetime geometry. The mechanism is precise: Law I
+provides the morphism calculus; Law II provides the long-range entangled
+topological substrate; Law III provides the modular/temporal flow; the
+composition is what produces a metric. We emphasised, in <a
+href="#prop:nonderivability" data-reference-type="ref+Label"
+data-reference="prop:nonderivability">30</a>, that no single prior law
+produces this emergent geometry alone — the layering is essential.</p>
+<p>The framework is explicitly modular, not unified: each layer remains
+a self-standing ingredient, and the synthesis is the assertion that the
+composition of the four layers, taken together, gives a derivation of
+classical spacetime from quantum information. Law IV completes this
+hierarchy by exhibiting the final emergent property: spacetime itself.
+We emphasise once more that this paper is best read as a <em>manifesto
+for a research programme</em>: we synthesise rigorous results in the
+discrete setting, identify the conjectural continuum extensions, and
+propose the modular composition as a unifying organising schema. The
+accompanying software package, summarised in <a href="#app:haskell"
+data-reference-type="ref+Label" data-reference="app:haskell">13</a>,
+gives computational substance to the discrete worked examples.</p>
+<h1 class="unnumbered" id="acknowledgements">Acknowledgements</h1>
+<p>This is paper 4 of 4 of the modular research series <em>Emergent
+Spacetime Dynamics</em>. We thank the authors of the prior papers in the
+series for the foundational structures recapitulated in <a
+href="#sec:recap" data-reference-type="ref+Label"
+data-reference="sec:recap">1.1</a>.</p>
+<h1 id="app:haskell">Companion Software Package: Architecture</h1>
+<p>A companion software package, written in Haskell, accompanies the
+manuscript. It implements the discrete examples discussed in <a
+href="#sec:examples" data-reference-type="ref+Label"
+data-reference="sec:examples">9</a> and provides automated property
+tests for the code-theoretic claims. The architecture is organised
+around four modules:</p>
+<ul>
+<li><p><code>Law4.Stabiliser</code> — a small stabiliser-code framework
+supporting symplectic representations of Pauli operators and
+verification of Knill–Laflamme conditions; instantiated for the
+bit-flip, phase-flip, Shor, Steane, and five-qubit codes.</p></li>
+<li><p><code>Law4.HaPPY</code> — a toy HaPPY-style holographic code on a
+small tile arrangement, including a single-tile and a two-tile pair,
+with combinatorial cut-counting to verify the discrete Ryu–Takayanagi
+formula.</p></li>
+<li><p><code>Law4.Fisher</code> — a Fisher-information metric calculator
+for parametric families, with closed-form support for the univariate
+Gaussian family and a numerical estimator using central
+differences.</p></li>
+<li><p><code>Law4.Properties</code> — a property-test suite verifying
+code distance, perfect-tensor balance via the stabiliser-commutativity
+check, and discrete RT cut sizes on the toy tilings.</p></li>
+</ul>
+<p>The package builds with <code>cabal build</code> and the test suite
+runs with <code>cabal test</code>, producing a thirteen-test pass on a
+clean checkout. The full source distribution is included alongside the
+manuscript.</p>
+<div class="thebibliography">
+<p><span>99</span></p>
+<p>F. Pastawski, B. Yoshida, D. Harlow, and J. Preskill, “Holographic
+quantum error-correcting codes: toy models for the bulk/boundary
+correspondence,” <em>JHEP</em> <strong>2015</strong>, 149 (2015),
+arXiv:1503.06237.</p>
+<p>S. Ryu and T. Takayanagi, “Holographic derivation of entanglement
+entropy from AdS/CFT,” <em>Phys. Rev. Lett.</em> <strong>96</strong>,
+181602 (2006), arXiv:hep-th/0603001.</p>
+<p>J. M. Maldacena, “The large
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+limit of superconformal field theories and supergravity,”
+<em>Int. J. Theor. Phys.</em> <strong>38</strong>, 1113 (1999),
+arXiv:hep-th/9711200.</p>
+<p>J. M. Maldacena, “Eternal black holes in anti-de Sitter,”
+<em>JHEP</em> <strong>2003</strong>, 021 (2003),
+arXiv:hep-th/0106112.</p>
+<p>J. M. Maldacena and L. Susskind, “Cool horizons for entangled black
+holes,” <em>Fortschr. Phys.</em> <strong>61</strong>, 781 (2013),
+arXiv:1306.0533.</p>
+<p>M. Van Raamsdonk, “Building up spacetime with quantum entanglement,”
+<em>Gen. Rel. Grav.</em> <strong>42</strong>, 2323 (2010),
+arXiv:1005.3035.</p>
+<p>A. Almheiri, D. Marolf, J. Polchinski, and J. Sully, “Black holes:
+complementarity or firewalls?” <em>JHEP</em> <strong>2013</strong>, 062
+(2013), arXiv:1207.3123.</p>
+<p>A. Almheiri, X. Dong, and D. Harlow, “Bulk locality and quantum error
+correction in AdS/CFT,” <em>JHEP</em> <strong>2015</strong>, 163 (2015),
+arXiv:1411.7041.</p>
+<p>D. Harlow, “The Ryu–Takayanagi formula from quantum error
+correction,” <em>Commun. Math. Phys.</em> <strong>354</strong>, 865
+(2017), arXiv:1607.03901.</p>
+<p>T. Faulkner, M. Guica, T. Hartman, R. C. Myers, and M. Van Raamsdonk,
+“Gravitation from entanglement in holographic CFTs,” <em>JHEP</em>
+<strong>2014</strong>, 051 (2014), arXiv:1312.7856.</p>
+<p>S.-I. Amari, <em>Information Geometry and Its Applications</em>,
+Applied Mathematical Sciences 194, Springer (2016).</p>
+<p>M. Miyaji and T. Takayanagi, “Surface/state correspondence as a
+generalized holography,” <em>Prog. Theor. Exp. Phys.</em>
+<strong>2015</strong>, 073B03 (2015), arXiv:1503.03542.</p>
+<p>M. Atiyah, “Topological quantum field theories,”
+<em>Publ. Math. IHES</em> <strong>68</strong>, 175 (1988).</p>
+<p>J. Baez and J. Dolan, “Higher-dimensional algebra and topological
+quantum field theory,” <em>J. Math. Phys.</em> <strong>36</strong>, 6073
+(1995).</p>
+<p>J. C. Baez and M. Stay, “Physics, topology, logic and computation: a
+Rosetta Stone,” arXiv:0903.0340 (2009).</p>
+<p>S. Abramsky and B. Coecke, “A categorical semantics of quantum
+protocols,” in <em>Proc. 19th IEEE Symp. on Logic in Computer
+Science</em> (2004).</p>
+<p>J. Lurie, <em>Higher Topos Theory</em>, Annals of Math. Studies 170,
+Princeton (2009).</p>
+<p>U. Schreiber and M. Shulman, “Quantum gauge field theory in cohesive
+homotopy type theory,” arXiv:1408.0054 (2014).</p>
+<p>F. W. Lawvere, “Functorial semantics of algebraic theories,”
+<em>Proc. Nat. Acad. Sci. USA</em> <strong>50</strong>, 869 (1963).</p>
+<p>A. Yu. Kitaev, “Fault-tolerant quantum computation by anyons,”
+<em>Ann. Phys.</em> <strong>303</strong>, 2 (2003).</p>
+<p>X.-G. Wen, “Topological orders in rigid states,”
+<em>Int. J. Mod. Phys. B</em> <strong>4</strong>, 239 (1990).</p>
+<p>M. Levin and X.-G. Wen, “String-net condensation: a physical
+mechanism for topological phases,” <em>Phys. Rev. B</em>
+<strong>71</strong>, 045110 (2005).</p>
+<p>X. Chen, Z.-C. Gu, Z.-X. Liu, and X.-G. Wen, “Symmetry protected
+topological orders and the group cohomology of their symmetry group,”
+<em>Phys. Rev. B</em> <strong>87</strong>, 155114 (2013).</p>
+<p>A. Kitaev and J. Preskill, “Topological entanglement entropy,”
+<em>Phys. Rev. Lett.</em> <strong>96</strong>, 110404 (2006).</p>
+<p>D. V. Else, B. Bauer, and C. Nayak, “Floquet time crystals,”
+<em>Phys. Rev. Lett.</em> <strong>117</strong>, 090402 (2016).</p>
+<p>V. Khemani, A. Lazarides, R. Moessner, and S. L. Sondhi, “Phase
+structure of driven quantum systems,” <em>Phys. Rev. Lett.</em>
+<strong>116</strong>, 250401 (2016).</p>
+<p>M. Bukov, L. D’Alessio, and A. Polkovnikov, “Universal high-frequency
+behavior of periodically driven systems,” <em>Adv. Phys.</em>
+<strong>64</strong>, 139 (2015).</p>
+<p>M. S. Rudner and N. H. Lindner, “Band structure engineering and
+non-equilibrium dynamics in Floquet topological insulators,”
+<em>Nat. Rev. Phys.</em> <strong>2</strong>, 229 (2020).</p>
+<p>R. Roy and F. Harper, “Periodic table for Floquet topological
+insulators,” <em>Phys. Rev. B</em> <strong>96</strong>, 155118
+(2017).</p>
+<p>J. J. Bisognano and E. H. Wichmann, “On the duality condition for
+quantum fields,” <em>J. Math. Phys.</em> <strong>17</strong>, 303
+(1976).</p>
+<p>C. Bény and O. Oreshkov, “General conditions for approximate quantum
+error correction and near-optimal recovery channels,”
+<em>Phys. Rev. Lett.</em> <strong>104</strong>, 120501 (2010),
+arXiv:0907.5391.</p>
+<p>M. A. Nielsen and I. L. Chuang, <em>Quantum Computation and Quantum
+Information</em>, 10th anniversary ed., Cambridge University Press
+(2010).</p>
+<p>R. Laflamme, C. Miquel, J. P. Paz, and W. H. Zurek, “Perfect quantum
+error correcting code,” <em>Phys. Rev. Lett.</em> <strong>77</strong>,
+198 (1996), arXiv:quant-ph/9602019.</p>
+<p>H. Casini, M. Huerta, and R. C. Myers, “Towards a derivation of
+holographic entanglement entropy,” <em>JHEP</em> <strong>2011</strong>,
+036 (2011), arXiv:1102.0440.</p>
+<p>D. Petz, “Quasi-entropies for finite quantum systems,” <em>Reports on
+Mathematical Physics</em> <strong>23</strong>, 57 (1986).</p>
+</div>

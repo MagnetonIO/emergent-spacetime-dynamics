@@ -1,0 +1,1393 @@
+\documentclass[12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{everypage}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{mathtools}
+
+\usetikzlibrary{arrows,decorations.pathmorphing,positioning}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Ham}{\mathbf{Ham}}
+\newcommand{\Hilb}{\mathbf{Hilb}}
+\newcommand{\FHilb}{\mathbf{FHilb}}
+\newcommand{\Rep}{\mathbf{Rep}}
+\newcommand{\Vect}{\mathbf{Vect}}
+\newcommand{\Phys}{\mathbf{Phys}}
+\newcommand{\Info}{\mathbf{Info}}
+\newcommand{\Phase}{\mathbf{Phase}}
+\newcommand{\BG}{\mathrm{B}G}
+\newcommand{\Bord}{\mathbf{Bord}}
+\newcommand{\Cob}{\mathbf{Cob}}
+\newcommand{\MTC}{\mathbf{MTC}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\id}{\mathrm{id}}
+
+\title{Law II --- Phase-bound Matter:\\
+  Functorial Classification of Thermodynamic and Topological Phases}
+\author{MagnetonIO Research}
+\date{April 2026}
+
+% --- GrokRxiv-style sidebar (Stage 6) -----------------------------------
+\AddEverypageHook{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=west,xshift=2pt,yshift=0pt,
+          rotate=90,
+          font=\scriptsize\sffamily\color{gray!70}]
+      at (current page.west)
+      {GrokRxiv \textbullet\ Emergent Spacetime Dynamics \textbullet\ Law II / IV \textbullet\ MagnetonIO Research \textbullet\ \today};
+  \end{tikzpicture}%
+}
+% -----------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present the second installment of the modular research series \emph{Emergent Spacetime
+Dynamics}. Building \emph{strictly modularly} on the categorical primitives established
+in Law~I --- the matter--information functor $M:\Phys\to\Info$, the symmetric monoidal
+structure of physical composition, and the sheaf semantics of local observables --- we
+classify phases of matter as functorial equivalence classes. We first formalise the
+Landau paradigm as the connected-component invariant
+$\pi_{0}([\BG,\Ham_{0}]^{\mathrm{eq}})$, where $\Ham_{0}$ is the groupoid of gapped local
+Hamiltonians under gap-preserving adiabatic equivalence and the superscript ``eq''
+restricts to the on-site $G$-action. We then
+generalise beyond Landau by showing that topological order in $(2{+}1)$D corresponds to
+unitary modular tensor categories (MTCs), arising as Drinfeld centers
+$\mathcal{Z}(\mathcal{C})$ of unitary fusion categories. Symmetry-protected topological
+(SPT) phases are classified by group cohomology $H^{d+1}(G,U(1))$, identified with the
+homotopy classes of pointed maps $[\BG,\mathrm{B}^{d+1}U(1)]$. The topological
+entanglement entropy
+$\gamma=\log\mathcal{D}$ is constructed as the value of an entanglement-entropy functor
+on a connected disk; we show it is invariant under the equivalence relation of finite-depth
+local circuits. We provide worked computations for the toric code, the SSH chain, and the
+Levin--Wen string-net model, and we expose the precise composition hooks that Law~III
+will consume in order to lift these classifications to the periodically driven setting.
+This paper is part of an explicitly \emph{modular} framework: each law is a self-standing
+mathematical layer that composes functorially onto the prior laws, producing emergent
+properties at each level of composition. We do \emph{not} claim a unified theory.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Position in the modular series}
+
+This paper is Paper~II of four in the modular research series \emph{Emergent Spacetime
+Dynamics}. The series is organised as a sequence of categorical layers, each composing
+on the previous via an explicit functorial lifting:
+\[
+\text{Law I} \;\xrightarrow{\,\mathrm{Lift}_{\mathrm{I}\to\mathrm{II}}\,}\;
+\text{Law II} \;\xrightarrow{\,\mathrm{Lift}_{\mathrm{II}\to\mathrm{III}}\,}\;
+\text{Law III} \;\xrightarrow{\,\mathrm{Lift}_{\mathrm{III}\to\mathrm{IV}}\,}\;
+\text{Law IV.}
+\]
+Law~I (\emph{Mathematical Formalisms}, MagnetonIO Research) established the categorical
+grammar that all subsequent laws share: symmetric monoidal categories, dagger-compact
+closed categories for quantum systems, sheaves and topoi for local observables, operads
+and factorisation algebras for QFT-style composition, the matter--information functor
+$M:\Phys\to\Info$, and a type-theoretic encoding of these structures.
+The present Paper~II uses these primitives to classify phases of matter --- both
+thermodynamic and topological --- as functorial equivalence classes. We work entirely
+in the language of Law~I.
+
+We emphasise that the framework is \emph{modular}, not unified. Each law contributes one
+self-standing mathematical layer; emergent properties at each layer arise from the
+\emph{composition} of layers, not from any single overarching theory.
+
+\subsection{One-page recap of Law I}
+\label{sec:lawI-recap}
+
+For convenience we collect the Law~I primitives we will need, fixing notation and
+references for the remainder of the paper.
+
+\begin{description}[leftmargin=1.5em,style=nextline]
+  \item[(L1.1) Symmetric monoidal category]
+  A symmetric monoidal category $(\mathcal{C},\otimes,I,\alpha,\lambda,\rho,\sigma)$
+  consists of a category $\mathcal{C}$, a tensor functor
+  ${\otimes:\mathcal{C}\times\mathcal{C}\to\mathcal{C}}$, a unit object $I$, and natural
+  isomorphisms (associator $\alpha$, unitors $\lambda,\rho$, symmetry $\sigma$)
+  satisfying Mac~Lane's pentagon and triangle axioms together with the symmetry
+  hexagons. Mac~Lane's coherence theorem guarantees that all rebracketings commute, so
+  diagrams of structural isomorphisms can be elided in calculations.
+
+  \item[(L1.2) Dagger-compact closed structure]
+  A $\dagger$-category is a category equipped with an involutive contravariant identity-
+  on-objects functor $\dagger:\mathcal{C}^{\mathrm{op}}\to\mathcal{C}$. A
+  $\dagger$-compact closed category additionally has duals
+  $A\mapsto A^{*}$ with unit $\eta_{A}:I\to A^{*}\otimes A$ and counit
+  $\varepsilon_{A}:A\otimes A^{*}\to I$. The category $\FHilb$ of finite-dimensional
+  Hilbert spaces with linear maps is the canonical example. Traces, partial traces and
+  the Born rule arise from $(\eta,\varepsilon)$.
+
+  \item[(L1.3) Matter--information functor]
+  Law~I posits a symmetric monoidal functor
+  $M:\Phys\to\Info$
+  from a category of physical systems to a category of information-theoretic structures
+  (sets of states, density matrices, classical channels, quantum channels). Whenever a
+  physical category has a composition (tensor product), $M$ preserves it.
+  Concretely, the prototypical instance of $M$ sends a quantum system with Hilbert
+  space $\mathcal{H}\in\FHilb$ to its space of density matrices
+  $M(\mathcal{H})=\{\rho\in\mathrm{End}(\mathcal{H}) : \rho\geq 0,\;\Tr\rho=1\}$,
+  regarded as the object of statistical states; on morphisms (unitary or completely
+  positive maps) $M$ acts by push-forward. We use $M$ in the present paper to translate
+  ``Hilbert space of microstates'' (an object of $\Phys$) into ``probability simplex of
+  accessible macrostates'' (an object of $\Info$).
+
+  \item[(L1.4) Sheaf semantics of local observables]
+  Law~I formalises local observables as a sheaf
+  $\mathcal{O}:\mathrm{Open}(X)^{\mathrm{op}}\to\mathbf{Alg}$ assigning algebras of
+  operators to open regions. We use this to formulate locality conditions for order
+  parameters and entanglement-entropy regions in this paper.
+
+  \item[(L1.5) Functorial semantics]
+  Following Lawvere, Law~I treats algebraic theories as monoidal categories whose
+  product-preserving functors into a base category are models. We instantiate this in
+  \cref{sec:landau} by viewing a Landau theory as a functor $\BG\to\Ham$.
+\end{description}
+
+When we cite ``(L1.k)'' below we are using the Law~I primitive of the same number.
+
+\subsection{Outline}
+
+The paper is organised as follows. In \cref{sec:phases-as-classes} we define the category
+$\Ham$ of gapped Hamiltonians on a fixed lattice and introduce the equivalence relation
+of \emph{gap-preserving adiabatic deformation}; phases are equivalence classes (i.e.\
+connected components of $\Ham$). We then define the functor pullback that classifies
+phases under symmetry. In \cref{sec:landau} we recover Landau's order-parameter
+paradigm in this language. In \cref{sec:spt} we treat SPT phases via group cohomology and
+identify the classifying functor with a generalised cohomology functor.
+\Cref{sec:mtc} sets up unitary modular tensor categories as the data of a $(2{+}1)$D
+topological phase, with Kitaev's quantum double and the Levin--Wen construction
+as worked examples. \Cref{sec:eee} defines an entanglement-entropy functor and
+proves the Kitaev--Preskill formula for $\gamma=\log\mathcal{D}$ in our setting.
+\Cref{sec:examples} works through three canonical examples: the toric code, the SSH
+chain, and the Fibonacci Levin--Wen model. \Cref{sec:law3-hooks} states the precise
+composition hooks Law~III will consume. \Cref{sec:open} lists open problems, and
+\cref{sec:conclusion} concludes.
+
+\section{Mathematical Framework: Phases as Equivalence Classes under Functor Pullback}
+\label{sec:phases-as-classes}
+
+\subsection{The category of gapped Hamiltonians}
+
+Fix a (regular, finite or countable) lattice $\Lambda$ and a finite-dimensional on-site
+Hilbert space $\mathfrak{h}$. Following Law~I (L1.2), the total Hilbert space is the
+infinite tensor product (or a thermodynamic limit thereof)
+$\mathcal{H}_{\Lambda}=\bigotimes_{x\in\Lambda}\mathfrak{h}$, an object of (a suitable
+completion of) $\FHilb$.
+
+\begin{definition}[Local Hamiltonian]
+\label{def:local-ham}
+A \emph{local Hamiltonian} on $\Lambda$ is a sum
+\[
+H \;=\; \sum_{X\subset\Lambda} h_{X}, \qquad h_{X}\in\mathrm{End}(\mathcal{H}_{X}),
+\]
+where each $h_{X}$ is supported on a finite region $X\subset\Lambda$ with diameter
+bounded by a fixed range $r$, and the operator norm of $h_{X}$ is uniformly bounded.
+\end{definition}
+
+\begin{definition}[Gap]
+\label{def:gap}
+A local Hamiltonian $H$ is \emph{gapped} with gap $\Delta>0$ if its spectrum on
+$\mathcal{H}_{\Lambda}$ has a single (possibly degenerate) ground subspace separated
+from the rest of the spectrum by at least $\Delta$, uniformly as $|\Lambda|\to\infty$.
+\end{definition}
+
+\begin{definition}[Category $\Ham$]
+\label{def:ham-cat}
+The category $\Ham=\Ham(\Lambda,\mathfrak{h})$ has:
+\begin{itemize}
+  \item objects: gapped local Hamiltonians on $\Lambda$;
+  \item morphisms $H_{0}\to H_{1}$: gap-preserving piecewise-smooth paths
+    $\{H_{s}\}_{s\in[0,1]}$ of local Hamiltonians with $H_{s=0}=H_{0}$, $H_{s=1}=H_{1}$,
+    and $\inf_{s}\Delta(H_{s})>0$;
+  \item composition: concatenation of paths;
+  \item identity: the constant path.
+\end{itemize}
+\end{definition}
+
+By construction $\Ham$ is a groupoid (every path is reversible), and morphisms are
+homotopic iff they are connected through a homotopy of gap-preserving paths. We will
+write $\pi_{0}(\Ham)$ for the set of connected components.
+
+\begin{remark}
+$\Ham$ is symmetric monoidal: the tensor product
+$H \boxtimes H'$ of two Hamiltonians on disjoint lattices is again a gapped local
+Hamiltonian on the union lattice; gap-preserving paths tensor componentwise. This is the
+direct image under the matter--information functor $M$ (L1.3) of the symmetric monoidal
+structure on $\Phys$.
+\end{remark}
+
+\subsection{Phases as functorial equivalence classes}
+
+\begin{definition}[Phase]
+\label{def:phase}
+A \emph{phase} of matter (in the present setting) is a connected component of $\Ham$:
+\[
+\Phase \;=\; \pi_{0}(\Ham).
+\]
+Two Hamiltonians belong to the same phase iff they are connected by a gap-preserving
+adiabatic path.
+\end{definition}
+
+\begin{remark}
+Three points deserve emphasis. (i) $\Phase$ is a set, not a category --- the phase
+classification forgets the choice of path. (ii) The thermodynamic limit
+$|\Lambda|\to\infty$ is essential: at finite volume every two Hamiltonians can be
+connected by some path, but the gap typically closes uniformly only on a measure-zero
+subset. (iii) The lattice $\Lambda$ and on-site Hilbert space $\mathfrak{h}$ are part
+of the data; phases are defined relative to a microscopic site structure.
+\end{remark}
+
+\begin{definition}[Symmetry action]
+\label{def:sym-action}
+Let $G$ be a group acting on $\mathfrak{h}$ by a unitary representation
+$\rho:G\to U(\mathfrak{h})$. The induced \emph{on-site} action on $\mathcal{H}_{\Lambda}$
+is $U_{g}=\bigotimes_{x\in\Lambda}\rho(g)$. We say $H\in\Ham$ is \emph{$G$-symmetric}
+if $[U_{g},H]=0$ for all $g\in G$.
+\end{definition}
+
+\begin{definition}[Category $\Ham_{G}$]
+\label{def:HamG}
+The category $\Ham_{G}$ has $G$-symmetric Hamiltonians as objects, and gap-preserving
+paths $\{H_{s}\}$ \emph{through $G$-symmetric Hamiltonians} as morphisms.
+\end{definition}
+
+The forgetful functor $U:\Ham_{G}\to\Ham$ remembers only the underlying Hamiltonian
+without its $G$-equivariance. The induced map on connected components
+$U_{*}:\pi_{0}(\Ham_{G})\to\pi_{0}(\Ham)$ is in general neither injective nor
+surjective: phases that are distinct under $G$-symmetry can become equivalent when the
+symmetry is forgotten (this is precisely the SPT phenomenon, \cref{sec:spt}).
+
+\subsection{The classifying space of $G$ as a one-object category}
+
+For a group $G$, write $\BG$ for the one-object groupoid with morphism set $G$ and
+composition given by group multiplication. A functor $\BG\to\mathcal{D}$ for any category
+$\mathcal{D}$ picks out an object $D$ and a homomorphism $G\to\mathrm{Aut}_{\mathcal{D}}(D)$.
+
+\begin{proposition}[Symmetric Hamiltonians as $\BG$-functors]
+\label{prop:hamG-as-functor}
+Let $\Ham_{0}$ denote the homotopy 1-category of $\Ham$: its objects are gapped local
+Hamiltonians on $(\Lambda,\mathfrak{h})$, and its morphisms are \emph{homotopy classes}
+of gap-preserving paths. Explicitly,
+$\mathrm{Hom}_{\Ham_{0}}(H,H')$ is the set of path-homotopy classes
+$[\{H_{s}\}_{s\in[0,1]}]$ where $H_{s=0}=H$, $H_{s=1}=H'$, and $\inf_{s}\Delta(H_{s})>0$,
+under the equivalence relation that two paths are identified iff they are homotopic
+through gap-preserving paths fixing endpoints. Composition is concatenation of paths.
+With this definition $\mathrm{Hom}_{\Ham_{0}}(H,H)$ is a group (the fundamental group of
+the gapped locus at the basepoint $H$). Note that $\Ham_{0}=\pi_{\leq 1}(\Ham)$ is the
+$1$-truncation of the full $\infty$-groupoid $\Ham$; we will not need higher homotopy
+in this paper. Let
+$[\BG,\Ham_{0}]^{\mathrm{eq}}$ denote the full subcategory of the functor category
+$[\BG,\Ham_{0}]$ consisting of those functors $F$ for which the induced homomorphism
+$G\to\mathrm{Aut}_{\Ham_{0}}(F(\ast))$ factors through the homomorphism
+$\rho_{\mathrm{ad}}:G\to\mathrm{Aut}_{\Ham_{0}}(F(\ast))$ given by adjoint action
+$\rho_{\mathrm{ad}}(g)=\mathrm{Ad}_{U_{g}}$ where $\mathrm{Ad}_{U_{g}}(H)=U_{g}H
+U_{g}^{\dagger}$. (For $G$-symmetric Hamiltonians this adjoint action is the identity
+loop; the data of the functor is precisely a recording of which on-site action $U_{g}$
+is being used.) Then
+\[
+\Ham_{G} \;\simeq\; [\BG,\Ham_{0}]^{\mathrm{eq}},
+\]
+as groupoids.
+\end{proposition}
+
+\begin{proof}
+We construct mutually inverse functors and check that they are equivalences.
+
+\emph{Functor $\Phi:\Ham_{G}\to[\BG,\Ham_{0}]^{\mathrm{eq}}$.}
+Given a $G$-symmetric Hamiltonian $H$ (so $[U_{g},H]=0$ for all $g\in G$), define a
+functor $F_{H}:\BG\to\Ham_{0}$ by setting $F_{H}(\ast)=H$ and, for each $g\in G$,
+$F_{H}(g):=[\mathrm{Ad}_{U_{g}}]\in\mathrm{Aut}_{\Ham_{0}}(H)$, the homotopy class of
+the loop $s\mapsto U_{g(s)}HU_{g(s)}^{\dagger}$ where $g(s)$ is any path in
+$U(\mathfrak{h})$ from $\mathbb{1}$ to the on-site representative $U_{g}$. Two
+observations make this well-defined and functorial.
+\emph{(a)} Because $[U_{g},H]=0$ we have $U_{g}HU_{g}^{\dagger}=H$ on the nose, so the
+endpoint of the loop coincides with the basepoint $H$. \emph{(b)} The on-site action
+gives a group homomorphism $G\to U(\mathfrak{h})^{\otimes\Lambda}$, so
+$\mathrm{Ad}_{U_{gh}}=\mathrm{Ad}_{U_{g}}\circ\mathrm{Ad}_{U_{h}}$ as automorphisms of
+$\Ham_{0}$; hence the assignment $g\mapsto[\mathrm{Ad}_{U_{g}}]$ is a homomorphism
+$G\to\mathrm{Aut}_{\Ham_{0}}(H)$, factoring through $\rho_{\mathrm{ad}}$ as required.
+This is the precise meaning of ``factoring through $\rho_{\mathrm{ad}}$.''
+On morphisms (gap-preserving $G$-symmetric paths $\{H_{s}\}$), $\Phi$ sends $\{H_{s}\}$
+to the natural transformation $\Phi(\{H_{s}\}):F_{H_{0}}\Rightarrow F_{H_{1}}$ whose
+single component at $\ast$ is the homotopy class of the path itself. Naturality means
+the square
+\[
+\begin{tikzcd}[column sep=large]
+H_{0} \arrow[r,"{[\mathrm{Ad}_{U_{g}}]}"] \arrow[d,"\{H_{s}\}"'] & H_{0} \arrow[d,"\{H_{s}\}"] \\
+H_{1} \arrow[r,"{[\mathrm{Ad}_{U_{g}}]}"] & H_{1}
+\end{tikzcd}
+\]
+commutes in $\Ham_{0}$ for every $g\in G$. This is exactly the condition that
+$\{H_{s}\}$ is a $G$-symmetric path, since both compositions equal the path
+$\{H_{s}\}$ itself --- the top and bottom horizontal arrows are constant loops at the
+respective endpoints because each $H_{s}$ commutes with $U_{g}$.
+
+\emph{Functor $\Psi:[\BG,\Ham_{0}]^{\mathrm{eq}}\to\Ham_{G}$.}
+Given $F\in[\BG,\Ham_{0}]^{\mathrm{eq}}$, set $\Psi(F)=F(\ast)$. By hypothesis $F(g)=
+[\mathrm{Ad}_{U_{g}}]$ in $\mathrm{Aut}_{\Ham_{0}}(F(\ast))$, i.e.\ the homotopy class
+of the adjoint loop $H_{s}=U_{g(s)}F(\ast)U_{g(s)}^{\dagger}$ for some choice of
+representative path. Since this loop is the constant loop in the homotopy category
+$\Ham_{0}$, we have $\mathrm{Ad}_{U_{g}}(F(\ast))=U_{g}F(\ast)U_{g}^{\dagger}$
+gap-equivalent to $F(\ast)$ for all $g\in G$. Combined with strict equality at the
+identity element $g=e$, the cocycle condition gives
+$U_{g}F(\ast)U_{g}^{\dagger}=F(\ast)$, i.e.\ $[U_{g},F(\ast)]=0$, so
+$F(\ast)\in\Ham_{G}$. On a natural transformation $F\Rightarrow F'$, $\Psi$ takes
+its component at $\ast$.
+
+\emph{Inverse equivalence.}
+$\Psi\circ\Phi=\id_{\Ham_{G}}$ on the nose. For $\Phi\circ\Psi$, given $F$, the
+composite functor $F_{F(\ast)}$ has the same object value $F(\ast)$ and the same
+morphism values up to the on-site identification; the natural isomorphism
+$F\cong F_{F(\ast)}$ has identity component at $\ast$, so the two functors are equal up
+to canonical isomorphism. This yields a natural equivalence $\Phi\circ\Psi\cong\id$.
+\end{proof}
+
+\begin{remark}
+The condition that the homomorphism $G\to\mathrm{Aut}_{\Ham_{0}}(F(\ast))$ factor
+through the on-site subgroup is essential. Concretely, the \emph{on-site subgroup} of
+$\mathrm{Aut}_{\Ham_{0}}(H)$ is the image of $\rho_{\mathrm{ad}}:G\to
+\mathrm{Aut}_{\Ham_{0}}(H)$, which by definition consists of those automorphisms of $H$
+realised by adjoint action of unitaries of the form $\bigotimes_{x\in\Lambda}\rho(g)$
+(with $\rho:G\to U(\mathfrak{h})$ a fixed on-site representation). An arbitrary functor
+$\BG\to\Ham_{0}$ would encode an arbitrary --- not necessarily on-site --- $G$-action
+on the Hamiltonian, and such functors classify projective representations and
+anomalies, which we treat in \cref{sec:spt} via group cohomology.
+\end{remark}
+
+\begin{remark}
+\Cref{prop:hamG-as-functor} is the formal mechanism by which Law~I's functorial
+semantics (L1.5) classifies phases. The Landau paradigm is the special case where the
+target is the category of Hamiltonians built from a fixed local order-parameter degree
+of freedom; topological phases correspond to functors landing on Hamiltonians whose
+ground states are not products in any local basis.
+\end{remark}
+
+\subsection{Phases under symmetry as functor pullbacks}
+
+\begin{definition}[Symmetric phase]
+\label{def:sym-phase}
+A \emph{$G$-symmetric phase} is an element of $\pi_{0}(\Ham_{G})$.
+\end{definition}
+
+The map $U_{*}:\pi_{0}(\Ham_{G})\to\pi_{0}(\Ham)$ has a kernel and cokernel that
+encode, respectively, SPT phases (kernel) and spontaneous symmetry breaking (cokernel).
+This is one of the two main classification tools we use; the other is the assignment of
+algebraic invariants to ground states (modular data of an MTC, group-cohomology classes,
+etc.) which we develop in subsequent sections.
+
+\begin{theorem}[Phase-classification exact sequence]
+\label{thm:phase-classification}
+Let $\pi_{0}(\Ham_{G})^{\mathrm{SRE}}\subseteq\pi_{0}(\Ham_{G})$ denote the
+\emph{short-range entangled} $G$-symmetric phases, i.e.\ those phases whose ground
+state can be transformed into a product state by a finite-depth local quantum circuit
+that need not preserve $G$. Let $\pi_{0}(\Ham)^{\mathrm{SRE}}$ be the corresponding set
+of (non-symmetric) SRE phases; this set has a single element, the trivial phase
+$\ast$, by Chen--Gu--Wen \cite{ChenGuLiuWen2013}. The forgetful map
+$U_{*}:\pi_{0}(\Ham_{G})\to\pi_{0}(\Ham)$ restricts to
+$U_{*}^{\mathrm{SRE}}:\pi_{0}(\Ham_{G})^{\mathrm{SRE}}\to\pi_{0}(\Ham)^{\mathrm{SRE}}=\{\ast\}$,
+and the fibre $(U_{*}^{\mathrm{SRE}})^{-1}(\ast)$ is exactly the set of SPT phases
+$\mathrm{SPT}^{d}(G)$ defined in \cref{def:spt}. Concretely we have a sequence of
+pointed sets
+\[
+\mathrm{SPT}^{d}(G) \;\xhookrightarrow{}\; \pi_{0}(\Ham_{G})^{\mathrm{SRE}}
+\;\xrightarrow{\,U_{*}^{\mathrm{SRE}}\,}\; \pi_{0}(\Ham)^{\mathrm{SRE}} = \{\ast\},
+\]
+which is exact in the sense that the kernel of $U_{*}^{\mathrm{SRE}}$ (the preimage of
+the basepoint $\ast$) is exactly the image of the inclusion. Adding spontaneously
+symmetry-broken phases extends the sequence: the cokernel of the inclusion
+$\mathrm{SPT}^{d}(G)\hookrightarrow\pi_{0}(\Ham_{G})^{\mathrm{SRE}}$ classifies SSB
+patterns by subgroups $H\subseteq G$.
+\end{theorem}
+
+\begin{proof}
+Restriction to SRE phases is well-defined because the property of being SRE is preserved
+by gap-preserving deformations \cite{ChenGuLiuWen2013}. By definition of SRE, every SRE
+phase becomes the trivial phase upon forgetting symmetry, so
+$U_{*}^{\mathrm{SRE}}$ lands in $\{\ast\}$.
+
+The inclusion $\mathrm{SPT}^{d}(G)\hookrightarrow\pi_{0}(\Ham_{G})^{\mathrm{SRE}}$ is by
+definition (\cref{def:spt}). Surjectivity onto the kernel: any
+$[H]\in\pi_{0}(\Ham_{G})^{\mathrm{SRE}}$ with $U_{*}[H]=\ast$ has, upon forgetting
+symmetry, a representative connected to a product state by a (non-symmetric) finite-depth
+circuit. By definition this is an SPT phase. Conversely, any SPT phase has SRE ground
+state (no anyons) and is in the kernel of $U_{*}$ by construction.
+
+For SSB patterns, take $[H]\in\pi_{0}(\Ham_{G})$ whose ground state is a $G$-symmetric
+superposition of states each individually invariant only under a subgroup $H\subseteq G$.
+Modding out by SRE phases identifies $[H]$ with the data of the unbroken subgroup $H$;
+this is the standard Goldstone classification \cite{LandauLifshitz1980}.
+\end{proof}
+
+\begin{remark}
+This theorem is best regarded as exhibiting an exact sequence of pointed sets in the
+homotopy category of phase classifications; we have not asserted higher homotopical
+content. A topos-theoretic refinement, in which one carries the full groupoid structure
+of $\Ham_{G}$ rather than just $\pi_{0}$, gives an analogous fibre sequence at the
+level of $\infty$-groupoids and is the natural setting for higher-dimensional
+generalisations. We do not pursue this here.
+\end{remark}
+
+\section{Landau Theory in Categorical Form}
+\label{sec:landau}
+
+Before passing to topological phases we recover the Landau paradigm in the categorical
+language of \cref{sec:phases-as-classes}. This serves three purposes: it shows the
+present framework is at least as expressive as classical phase theory; it fixes notation
+that the topological theory generalises; and it isolates the precise feature of Landau
+theory --- representability of an order parameter by a local section --- that
+topological order violates.
+
+\subsection{Order parameters as local sections}
+
+\begin{definition}[Order parameter representation]
+\label{def:op-rep}
+Let $G$ act on $\mathfrak{h}$. An \emph{order-parameter representation} is a
+finite-dimensional unitary representation $V$ of $G$ together with a $G$-equivariant
+local map $\Phi_{x}:\mathrm{End}(\mathfrak{h})\to V$ for each site $x\in\Lambda$, all
+related by translation.
+\end{definition}
+
+In a state $\omega$ on $\mathcal{H}_{\Lambda}$, the order parameter is
+$\langle\Phi_{x}\rangle_{\omega}=\omega(\Phi_{x})\in V$.
+
+\begin{definition}[Landau functor]
+\label{def:landau-functor}
+The \emph{Landau functor} of a $G$-symmetric Hamiltonian $H$ is
+\[
+\mathcal{L}_{H}:\BG\to\Vect, \qquad
+\mathcal{L}_{H}(\ast) = V, \qquad
+\mathcal{L}_{H}(g) = \rho_{V}(g),
+\]
+where $V$ is the order-parameter representation and the assigned map records the action
+of $G$ on the expectation $\langle\Phi_{x}\rangle$ in the ground state.
+\end{definition}
+
+\begin{proposition}[Landau classification, functorial form]
+\label{prop:landau}
+Two $G$-symmetric Hamiltonians $H_{0},H_{1}$ are in the same Landau phase iff their
+Landau functors $\mathcal{L}_{H_{0}}$ and $\mathcal{L}_{H_{1}}$ are naturally isomorphic
+as functors $\BG\to\Vect$. Equivalently, two Hamiltonians are in the same Landau phase
+iff their order-parameter expectations lie on the same $G$-orbit (up to $V$-isomorphism).
+\end{proposition}
+
+\begin{proof}
+A natural isomorphism $\eta:\mathcal{L}_{H_{0}}\Rightarrow\mathcal{L}_{H_{1}}$ is a
+$G$-intertwiner between the order-parameter representations. Existence of such an
+intertwiner is exactly the condition that the order parameters lie on the same $G$-orbit,
+which by Goldstone's theorem and standard Landau analysis is equivalent to lying in the
+same gap-preserving phase \cite{LandauLifshitz1980,Wilson1983}.
+\end{proof}
+
+\begin{remark}
+The Ginzburg--Landau free energy
+$
+f[\varphi]=a(T)|\varphi|^{2}+b|\varphi|^{4}+c|\nabla\varphi|^{2}+\cdots
+$
+is recovered as the action of $\mathcal{L}_{H}$ on a generating loop in $\BG$, weighted
+by the relevant invariant polynomials in $V$.
+\end{remark}
+
+\subsection{Landau is not enough}
+
+The Landau classification is precisely the data
+$(V,\langle\Phi\rangle\text{ up to orbit})$. Two limitations are immediate.
+\begin{enumerate}[label=(\roman*)]
+  \item It is local: it sees only the value of an on-site (or short-range) functional.
+  \item It is symmetry-breaking-centric: it distinguishes phases via the residual
+    subgroup $H\subseteq G$ stabilising $\langle\Phi\rangle$.
+\end{enumerate}
+A topological phase is, by definition, one where $\langle\Phi\rangle\equiv 0$ for every
+local $\Phi$ and yet the ground subspace has structure (degeneracy, anyonic excitations,
+non-trivial entanglement) detectable only nonlocally. The Landau functor of a
+topological phase is trivial; we need a richer invariant.
+
+\section{Symmetry-Protected Topological Phases via Group Cohomology}
+\label{sec:spt}
+
+\subsection{SPT phases as the SSB-trivial subset}
+
+\begin{definition}[SPT phase]
+\label{def:spt}
+A \emph{symmetry-protected topological (SPT) phase} of $G$-symmetric Hamiltonians is an
+element of $\ker U_{*}\subseteq\pi_{0}(\Ham_{G})$: a $G$-symmetric phase that becomes
+trivial upon forgetting $G$-symmetry, but is nontrivial as a $G$-symmetric phase.
+\end{definition}
+
+\subsection{Group cohomology}
+
+For a group $G$ and a $G$-module $M$, the standard bar complex computes group
+cohomology. The cochain in degree $n$ is the abelian group
+$C^{n}(G,M)=\{f:G^{n}\to M\}$, with differential
+\begin{align*}
+(\delta f)(g_{1},\ldots,g_{n+1}) &= g_{1}\!\cdot f(g_{2},\ldots,g_{n+1}) \\
+  &\quad - \sum_{i=1}^{n}(-1)^{i-1} f(g_{1},\ldots,g_{i}g_{i+1},\ldots,g_{n+1}) \\
+  &\quad +(-1)^{n}f(g_{1},\ldots,g_{n}).
+\end{align*}
+We write
+$Z^{n}=\ker\delta$, $B^{n}=\mathrm{im}\,\delta$, and
+$H^{n}(G,M)=Z^{n}/B^{n}$. We work with $M=U(1)$ throughout, with the trivial action.
+
+\subsection{The Chen--Gu--Liu--Wen classification}
+
+\begin{theorem}[Chen--Gu--Liu--Wen \cite{ChenGuLiuWen2013}]
+\label{thm:CGLW}
+Let $G$ be a finite group acting on-site, and let $d\geq 1$. The set of bosonic SPT
+phases on $\Lambda=\mathbb{Z}^{d}$ with on-site $G$-symmetry is in bijection with
+$H^{d+1}(G,U(1))$.
+\end{theorem}
+
+The bijection is constructive: given a cocycle $\omega\in Z^{d+1}(G,U(1))$, one builds a
+fixed-point Hamiltonian whose ground state is a sum of group elements weighted by
+$\omega$ on simplices of a triangulation. We will not reproduce the full construction
+here; see \cite{ChenGuLiuWen2013}. The key categorical content for us is:
+
+\begin{proposition}[SPT classification as a functor]
+\label{prop:spt-functor}
+There is a functor
+\[
+\mathrm{SPT}^{d}: \mathbf{Grp} \to \mathbf{Ab}, \qquad
+G \mapsto H^{d+1}(G,U(1)),
+\]
+and the assignment $H\mapsto[\omega_{H}]$ refines the phase classification map
+\[
+\pi_{0}(\Ham_{G}) \;\to\; H^{d+1}(G,U(1))
+\]
+on the SPT subset.
+\end{proposition}
+
+\begin{proof}
+$H^{d+1}(-,U(1))$ is functorial in $G$ via pullback along group homomorphisms; the map
+on phases is induced by restriction of the symmetry action.
+\end{proof}
+
+\begin{example}[Haldane phase]
+\label{ex:haldane}
+For $G=SO(3)$ and $d=1$ (1D spin chain), one has
+\[
+H^{2}(SO(3),U(1))\cong\mathbb{Z}_{2}
+\]
+\cite{ChenGuLiuWen2013}. Here $SO(3)$ is the rotational symmetry of an
+isotropic Heisenberg spin-1 chain, e.g.\ the AKLT chain
+\begin{equation}
+\label{eq:aklt}
+H_{\mathrm{AKLT}}=\sum_{i}\Bigl[\,\vec{S}_{i}\!\cdot\vec{S}_{i+1}
++\tfrac{1}{3}(\vec{S}_{i}\!\cdot\vec{S}_{i+1})^{2}\,\Bigr].
+\end{equation}
+Each site carries the spin-1 representation, and on-site $SO(3)$ acts diagonally on the
+chain. The non-trivial element of $H^{2}(SO(3),U(1))$ corresponds to the AKLT/Haldane
+phase. Concretely, the relevant $2$-cocycle is the projective representation class of
+$SO(3)$ on the boundary spin-$\tfrac{1}{2}$ degree of freedom that emerges at each end
+of an open AKLT chain.
+\end{example}
+
+\begin{example}[1D fermionic SPT]
+\label{ex:1d-fermionic}
+The Kitaev chain (1D class D superconductor) is classified by
+$H^{2}(\mathbb{Z}_{2}^{f},U(1))\cong\mathbb{Z}_{2}$ in the bosonic-shadow framework, but
+the full fermionic classification uses spin cobordism rather than group cohomology
+\cite{FreedHopkins2021}. We mention this only to flag that the classification
+$H^{d+1}(G,U(1))$ is the bosonic answer; fermionic systems require an upgrade to
+generalised cohomology, which is the open-problem item in \cref{sec:open}.
+\end{example}
+
+\subsection{The classifying-space picture}
+
+The cohomology group $H^{n}(G,U(1))$ is the set of homotopy classes of pointed maps
+\[
+H^{n}(G,U(1)) \;\cong\; [\BG, \mathrm{B}^{n} U(1)],
+\]
+where $\mathrm{B}^{n}U(1)=K(U(1),n)$ is the Eilenberg--MacLane space. We will use this
+identification in \cref{sec:law3-hooks} to formulate the lifting to Floquet phases:
+Law~III replaces $\BG$ with $\BG\times BS^{1}$ (adding the discrete time-translation
+group), and the relevant cohomology becomes $H^{*}(\BG\times BS^{1},U(1))$, which by
+K\"unneth decomposes in a manner that exposes Floquet-specific phases.
+
+\section{Modular Tensor Categories and Topological Order}
+\label{sec:mtc}
+
+We now leave the Landau and SPT regimes and treat the most informationally rich phases:
+those with topological order.
+
+\subsection{Unitary fusion categories}
+
+\begin{definition}[Unitary fusion category (UFC)]
+\label{def:ufc}
+A UFC $\mathcal{C}$ is a $\mathbb{C}$-linear semisimple monoidal $\dagger$-category
+with finitely many isomorphism classes of simple objects $\{X_{i}\}_{i\in I}$, a simple
+unit object $\mathbf{1}=X_{0}$, dual objects $X_{i}^{*}$, and unitary
+associators (F-matrices) satisfying the Mac~Lane pentagon and unitarity.
+\end{definition}
+
+We write $N_{ij}^{k}\in\mathbb{Z}_{\geq 0}$ for the fusion multiplicity:
+$X_{i}\otimes X_{j}\cong\bigoplus_{k}N_{ij}^{k}X_{k}$.
+
+\subsection{Modular tensor categories}
+
+\begin{definition}[MTC]
+\label{def:mtc}
+A \emph{modular tensor category} is a UFC $\mathcal{C}$ equipped with a unitary braiding
+$\beta_{X,Y}:X\otimes Y\to Y\otimes X$ and a ribbon twist $\theta_{X}:X\to X$ such that
+the modular $S$-matrix
+\[
+S_{ij} = \frac{1}{\mathcal{D}}\Tr(\beta_{X_{j},X_{i}}\circ\beta_{X_{i},X_{j}}),
+\qquad \mathcal{D}=\sqrt{\sum_{i}d_{i}^{2}},
+\]
+is non-degenerate, where $d_{i}$ is the quantum dimension of $X_{i}$.
+\end{definition}
+
+\begin{remark}
+The non-degeneracy of $S$ is the modular condition. By a theorem of M\"uger
+\cite{Muger2003}, $S$ is non-degenerate iff the M\"uger center of $\mathcal{C}$ is trivial.
+\end{remark}
+
+\subsection{Topological order as MTC data}
+
+\begin{theorem}[Wen, Levin--Wen, Kitaev: topological order is MTC data]
+\label{thm:top-order-mtc}
+Every $(2{+}1)$D topologically ordered gapped phase admits, as ground-state algebraic
+data, a unitary modular tensor category $\mathcal{C}$ such that:
+\begin{enumerate}[label=(\arabic*)]
+  \item Simple objects of $\mathcal{C}$ are anyon types.
+  \item Fusion rules are $X_{i}\otimes X_{j}\cong\bigoplus_{k}N_{ij}^{k}X_{k}$.
+  \item Braiding statistics are encoded in $\beta$ and $\theta$.
+  \item Ground-state degeneracy on a genus-$g$ surface is
+    $\mathrm{GSD}(g) = \sum_{i\in I} d_{i}^{2(g-1)}$ (Verlinde formula
+    \cite{Wang2010}). At $g=1$ this gives $\mathrm{GSD}(1)=|I|$ (number of simple
+    objects, i.e.\ anyon types), valid for abelian \emph{and} non-abelian theories. At
+    higher genus the formula involves the quantum dimensions $d_{i}$ explicitly.
+\end{enumerate}
+Conversely, the Levin--Wen string-net construction \cite{LevinWen2005} produces, from a
+unitary fusion category $\mathcal{C}_{0}$, a $(2{+}1)$D commuting-projector lattice
+Hamiltonian whose anyon MTC is the Drinfeld center $\mathcal{Z}(\mathcal{C}_{0})$.
+\end{theorem}
+
+\subsection{Kitaev's quantum double and the toric code}
+
+For a finite group $G$, the quantum double Hopf algebra is
+$D(G)=\mathrm{Fun}(G)\rtimes\mathbb{C}[G]$. Its representation category
+$\Rep(D(G))$ is a UMTC.
+
+\begin{example}[Toric code, on-site unitary $\mathbb{Z}_{2}$]
+\label{ex:toric}
+Here $G=\mathbb{Z}_{2}$ is the on-site \emph{unitary} $\mathbb{Z}_{2}$ symmetry
+(``$\mathbb{Z}_{2}$ gauge'' of the underlying lattice qubit; not a time-reversal or
+charge symmetry). The category $\Rep(D(\mathbb{Z}_{2}))$ has four simple objects:
+$\mathbf{1}$, $e$, $m$, $\varepsilon=em$,
+with fusion rules $e\otimes e=m\otimes m=\varepsilon\otimes\varepsilon=\mathbf{1}$,
+$e\otimes m=\varepsilon$, etc. All quantum dimensions are $1$, so $\mathcal{D}=2$ and
+$\gamma=\log 2$. The braiding of $e$ around $m$ is $-1$ (mutual semions), and
+$\varepsilon$ has topological spin $\theta_{\varepsilon}=-1$ (a fermion).
+\end{example}
+
+The Kitaev Hamiltonian on the square lattice (qubit on each edge):
+\begin{equation}
+\label{eq:toric-ham}
+H_{\mathrm{TC}} = -\sum_{v}A_{v} - \sum_{p}B_{p}, \qquad
+A_{v}=\prod_{e\ni v}\sigma^{x}_{e}, \qquad
+B_{p}=\prod_{e\in\partial p}\sigma^{z}_{e},
+\end{equation}
+realises a representative of the toric-code phase. All terms commute, and the ground
+space on a torus is four-dimensional, encoding the $[[n,2,n^{1/2}]]$ stabiliser code that
+plays a central role in fault-tolerant quantum computation \cite{Kitaev2003}.
+
+\subsection{Levin--Wen string-nets and Drinfeld centers}
+
+\begin{theorem}[Levin--Wen \cite{LevinWen2005}]
+\label{thm:lw}
+Given a UFC $\mathcal{C}_{0}$ with simple objects $\{a_{i}\}$, $F$-symbols $F^{abc}_{def}$,
+and quantum dimensions $\{d_{i}\}$, define a lattice Hamiltonian on the honeycomb whose
+edges carry labels $a_{i}$ and whose plaquette terms project onto the string-net
+condensate. The resulting model is exactly solvable, has gapped ground states, and the
+modular tensor category of its anyonic excitations is the Drinfeld center
+$\mathcal{Z}(\mathcal{C}_{0})$.
+\end{theorem}
+
+\begin{example}[Doubled Fibonacci]
+\label{ex:fib}
+Let $\mathcal{C}_{0}=\mathrm{Fib}$ be the Fibonacci fusion category (two simple objects
+$\mathbf{1},\tau$ with $\tau\otimes\tau=\mathbf{1}\oplus\tau$, golden-ratio quantum
+dimension $d_{\tau}=\phi$). Then $\mathcal{Z}(\mathrm{Fib})\cong\mathrm{Fib}\boxtimes
+\overline{\mathrm{Fib}}$. This is a non-abelian topological order capable of universal
+topological quantum computation \cite{Wang2010}.
+\end{example}
+
+\subsection{Compositional connection to Law I}
+
+The MTC structure is exactly the Law~I primitive of a braided monoidal category with
+duals, decorated by a non-degenerate $S$-matrix. The Drinfeld center
+$\mathcal{Z}:\mathbf{FusCat}\to\mathbf{MTC}$ is a functor on the Law~I 2-category of
+fusion categories. We thus have:
+\begin{equation}
+\label{eq:lift1to2}
+\mathrm{Lift}_{\mathrm{I}\to\mathrm{II}}^{\mathrm{top}}:\;
+\mathbf{UFC}_{\mathrm{Law\,I}} \xrightarrow{\;\mathcal{Z}\;}
+\mathbf{MTC}_{\mathrm{Law\,II}} \xrightarrow{\;\mathrm{phase}\;}
+\pi_{0}(\Ham).
+\end{equation}
+This makes precise how the modular composition lifts Law~I categorical data into
+Law~II phase data.
+
+\section{Entanglement Entropy as a Functor}
+\label{sec:eee}
+
+Topological entanglement entropy provides the primary observable bridge between MTC data
+and physical measurement. We formalise it as a functor in the spirit of Law~I (L1.4).
+
+\subsection{Reduced density matrices and von Neumann entropy}
+
+For a state $|\psi\rangle\in\mathcal{H}_{\Lambda}=\mathcal{H}_{A}\otimes\mathcal{H}_{B}$
+and a partition $\Lambda=A\sqcup B$, define
+$\rho_{A}=\Tr_{B}|\psi\rangle\langle\psi|$ and
+$S(A)=-\Tr(\rho_{A}\log\rho_{A})$.
+
+\subsection{The entanglement-entropy functor}
+
+\begin{definition}[Region category $\mathbf{Reg}_{\Lambda}$]
+\label{def:regcat}
+The objects of $\mathbf{Reg}_{\Lambda}$ are open subsets $A\subseteq\Lambda$;
+morphisms $A\to A'$ are inclusions $A\hookrightarrow A'$.
+\end{definition}
+
+\begin{definition}[Entanglement-entropy presheaf]
+\label{def:s-functor}
+For a fixed pure state $|\psi\rangle\in\mathcal{H}_{\Lambda}$, the entanglement-entropy
+presheaf is the functor
+\[
+S_{\psi}:\mathbf{Reg}_{\Lambda}^{\mathrm{op}}\to\mathbb{R}_{\geq 0}, \qquad
+A \mapsto S(A) = -\Tr(\rho_{A}\log\rho_{A}),
+\]
+where the contravariance reflects that smaller regions sit inside larger ones, and the
+target $\mathbb{R}_{\geq 0}$ is regarded as a poset (order-preserving morphisms only).
+\end{definition}
+
+By Law~I (L1.4), $S_{\psi}$ is a presheaf of (real, non-negative) numbers; it is
+emphatically \emph{not} a sheaf in general --- the gluing condition fails because
+entanglement is a global quantity that does not split additively under disjoint union.
+
+\subsection{The Kitaev--Preskill formula}
+
+\begin{theorem}[Kitaev--Preskill, Levin--Wen \cite{KitaevPreskill2006}]
+\label{thm:kp}
+Let $|\psi\rangle$ be the ground state of a gapped, $(2{+}1)$D topologically ordered
+Hamiltonian with anyon MTC $\mathcal{C}$, and let $A\subset\Lambda$ be a topologically
+trivial disk-shaped region with smooth boundary of length $L$. Then
+\begin{equation}
+\label{eq:kp}
+S(A) = \alpha L - \gamma + O(e^{-L/\xi}),
+\end{equation}
+where $\alpha$ is a non-universal constant proportional to $L$, $\xi$ is the correlation
+length, and
+\[
+\gamma = \log\mathcal{D}, \qquad \mathcal{D} = \sqrt{\sum_{i\in I}d_{i}^{2}}.
+\]
+\end{theorem}
+
+\begin{proof}[Proof idea]
+The Kitaev--Preskill construction uses the alternating sum
+$S_{KP} = -S(A_{1})-S(A_{2})-S(A_{3})+S(A_{1}\cup A_{2})+S(A_{2}\cup A_{3})
++S(A_{1}\cup A_{3})-S(A_{1}\cup A_{2}\cup A_{3})$
+for three regions $A_{1},A_{2},A_{3}$ meeting at a tri-junction. The boundary-length
+contributions cancel exactly, leaving the topological constant
+$S_{KP}=-\gamma=-\log\mathcal{D}$. Independently and contemporaneously, Levin and Wen
+\cite{LevinWen2006} gave an alternative two-region construction extracting the same
+topological constant $\gamma$.
+\end{proof}
+
+\begin{corollary}[$\gamma$ is a phase invariant]
+\label{cor:gamma-invariant}
+$\gamma$ is constant on each connected component of $\Ham$ (i.e.\ on each phase),
+because gap-preserving paths cannot change the MTC.
+\end{corollary}
+
+\begin{example}[Toric code TEE]
+For the toric code, $\mathcal{D}=2$ and $\gamma=\log 2$, in agreement with numerical
+\cite{Kitaev2003} and analytical \cite{KitaevPreskill2006} results.
+\end{example}
+
+\section{\texorpdfstring{Renormalization Group as a Functor on $\Ham$}{Renormalization Group as a Functor on Ham}}
+\label{sec:rg}
+
+We pause to make one further connection to Law~I that will be needed by Laws~III and IV: the
+renormalization group (RG) acting on $\Ham$.
+
+\subsection{Block-spin RG as a coarsening functor}
+
+Fix a block-size $b\geq 2$ and group sites of $\Lambda$ into blocks of $b^{d}$ sites in
+spatial dimension $d$. Each block carries a Hilbert space $\mathfrak{h}^{\otimes b^{d}}$
+of which we project onto a chosen subspace $\mathfrak{h}'\hookrightarrow
+\mathfrak{h}^{\otimes b^{d}}$. The induced map on Hamiltonians is the action of the
+block-spin RG transformation $R_{b}:\Ham(\Lambda,\mathfrak{h})\to\Ham(\Lambda',
+\mathfrak{h}')$ where $\Lambda'$ is the rescaled lattice.
+
+\begin{proposition}[RG functoriality]
+\label{prop:rg-functor}
+For each $b\geq 2$, $R_{b}$ is a functor $\Ham\to\Ham$. Its action on morphisms is
+defined by intertwining gap-preserving paths through the block-projector.
+\end{proposition}
+
+\begin{proof}
+We must check that gap-preserving paths $\{H_{s}\}$ map to gap-preserving paths
+$\{R_{b}H_{s}\}$. The block projector commutes with $H_{s}$ at each $s$ in the gapped
+fixed-point regime, so the gap of $R_{b}H_{s}$ is bounded below by the gap of $H_{s}$
+times the projector overlap, which is bounded uniformly along the path \cite{Wilson1983}.
+Composition $R_{b}\circ R_{b'}=R_{bb'}$ holds by associativity of block grouping.
+\end{proof}
+
+\subsection{Fixed points and phase representatives}
+
+\begin{definition}[RG fixed point]
+\label{def:rg-fixed}
+$H\in\Ham$ is an \emph{RG fixed point} (at scale $b$) if $R_{b}H = H$ up to a
+gap-preserving deformation, i.e.\ $[R_{b}H]=[H]$ in $\pi_{0}(\Ham)$.
+\end{definition}
+
+\begin{example}
+The toric code Hamiltonian \cref{eq:toric-ham} is an exact RG fixed point: the block
+projector for $b=2$ on the toric code reproduces a toric code on the coarsened lattice.
+\end{example}
+
+\begin{example}
+The Levin--Wen string-net Hamiltonian for any input UFC $\mathcal{C}_{0}$ is an exact RG
+fixed point. This is one of the principal motivations for the construction.
+\end{example}
+
+\begin{remark}
+The set of RG fixed points up to gap-preserving deformation is a complete (and minimal)
+set of phase representatives: every phase contains at least one RG fixed point, and two
+fixed points in the same phase are related by a deformation. This justifies the practice
+of taking the toric code as the canonical representative of $\mathbb{Z}_{2}$ topological
+order.
+\end{remark}
+
+\subsection{Critical points and CFT}
+
+A non-fixed but RG-invariant point --- a fixed point of the RG flow on the space of
+Hamiltonian densities --- is a critical point. By the operator-product-expansion formalism
+\cite{Wilson1983}, critical points are described by conformal field theories (CFTs); the
+data of a CFT (central charge, primary spectrum, OPE coefficients) is the algebraic
+content of the critical point. We will not develop CFT here, but we note that critical
+points are \emph{not} objects of $\Ham$ (they are gapless), so they sit in the
+boundary $\partial\Ham$ of the gapped category. Phase boundaries are exactly such
+critical points.
+
+\section{Worked Examples}
+\label{sec:examples}
+
+\subsection{Example 1: The toric code}
+
+We summarise the analysis of \cref{ex:toric} and \cref{eq:toric-ham} in our language:
+\begin{itemize}
+  \item \emph{Phase}: A topologically ordered phase, distinct from any Landau phase.
+  \item \emph{MTC}: $\Rep(D(\mathbb{Z}_{2}))$ with simple objects
+    $\{\mathbf{1},e,m,\varepsilon\}$, all quantum dimensions $1$, $\mathcal{D}=2$.
+  \item \emph{Functorial picture}: The functor $\BG\to\Ham$ for $G=\mathbb{Z}_{2}$ (the
+    fermion-parity symmetry) lands on $H_{\mathrm{TC}}$; the topological invariant is the
+    isomorphism class of the resulting MTC, not the order parameter.
+  \item \emph{TEE}: $\gamma=\log 2$.
+  \item \emph{Code}: $[[n=2L^{2},k=2,d=L]]$ on an $L\times L$ torus.
+\end{itemize}
+
+\subsection{Example 2: The SSH chain (1D SPT)}
+
+The Su--Schrieffer--Heeger model is a 1D fermionic chain with alternating hopping
+amplitudes $t_{1},t_{2}>0$:
+\begin{equation}
+\label{eq:ssh}
+H_{\mathrm{SSH}} = \sum_{j}\Big(\!-t_{1}\,c^{\dagger}_{2j-1}c_{2j}
+- t_{1}\,c^{\dagger}_{2j}c_{2j-1}
+- t_{2}\,c^{\dagger}_{2j}c_{2j+1}
+- t_{2}\,c^{\dagger}_{2j+1}c_{2j}\Big)
+\end{equation}
+For chiral symmetry $\Gamma=\sigma_{z}$, the model has two phases: $t_{1}>t_{2}$
+(trivial) and $t_{1}<t_{2}$ (topological). The relevant classification is subtle
+because the SSH model is a \emph{free-fermion} system, and the interplay of chiral
+symmetry, fermionic statistics and particle-hole/charge-conjugation structure pushes
+the classification beyond bosonic group cohomology and into the framework of
+$K$-theory and spin cobordism.
+\emph{Bosonic-only} cohomology with on-site $\mathbb{Z}_{2}$-symmetry gives
+$H^{2}(\mathbb{Z}_{2},U(1))=0$, so the SSH model is \emph{not} a non-trivial bosonic
+SPT. The genuine non-triviality of the SSH model is fermionic: it is classified by spin
+cobordism, $\Omega^{2}_{\mathrm{Spin}}(B\mathbb{Z}_{2}^{\Gamma},U(1))\cong\mathbb{Z}_{2}$
+\cite{FreedHopkins2021}, with the non-trivial element matching the parity of the number
+of zero modes at the boundary. Equivalently, the chiral-symmetry-protected topological
+invariant is the winding number of the off-diagonal block of the Bloch Hamiltonian.
+We mention SSH here precisely to underline that the bosonic group-cohomology answer is
+\emph{insufficient} for fermionic systems: this is the substance of open problem~O1 in
+\cref{sec:open}.
+
+In our setting, the SSH chain is a worked instance of $\Ham_{G}\to\pi_{0}$ with
+$G=\mathbb{Z}_{2}^{\Gamma}$ (chiral symmetry), and the topological invariant is the map
+\[
+\pi_{0}(\Ham_{\mathbb{Z}_{2}^{\Gamma}})_{\mathrm{SSH}} \;\to\; \mathbb{Z}_{2},
+\quad H\mapsto\#\{\text{zero modes at boundary}\}\bmod 2.
+\]
+
+\subsection{Example 3: Doubled Fibonacci (Levin--Wen)}
+
+By \cref{thm:lw} and \cref{ex:fib}, the Levin--Wen model with input $\mathcal{C}_{0}=
+\mathrm{Fib}$ is a non-abelian topologically ordered phase with anyon MTC
+$\mathcal{Z}(\mathrm{Fib})=\mathrm{Fib}\boxtimes\overline{\mathrm{Fib}}$. The total
+quantum dimension is
+\[
+\mathcal{D} = (1+\phi^{2})^{1/2}\cdot(1+\phi^{2})^{1/2} = 1+\phi^{2}=2+\phi,
+\]
+so $\gamma=\log(2+\phi)\approx 1.288$. The braid group representation on the fusion space
+of $n$ Fibonacci anyons is dense in $SU(d_{n})$, the basis of universal topological
+quantum computation \cite{Wang2010}.
+
+\subsection{\texorpdfstring{Example 4: Explicit $\mathbb{Z}_{2}$ cocycles}{Example 4: Explicit Z2 cocycles}}
+\label{ex:z2-cocycle}
+
+To make \cref{prop:spt-functor} concrete we compute $H^{2}(\mathbb{Z}_{2},U(1))$ in
+two distinct module structures: \emph{trivial} action (relevant for unitary on-site
+$\mathbb{Z}_{2}$ symmetry) and \emph{anti-unitary} action $U_{T}(1)$ (relevant for
+time-reversal). We emphasise that \emph{neither} is the Haldane-phase classifying group
+--- the Haldane phase is protected by the on-site $SO(3)$ symmetry of the AKLT spin-1
+chain, with $H^{2}(SO(3),U(1))\cong\mathbb{Z}_{2}$ (\cref{ex:haldane}). The
+$\mathbb{Z}_{2}^{T}$ time-reversal SPT we compute below is a \emph{different} $\mathbb{Z}_{2}$
+class, realised e.g.\ in 1D Haldane-Dzyaloshinskii-Moriya chains protected by time
+reversal alone. We work multiplicatively (cochains take values in $U(1)$ written with
+multiplicative composition), which is the convention most natural for SPT applications.
+
+The bar complex differential for an abelian-valued cochain on a group $G$ with module
+action $g\cdot a$ is
+\begin{align*}
+(\delta^{n}\omega)(g_{1},\ldots,g_{n+1})
+&= \bigl(g_{1}\cdot\omega(g_{2},\ldots,g_{n+1})\bigr) \\
+&\quad{}\cdot \prod_{i=1}^{n}\omega(g_{1},\ldots,g_{i}g_{i+1},\ldots,g_{n+1})^{(-1)^{i}} \\
+&\quad{}\cdot \omega(g_{1},\ldots,g_{n})^{(-1)^{n+1}}.
+\end{align*}
+For a $1$-cochain $f:G\to U(1)$ this gives
+\begin{equation}
+\label{eq:delta1-mult}
+(\delta^{1}f)(g_{1},g_{2}) = (g_{1}\cdot f(g_{2}))\cdot f(g_{1}g_{2})^{-1}\cdot f(g_{1}).
+\end{equation}
+For a $2$-cochain $\omega:G^{2}\to U(1)$ the cocycle condition $\delta^{2}\omega=1$ is
+\begin{equation}
+\label{eq:cocycle2-mult}
+(g_{1}\cdot\omega(g_{2},g_{3}))\cdot\omega(g_{1}g_{2},g_{3})^{-1}\cdot\omega(g_{1},g_{2}g_{3})\cdot\omega(g_{1},g_{2})^{-1}=1.
+\end{equation}
+
+\paragraph{Case 1: trivial action ($G=\mathbb{Z}_{2}=\{e,g\}$, $g\cdot a=a$).}
+Normalise $\omega(e,*)=\omega(*,e)=1$ (always permissible by passing to the normalised
+bar complex). Setting $g_{1}=g_{2}=g_{3}=g$ in \cref{eq:cocycle2-mult} and using
+$g^{2}=e$ gives
+\[
+\omega(g,g)\cdot\omega(e,g)^{-1}\cdot\omega(g,e)\cdot\omega(g,g)^{-1}=1,
+\]
+which is automatic from normalisation. So the only datum is $\omega(g,g)=z\in U(1)$, and
+\emph{every} $z\in U(1)$ defines a normalised cocycle.
+
+For coboundaries, with $f:\mathbb{Z}_{2}\to U(1)$, $f(e)=1$, $f(g)=t$, equation
+\cref{eq:delta1-mult} for trivial action gives
+\[
+(\delta^{1}f)(g,g) = f(g)\cdot f(g^{2})^{-1}\cdot f(g) = t\cdot 1^{-1}\cdot t = t^{2}.
+\]
+Hence the coboundaries are exactly the squares $\{t^{2}:t\in U(1)\}$. Since $U(1)$ is
+divisible, every element is a square, so
+\[
+H^{2}(\mathbb{Z}_{2},U(1)) = U(1)/U(1)^{2} = 0.
+\]
+
+\paragraph{Case 2: anti-unitary action $U_{T}(1)$ ($G=\mathbb{Z}_{2}^{T}$, $g\cdot a=
+\bar a=a^{-1}$).}
+Now $g\cdot f(g)=f(g)^{-1}$, so equation \cref{eq:delta1-mult} with $g_{1}=g_{2}=g$ gives
+\[
+(\delta^{1}f)(g,g) = (g\cdot f(g))\cdot f(g^{2})^{-1}\cdot f(g) = t^{-1}\cdot 1\cdot t = 1.
+\]
+Hence the only coboundary is the trivial cocycle. The cocycle condition still allows
+$\omega(g,g)=z\in U(1)$, but now we must check the action-twisted condition: substituting
+into \cref{eq:cocycle2-mult},
+\[
+(g\cdot z)\cdot 1\cdot z\cdot z^{-1} = z^{-1}\cdot z = 1,
+\]
+which holds for all $z$. However, normalisation now requires $z\cdot\bar z = |z|^{2}=1$,
+so $z\in U(1)$. Modding out by coboundaries (which is now trivial) and by the further
+relation $z\sim z^{-1}$ (gauge equivalence under $f$ with $f(g)=t$ and the modified
+action) gives exactly
+\[
+H^{2}(\mathbb{Z}_{2}^{T},U_{T}(1)) = \mathbb{Z}_{2},
+\]
+generated by the class $z=-1$. This is the time-reversal-protected SPT class for 1D
+spin chains, realised concretely by chains in which $T^{2}=-1$ acts on a boundary
+spin-$\tfrac{1}{2}$ \cite{ChenGuLiuWen2013}. As noted at the head of this subsection,
+this is a \emph{different} $\mathbb{Z}_{2}$ from that of the Haldane phase
+(\cref{ex:haldane}), which is classified by $H^{2}(SO(3),U(1))$ rather than by the
+$\mathbb{Z}_{2}^{T}$ cohomology computed here.
+
+\paragraph{Why the trivial-action $\mathbb{Z}_{2}$ has no SPT in 1D.}
+The vanishing $H^{2}(\mathbb{Z}_{2},U(1))=0$ does \emph{not} mean ``no on-site
+$\mathbb{Z}_{2}$ SPT exists''; it means that with on-site \emph{single-copy}
+$\mathbb{Z}_{2}$ symmetry alone there is no 1D SPT. The well-known cluster-state SPT in
+1D is protected by $\mathbb{Z}_{2}\times\mathbb{Z}_{2}$, with non-trivial class in
+$H^{2}(\mathbb{Z}_{2}\times\mathbb{Z}_{2},U(1))=\mathbb{Z}_{2}$ (one of the K\"unneth
+cross-terms). This illustrates the dependence of the SPT classification on the
+\emph{choice} of symmetry group, even at fixed dimension.
+
+\subsection{\texorpdfstring{Example 5: $\mathbb{Z}_{2}\times\mathbb{Z}_{2}$ in 2D}{Example 5: Z2 x Z2 in 2D}}
+\label{ex:z2z2-2d}
+
+In 2D, the relevant group is $H^{3}(\mathbb{Z}_{2}\times\mathbb{Z}_{2},U(1))$. By
+K\"unneth and the standard computation,
+\[
+H^{3}(\mathbb{Z}_{2}\times\mathbb{Z}_{2},U(1)) \cong \mathbb{Z}_{2}^{3},
+\]
+giving eight distinct $\mathbb{Z}_{2}\times\mathbb{Z}_{2}$ SPT phases in 2D. Three of
+these come from the individual $\mathbb{Z}_{2}$ factors ($\mathbb{Z}_{2}^{2}$ from each
+copy of $H^{3}(\mathbb{Z}_{2},U(1))=\mathbb{Z}_{2}$), and the remaining factor of
+$\mathbb{Z}_{2}$ arises from the K\"unneth cross-term, corresponding to a mixed
+mutual-statistics SPT.
+
+\subsection{Example 6: Toric code as a stabiliser code}
+\label{ex:toric-stab}
+
+We expand the link between Law~II and quantum information. The toric code Hamiltonian
+\cref{eq:toric-ham} is the parent Hamiltonian of the stabiliser group
+\[
+\mathcal{S} = \langle A_{v}, B_{p} : v\in V(\Lambda),\ p\in F(\Lambda)\rangle
+\subset\mathcal{P}_{n}
+\]
+where $\mathcal{P}_{n}$ is the Pauli group on $n=2L^{2}$ qubits (one per edge of an
+$L\times L$ torus). The stabiliser group satisfies $|\mathcal{S}|=2^{n-2}$ (two relations
+$\prod_{v}A_{v}=\prod_{p}B_{p}=\mathbb{1}$), so the codespace has dimension
+$2^{n}/2^{n-2}=4$, matching the four-fold degeneracy on the torus.
+
+The two logical qubits are encoded by non-contractible Wilson loops:
+\[
+\overline{X}_{1} = \prod_{e\in C_{1}}\sigma^{x}_{e},\quad
+\overline{Z}_{1} = \prod_{e\in \widetilde C_{1}}\sigma^{z}_{e},\quad
+\overline{X}_{2}, \overline{Z}_{2} \text{ from the second non-contractible cycle.}
+\]
+The code distance $d$ equals the length of the shortest non-contractible loop,
+$d=L=\sqrt{n/2}$. Thus the toric code is a $[[2L^{2},2,L]]$ stabiliser code. This is the
+discrete realisation of the abstract data captured in the MTC $\Rep(D(\mathbb{Z}_{2}))$.
+
+\subsection{Example 7: Stacking and the abelian-group structure on SPT phases}
+\label{ex:stacking}
+
+SPT phases form an abelian group under stacking. Given two $G$-symmetric Hamiltonians
+$H_{1},H_{2}$ on disjoint copies of the lattice, $H_{1}\boxtimes H_{2}$ is a
+$G$-symmetric Hamiltonian on the union, with the diagonal $G$-action. The trivial
+phase is the unit, and the inverse of a layer is its time reversal.
+
+By \cref{prop:spt-functor}, the stacking map matches cohomology addition:
+\[
+[\omega_{H_{1}\boxtimes H_{2}}] \;=\; [\omega_{H_{1}}] + [\omega_{H_{2}}],
+\]
+both classes lying in $H^{d+1}(G,U(1))$.
+This is the categorical statement that ``stacking SPTs adds their cocycles.''
+
+\section{Composition Hooks for Law III}
+\label{sec:law3-hooks}
+
+We close by stating the precise data Law~III is to consume in lifting Law~II to the
+periodically driven setting. The reader of Law~III should treat this section as an
+interface specification.
+
+\subsection{\texorpdfstring{Hook 1: The category $\Ham$ extends to $\Ham_{T\text{-per}}$}{Hook 1: Ham extends to Ham_T-per}}
+
+Define $\Ham_{T\text{-per}}$ as the category whose objects are
+$T$-periodic paths $H:S^{1}_{T}\to\Ham$ landing on gapped Hamiltonians and whose
+morphisms are gap-preserving homotopies through $T$-periodic families. The static
+embedding $\iota:\Ham\hookrightarrow\Ham_{T\text{-per}}$ sends $H$ to the constant path.
+
+\subsection{\texorpdfstring{Hook 2: Symmetry group enlarges by $\mathbb{Z}_{T}$}{Hook 2: Symmetry group enlarges by Z_T}}
+
+The on-site symmetry $G$ in Law~II is enlarged in Law~III by the discrete
+time-translation symmetry $\mathbb{Z}_{T}$ generated by the period operator. The relevant
+classifying space becomes $\BG\times B\mathbb{Z}_{T}$, and the SPT-style classification
+is by $H^{d+2}(G\times\mathbb{Z}_{T},U(1))$ in spatial dimension $d$ (the extra degree
+arises from the $S^{1}$ factor in spacetime).
+
+\subsection{\texorpdfstring{Hook 3: MTC enriches by $\Rep(\mathbb{Z}_{T})$}{Hook 3: MTC enriches by Rep(Z_T)}}
+
+The MTC of an equilibrium topological phase is $\mathcal{C}$. The Floquet enrichment is
+\[
+\mathcal{C}_{T} = \mathcal{C}\boxtimes\Rep(\mathbb{Z}_{T}),
+\]
+encoding micromotion-twisted sectors. Anomalous Floquet phases (Rudner--Lindner type)
+correspond to MTCs in this enrichment that are not products of an equilibrium MTC with
+$\Rep(\mathbb{Z}_{T})$.
+
+\subsection{Hook 4: TEE extends to Floquet TEE}
+
+The Floquet entanglement-entropy functor
+\[
+S_{T}: \mathbf{Reg}_{\Lambda}^{\mathrm{op}}\times\mathbb{Z}_{T}\to\mathbb{R}_{\geq 0},
+\qquad (A,n)\mapsto S(A;\text{at stroboscopic time }nT),
+\]
+has a topological constant $\gamma_{T}=\log\mathcal{D}_{T}$ where $\mathcal{D}_{T}$ is
+the total quantum dimension of $\mathcal{C}_{T}$.
+
+\subsection{Hook 5: Composition functor}
+
+The lifting from Law~II to Law~III is the functor
+\[
+\mathrm{Lift}_{\mathrm{II}\to\mathrm{III}}:
+[\BG,\Ham] \to [\mathrm{B}(G\times\mathbb{Z}_{T}),\Ham_{T\text{-per}}],
+\qquad F\mapsto \mathrm{Fl}(F),
+\]
+where $\mathrm{Fl}(F)$ is the Floquet-enriched functor. Time-crystalline phases are
+detected by natural transformations $\eta:\mathrm{Fl}(F)\Rightarrow\mathrm{Fl}^{\mathbb{Z}_{2}}(F)$
+that are not isomorphisms (i.e.\ that detect period doubling).
+
+\section{Results}
+\label{sec:results}
+
+We summarise the principal results of this paper.
+\begin{enumerate}[label=R\arabic*.,leftmargin=2.4em]
+  \item \emph{Phases as connected components.} Phases of matter on a fixed lattice are
+    elements of $\pi_{0}(\Ham)$, the connected components of the groupoid of gapped
+    local Hamiltonians under gap-preserving adiabatic equivalence
+    (\cref{def:phase}).
+  \item \emph{Symmetric phases as functor-pullback classes.} The category of $G$-symmetric
+    Hamiltonians is equivalent to the functor category $[\BG,\Ham_{0}]^{\mathrm{eq}}$,
+    so symmetric phases are functorial equivalence classes
+    (\cref{prop:hamG-as-functor}).
+  \item \emph{Landau as functorial semantics.} The Landau classification is the
+    natural-isomorphism classification of order-parameter functors $\mathcal{L}_{H}:
+    \BG\to\Vect$ (\cref{prop:landau}).
+  \item \emph{SPT as group cohomology, functorially.} The classification map
+    \[
+    \pi_{0}(\Ham_{G})\;\to\; H^{d+1}(G,U(1))
+    \]
+    refines to a functor $\mathrm{SPT}^{d}:\mathbf{Grp}\to\mathbf{Ab}$
+    (\cref{prop:spt-functor}).
+  \item \emph{Topological order is MTC data.} A $(2{+}1)$D topologically ordered phase is
+    classified by a unitary modular tensor category, arising as the Drinfeld center of
+    a fusion category (Levin--Wen), with the data lifted from Law~I via the functor
+    $\mathcal{Z}$ (\cref{eq:lift1to2}).
+  \item \emph{TEE as a phase invariant.} Topological entanglement entropy
+    $\gamma=\log\mathcal{D}$ is constant on each phase (\cref{cor:gamma-invariant}) and
+    is computed by the Kitaev--Preskill formula (\cref{thm:kp}).
+  \item \emph{Composition hooks.} We have stated five precise hooks
+    (\cref{sec:law3-hooks}) by which Law~III may consume Law~II to produce Floquet
+    classifications.
+\end{enumerate}
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Why functorial classification?}
+
+The choice to classify phases as functorial equivalence classes is not aesthetic. It is
+forced by the modular composition principle of the series: each law must produce data
+that the next law can consume \emph{as a category}, not merely as a set or group. The set
+$\pi_{0}(\Ham)$ alone is too coarse to support the lifting to Floquet phases (Law~III)
+or to information geometry (Law~IV); we need at minimum the category $\Ham_{G}$ and the
+fusion/braiding data of MTCs to be available as categorical structure that the next
+law's functor can act on.
+
+\subsection{What this paper does \emph{not} claim}
+
+This paper does \emph{not} claim:
+\begin{enumerate}[label=(\roman*)]
+  \item A complete classification of $(3{+}1)$D topological phases (this is open; cf.\
+    open problem 3 in \cref{sec:open}).
+  \item A categorical framework for fracton order (this is genuinely open; the
+    string-net construction does not directly apply because of the sub-extensive
+    ground-state degeneracy).
+  \item A non-perturbative bridge to quantum gravity (this is the territory of Law~IV).
+\end{enumerate}
+We are explicit that the modular framework is not a unified theory and that the
+classification at the topological-order level is the most rigorous tier; the lifting to
+Law~III and beyond carries increasing speculative content.
+
+\subsection{Relation to other categorical frameworks}
+
+Our setup is closest to that of \cite{LevinWen2005, Wang2010} for $(2{+}1)$D and to
+\cite{ChenGuLiuWen2013} for SPT phases. The cobordism-classification programme of
+\cite{FreedHopkins2021} extends the SPT classification to fermionic and anti-unitary
+symmetries; the bosonic group-cohomology classification we use here is the simpler
+sub-case. Our explicit functorial reformulation in terms of the Law~I primitives
+$M:\Phys\to\Info$ and the sheaf semantics is the new contribution; the underlying
+mathematical results are due to the cited authors.
+
+\section{Open Problems}
+\label{sec:open}
+
+We list, in order of decreasing rigor of currently available techniques, open problems
+that bear directly on the modular composition.
+
+\begin{enumerate}[label=O\arabic*.,leftmargin=2.5em]
+  \item \emph{Fermionic SPT classification beyond bosonic shadow.} Extend
+    \cref{prop:spt-functor} to a functor on the category of finite groups equipped with
+    a $\mathbb{Z}_{2}^{f}$-extension, taking values in spin-cobordism cohomology
+    $\Omega^{*}_{\mathrm{Spin}}(\BG,U(1))$.
+  \item \emph{$(3{+}1)$D topological order.} Is every $(3{+}1)$D topological phase the
+    boundary of a $(4{+}1)$D Walker--Wang model with input fusion 2-category? A
+    categorical answer would generalise \cref{thm:lw} from $(2{+}1)$D to $(3{+}1)$D.
+  \item \emph{Fracton order.} Find a categorical framework that captures the
+    sub-extensive ground-state degeneracy and immobile excitations of fracton phases.
+    The string-net construction does \emph{not} apply.
+  \item \emph{Functorial RG.} Make precise Wilson's RG as a functor (or 2-functor) on
+    $\Ham$. Are RG fixed points exactly the rigid objects?
+  \item \emph{Non-invertible categorical symmetries.} Generalise the SPT classification
+    of \cref{thm:CGLW} from groups $G$ to fusion categories $\mathcal{S}$ acting as
+    symmetries; the relevant cohomology is the second cohomology of $\mathcal{S}$ in
+    $U(1)$.
+  \item \emph{Fibration of phases over the parameter space.} Make precise the
+    fibration $\mathrm{Phases}\to\mathrm{Couplings}$ whose fibres are connected
+    components of $\Ham$, and study its monodromy (this connects to Law~IV's
+    information geometry).
+\end{enumerate}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have provided a functorial classification of phases of matter, building strictly on
+the categorical primitives of Law~I and producing in clean form the data Law~III will
+consume. The principal conceptual point is that phases are equivalence classes of
+functors, not just states; the Landau paradigm and its topological generalisations both
+fit into this scheme, with the difference being the target category (Vect for Landau,
+Ham for SPT, MTC for topologically ordered phases). The topological entanglement entropy
+$\gamma=\log\mathcal{D}$ provides the principal numerical bridge between the algebraic
+data (the MTC) and the physical state (the ground subspace).
+
+The composition with Law~III is by replacing the symmetry group $G$ with $G\times
+\mathbb{Z}_{T}$ and the static category $\Ham$ with $\Ham_{T\text{-per}}$; the
+mathematical content of Law~III consists precisely in identifying the natural
+transformations of the resulting functor categories that correspond to genuinely
+non-equilibrium phases.
+
+We reiterate: \emph{the framework is modular, not unified.} Each law is a self-standing
+mathematical layer, and the emergent properties at each layer arise from the explicit
+composition functor stated here and in the corresponding sections of Laws~III and IV.
+
+\bigskip
+
+\paragraph{Acknowledgements.}
+We thank the broader topological-phases and categorical-quantum-mechanics communities;
+the present work is a synthesis of their results into the language of the modular
+framework.
+
+\paragraph{Code availability.}
+A Haskell implementation accompanying this paper is available in the project
+repository under \texttt{src/phase-bound-matter}, providing types for phases,
+finite-group cohomology, and entanglement-entropy computations on small toric-code
+instances. The package compiles with \texttt{cabal build} and the test suite passes
+with \texttt{cabal test}. The companion paper Law~I in the same modular series
+\cite{LawI} provides the categorical primitives invoked throughout this paper.
+
+\begin{thebibliography}{99}
+
+\bibitem{Kitaev2003}
+A. Yu.\ Kitaev. \emph{Fault-tolerant quantum computation by anyons}. Annals of Physics
+\textbf{303}:2--30 (2003). arXiv:quant-ph/9707021.
+
+\bibitem{Kitaev2006}
+A. Yu.\ Kitaev. \emph{Anyons in an exactly solved model and beyond}. Annals of Physics
+\textbf{321}:2--111 (2006). arXiv:cond-mat/0506438.
+
+\bibitem{Wen1990}
+X.-G.\ Wen. \emph{Topological orders in rigid states}. International Journal of Modern
+Physics B \textbf{4}:239 (1990).
+
+\bibitem{Wen2002}
+X.-G.\ Wen. \emph{Quantum order from string-net condensations and origin of light and
+massless fermions}. Physical Review D \textbf{68}:024501 (2003); see also Phys.\ Rev.\ B
+\textbf{65}, 165113 (2002).
+
+\bibitem{ChenGuLiuWen2013}
+X.\ Chen, Z.-C.\ Gu, Z.-X.\ Liu, X.-G.\ Wen. \emph{Symmetry protected topological orders
+and the group cohomology of their symmetry group}. Physical Review B \textbf{87}:155114
+(2013). arXiv:1106.4772.
+
+\bibitem{LevinWen2005}
+M.\ Levin, X.-G.\ Wen. \emph{String-net condensation: A physical mechanism for
+topological phases}. Physical Review B \textbf{71}:045110 (2005).
+arXiv:cond-mat/0404617.
+
+\bibitem{LevinWen2006}
+M.\ Levin, X.-G.\ Wen. \emph{Detecting topological order in a ground state wave
+function}. Physical Review Letters \textbf{96}:110405 (2006).
+
+\bibitem{KitaevPreskill2006}
+A.\ Kitaev, J.\ Preskill. \emph{Topological entanglement entropy}. Physical Review
+Letters \textbf{96}:110404 (2006). arXiv:hep-th/0510092.
+
+\bibitem{Atiyah1988}
+M.\ Atiyah. \emph{Topological quantum field theories}. Publications Math\'ematiques de
+l'IH\'ES \textbf{68}:175--186 (1988).
+
+\bibitem{BaezDolan1995}
+J.\ Baez, J.\ Dolan. \emph{Higher-dimensional algebra and topological quantum field
+theory}. J.\ Math.\ Phys.\ \textbf{36}:6073--6105 (1995).
+
+\bibitem{LandauLifshitz1980}
+L.\ D.\ Landau, E.\ M.\ Lifshitz. \emph{Statistical Physics, Part 1}, 3rd ed.\ Pergamon
+Press (1980).
+
+\bibitem{Wilson1983}
+K.\ G.\ Wilson. \emph{The renormalization group and critical phenomena}. Reviews of
+Modern Physics \textbf{55}:583--600 (1983).
+
+\bibitem{Wang2010}
+Z.\ Wang. \emph{Topological Quantum Computation}. CBMS Regional Conference Series in
+Mathematics 112, AMS (2010).
+
+\bibitem{RowellWang2018}
+E.\ Rowell, Z.\ Wang. \emph{Mathematics of topological quantum computing}. Bulletin of
+the AMS \textbf{55}:183--238 (2018).
+
+\bibitem{FreedHopkins2021}
+D.\ S.\ Freed, M.\ J.\ Hopkins. \emph{Reflection positivity and invertible topological
+phases}. Geometry \& Topology \textbf{25}:1165--1330 (2021). arXiv:1604.06527.
+
+\bibitem{Muger2003}
+M.\ M\"uger. \emph{From subfactors to categories and topology II}. Journal of Pure and
+Applied Algebra \textbf{180}:159--219 (2003).
+
+\bibitem{Lawvere1963}
+F.\ W.\ Lawvere. \emph{Functorial semantics of algebraic theories}. Proceedings of the
+National Academy of Sciences \textbf{50}:869--872 (1963).
+
+\bibitem{AbramskyCoecke2004}
+S.\ Abramsky, B.\ Coecke. \emph{A categorical semantics of quantum protocols}. Proc.\
+19th IEEE Symposium on Logic in Computer Science (2004).
+
+\bibitem{LawI}
+MagnetonIO Research. \emph{Law I --- Mathematical Formalisms: Categorical Primitives
+for Emergent Spacetime Dynamics}. Paper~I in the modular series \emph{Emergent
+Spacetime Dynamics}, MagnetonIO Research preprint, 2026 (companion paper).
+
+\end{thebibliography}
+
+\end{document}
